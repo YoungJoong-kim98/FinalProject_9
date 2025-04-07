@@ -31,6 +31,7 @@ public class PlayerBaseState : IState
         PlayerController input = stateMachine.Player.Input;
         input.playerActions.Movement.canceled += OnMovementCanceled;    // 이동 취소 시 호출
         input.playerActions.Run.started += OnRunStarted;                // 달리기 시작 시 호출
+        input.playerActions.Jump.started += OnJumpStarted;              // 점프 시 호출
     }
 
     protected virtual void RemoveInputActionsCallbacks()
@@ -38,7 +39,7 @@ public class PlayerBaseState : IState
         PlayerController input = stateMachine.Player.Input;
         input.playerActions.Movement.canceled -= OnMovementCanceled;
         input.playerActions.Run.started -= OnRunStarted;
-
+        input.playerActions.Jump.started -= OnJumpStarted;
     }
 
     public virtual void HandleInput()
@@ -65,7 +66,10 @@ public class PlayerBaseState : IState
     {
 
     }
-    
+    protected virtual void OnJumpStarted(InputAction.CallbackContext context)
+    {
+
+    }
     protected void StartAnimation(int animationHash)
     {
         stateMachine.Player.Animator.SetBool(animationHash, true);
@@ -108,7 +112,7 @@ public class PlayerBaseState : IState
     {
         float movementSpeed = GetMovementSpeed();
         
-        stateMachine.Player.Controller.Move((direction * movementSpeed) * Time.deltaTime);
+        stateMachine.Player.Controller.Move(((direction * movementSpeed) + stateMachine.Player.ForceReceiver.Movement) * Time.deltaTime);
     }
     
     private float GetMovementSpeed()
