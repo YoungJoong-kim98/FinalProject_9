@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class PlayerFallState : PlayerAirState
 {
@@ -26,6 +27,11 @@ public class PlayerFallState : PlayerAirState
         if (stateMachine.Player.Controller.isGrounded)
         {
             stateMachine.ChangeState(stateMachine.IdleState);
+            return;
+        }
+        if (Mouse.current.leftButton.wasPressedThisFrame)
+        {
+            stateMachine.ChangeState(stateMachine.GrabState);
             return;
         }
     }

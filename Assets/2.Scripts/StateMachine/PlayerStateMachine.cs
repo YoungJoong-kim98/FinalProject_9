@@ -21,6 +21,7 @@ public class PlayerStateMachine : StateMachine
     public PlayerRunState RunState { get; private set;}     // 뛰기 상태
     public PlayerJumpState JumpState { get; private set; } // 점프 상태
     public PlayerFallState FallState { get; private set; } //추락 상태
+    public PlayerGrabState GrabState { get; private set; } //잡기 상태
     public PlayerStateMachine(Player player)
     {
         this.Player = player;
@@ -33,6 +34,7 @@ public class PlayerStateMachine : StateMachine
 
         JumpState = new PlayerJumpState(this);
         FallState = new PlayerFallState(this);
+        GrabState = new PlayerGrabState(this);
 
         MovementSpeed = player.Data.GroundData.BaseSpeed;   // 기본 속도 설정
         RotationDamping = player.Data.GroundData.BaseRotationDamping;

@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class ForceReceiver : MonoBehaviour
@@ -7,6 +8,7 @@ public class ForceReceiver : MonoBehaviour
     private float verticalVelocity;
 
     public Vector3 Movement => Vector3.up * verticalVelocity;
+    private float gravityScale = 1f;
 
     private void Start()
     {
@@ -17,16 +19,21 @@ public class ForceReceiver : MonoBehaviour
     {
         if (controller.isGrounded)
         {
-            verticalVelocity = Physics.gravity.y * Time.deltaTime;
+            verticalVelocity = Physics.gravity.y * gravityScale * Time.deltaTime;
         }
         else
         {
-            verticalVelocity += Physics.gravity.y * Time.deltaTime;
+            verticalVelocity += Physics.gravity.y * gravityScale * Time.deltaTime;
         }
     }
 
     public void Jump(float jumpForce)
     {
         verticalVelocity += jumpForce;
+    }
+
+    public void SetGravityScale(float scale)
+    {
+        gravityScale = scale;
     }
 }

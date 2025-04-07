@@ -15,8 +15,8 @@ public class PlayerAnimationData
     [SerializeField] private string airParameterName = "@Air";
     [SerializeField] private string jumpParameterName = "Jump";
     [SerializeField] private string fallParameterName = "Fall";
-    // [SerializeField] private string grabParameterName = "Grab";
-    
+    [SerializeField] private string grabParameterName = "Grab";
+
     // Animator 해시값 저장 (런타임 시 빠른 성능 위해)
     public int GroundParameterHash { get; private set; }
     public int IdleParameterHash { get; private set; }
@@ -26,7 +26,7 @@ public class PlayerAnimationData
     public int AirParameterHash { get; private set; }
     public int JumpParameterHash { get; private set; }
     public int FallParameterHash { get; private set; }
-    // public int GrabParameterHash { get; private set; }
+    public int GrabParameterHash { get; private set; }
     
     // 애니메이터 해시값 설정
     public void Initialize()
@@ -39,6 +39,6 @@ public class PlayerAnimationData
         AirParameterHash = Animator.StringToHash(airParameterName);
         JumpParameterHash = Animator.StringToHash(jumpParameterName);
         FallParameterHash = Animator.StringToHash(fallParameterName);
-        // GrabParameterHash = Animator.StringToHash(grabParameterName);
+        GrabParameterHash = Animator.StringToHash(grabParameterName);
     }
 }
