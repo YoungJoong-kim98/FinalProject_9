@@ -5,47 +5,100 @@ using UnityEngine;
 public class UIManager : MonoBehaviour
 {
     private const string UIResourceFolderPath = "UI/"; //UI리소스 위치 폴더 경로 - 이후 ui 프리팹으로 만들어 관리
-    private Dictionary<string, BaseUI> activeUIs = new Dictionary<string, BaseUI>();
-    public UIType ShowUI<UIType>() where UIType : BaseUI
-    {
-        string uiName = typeof(UIType).Name;//UI 이름- uitype 통해 얻음
 
-        if (activeUIs.ContainsKey(uiName))//활성화 ui 확인
+    private Dictionary<string, BaseUI> permanentUIs = new Dictionary<string, BaseUI>(); // 상시 UI들
+    private Dictionary<string, BaseUI> activePopupUIs = new Dictionary<string, BaseUI>(); // 팝업 UI들
+
+    public void ShowPermanentUI<UIType>() where UIType : BaseUI//상시 UI
+    {
+        string uiName = typeof(UIType).Name;
+
+        if (permanentUIs.ContainsKey(uiName))//활성화되어있다면 다시표시
         {
-            activeUIs[uiName].OnShow();
-            return activeUIs[uiName] as UIType;
+            permanentUIs[uiName].OnShow();
         }
+        else
+        {            
+            UIType uiComponent = LoadUI<UIType>(uiName); // 상시 UI 새로 로드하고 화면에 표시
+            if (uiComponent != null)
+            {
+                uiComponent.Initialize();
+                uiComponent.OnShow();
+                permanentUIs.Add(uiName, uiComponent); // 상시 UI로 딕셔너리에 추가
+            }
+        }
+    }
+
+   
+    public void HidePermanentUI<UIType>() where UIType : BaseUI  // 상시 UI를 숨기기
+    {
+        string uiName = typeof(UIType).Name;
+
+        if (permanentUIs.ContainsKey(uiName))
+        {
+            permanentUIs[uiName].OnHide(); // 상시 UI 숨기기
+        }
+        else
+        {
+            Debug.LogWarning($"{uiName} UI는 활성화되어 있지 않음");
+        }
+    }
+
+
+    public void ShowPopupUI<UIType>() where UIType : BaseUI // 팝업 UI를 표시
+    {
+        string uiName = typeof(UIType).Name;
+      
+        if (activePopupUIs.ContainsKey(uiName)) //활성화 되어있다면 다시표시
+        {
+            activePopupUIs[uiName].OnShow();
+        }
+        else
+        {
+            UIType uiComponent = LoadUI<UIType>(uiName); // 팝업 UI 새로 로드하고 화면에 표시
+            if (uiComponent != null)
+            {
+                uiComponent.Initialize();
+                uiComponent.OnShow();
+                activePopupUIs.Add(uiName, uiComponent); // 팝업 UI로 딕셔너리에 추가
+            }
+        }
+    }
+
+    public void HidePopupUI<UIType>() where UIType : BaseUI //팝업UI 숨기기
+    {
+        string uiName = typeof(UIType).Name;
+
+        if (activePopupUIs.ContainsKey(uiName))
+        {
+            activePopupUIs[uiName].OnHide(); // 팝업 UI 숨기기
+            activePopupUIs.Remove(uiName); // 팝업 UI 딕셔너리에서 제거
+        }
+        else
+        {
+            Debug.LogWarning($"{uiName} 팝업 UI는 활성화되어 있지 않음");
+        }
+    }
+
+    private UIType LoadUI<UIType>(string uiName) where UIType : BaseUI // UI를 로드하고 인스턴스를 생성
+    {
         GameObject uiPrefab = Resources.Load<GameObject>($"{UIResourceFolderPath}{uiName}");
 
-        if (uiPrefab != null)
+        if (uiPrefab == null)
         {
+            Debug.LogWarning($"{uiName} UI Prefab을 찾을 수 없음");
             return null;
         }
-        GameObject uiInstance = Instantiate(uiPrefab, transform); //ui인스턴스 생성,화면표시
+
+        GameObject uiInstance = Instantiate(uiPrefab, transform);
         UIType uiComponent = uiInstance.GetComponent<UIType>();
 
         if (uiComponent == null)
         {
-            Destroy(uiInstance); // UI 인스턴스를 잘못 생성한 경우 삭제
+            Destroy(uiInstance);
             return null;
         }
 
-        activeUIs.Add(uiName, uiComponent);
-        uiComponent.Initialize();
-        uiComponent.OnShow();
         return uiComponent;
-    }
-    public void HideUI<UIType>() where UIType : BaseUI
-    {
-        string uiName = typeof(UIType).Name;
-
-        if (activeUIs.TryGetValue(uiName, out BaseUI ui))
-        {
-            ui.OnHide();
-        }
-        else
-        {
-            Debug.LogWarning("UI가 활성화 상태가 아님");
-        }
     }
 }
