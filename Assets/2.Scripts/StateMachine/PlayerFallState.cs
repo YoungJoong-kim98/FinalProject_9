@@ -23,13 +23,13 @@ public class PlayerFallState : PlayerAirState
     public override void Update()
     {
         base.Update();
-
+        DebugDrawGrabRay();
         if (IsGrounded())
         {
             stateMachine.ChangeState(stateMachine.IdleState);
             return;
         }
-        if (Mouse.current.leftButton.wasPressedThisFrame)
+        if (Mouse.current.leftButton.wasPressedThisFrame && IsNearGrabbableWall())
         {
             stateMachine.ChangeState(stateMachine.GrabState);
             return;
@@ -46,6 +46,20 @@ public class PlayerFallState : PlayerAirState
     {
         Transform t = stateMachine.Player.transform;
         Vector3 origin = t.position + Vector3.up * 0.5f;
-        return Physics.Raycast(origin, t.forward, 1f, LayerMask.GetMask("Grabbable"));
+        Vector3 direction = t.forward;
+        float distance = 1f;
+
+
+        // 실제 Raycast 검사
+        return Physics.Raycast(origin, direction, distance, LayerMask.GetMask("Ground"));
+    }
+    private void DebugDrawGrabRay()
+    {
+        Transform t = stateMachine.Player.transform;
+        Vector3 origin = t.position + Vector3.up * 0.5f;
+        Vector3 direction = t.forward;
+        float distance = 1f;
+
+        Debug.DrawRay(origin, direction * distance, Color.red);
     }
 }
