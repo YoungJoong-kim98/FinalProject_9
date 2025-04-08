@@ -8,31 +8,42 @@ public class PlayerJumpState : PlayerAirState
     {
     }
 
-    // ì í”„ ìƒíƒœ ì§„ì… ì‹œ í˜¸ì¶œ
     public override void Enter()
     {
-        // stateMachine.JumpForce = stateMachine.Player.Data.AirData.JumpForce;    // ì í”„ í˜ ì„¤ì • (PlayerSOì—ì„œ ê°€ì ¸ì˜´)
-        stateMachine.Player.Rigidbody.AddForce(Vector3.up * stateMachine.JumpForce, ForceMode.Impulse); // ì í”„ í˜ ì ìš©
+        Vector3 moveDir = GetMovementDirection().normalized;
+
+        float moveSpeed = stateMachine.MovementSpeed * stateMachine.MovementSpeedModifier;
+        float jumpForce = stateMachine.Player.Data.AirData.JumpForce;
+
+        Rigidbody rb = stateMachine.Player.Rigidbody;
+
+        // ±âÁ¸ Y ¼Óµµ ÃÊ±âÈ­
+        Vector3 currentVelocity = rb.velocity;
+        currentVelocity.y = 0f;
+        rb.velocity = currentVelocity;
+
+        //  ÀÌµ¿ ¹æÇâÀ¸·Î °¡¼Óµµ ÁÖ±â (Impulse)
+        Vector3 jumpDirection = moveDir * moveSpeed + Vector3.up * jumpForce;
+        rb.AddForce(jumpDirection, ForceMode.Impulse);  // ¡ç ÀÌ°É·Î "¸Ö¸® Á¡ÇÁ" ´À³¦ °¡´É
 
         base.Enter();
-        StartAnimation(stateMachine.Player.AnimationData.JumpParameterHash);    // ì í”„ ì‹œì‘
+        StartAnimation(stateMachine.Player.AnimationData.JumpParameterHash);
     }
-
-    // ì í”„ ìƒíƒœì—ì„œ ë‚˜ê°ˆ ë•Œ í˜¸ì¶œ
     public override void Exit()
     {
         base.Exit();
-        StopAnimation(stateMachine.Player.AnimationData.JumpParameterHash);     // ì í”„ ì¢…ë£Œ
+        StopAnimation(stateMachine.Player.AnimationData.JumpParameterHash);
     }
 
-    // ë¬¼ë¦¬ ì—…ë°ì´íŠ¸
     public override void PhysicsUpdate()
     {
-        base.PhysicsUpdate();
+        base.Update();
 
-        if (stateMachine.Player.Rigidbody.velocity.y <= 0) // í•˜ê°• ì‹œì‘í•˜ë©´
+        if (stateMachine.Player.Rigidbody.velocity.y <= 0)
         {
             stateMachine.ChangeState(stateMachine.FallState);
+            return;
         }
     }
 }
+

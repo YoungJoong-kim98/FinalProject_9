@@ -8,17 +8,15 @@ public class PlayerAirState : PlayerBaseState
     {
     }
 
-    // 공중 상태에 진입할 때 호출
     public override void Enter()
     {
         base.Enter();
-        StartAnimation(stateMachine.Player.AnimationData.AirParameterHash); // Air 시작
+        StartAnimation(stateMachine.Player.AnimationData.AirParameterHash);
     }
 
-    // 공중 상태에서 나갈 때 호출
     public override void Exit()
     {
         base.Exit();
-        StopAnimation(stateMachine.Player.AnimationData.AirParameterHash);  // Air 종료
+        StopAnimation(stateMachine.Player.AnimationData.AirParameterHash);
     }
 }

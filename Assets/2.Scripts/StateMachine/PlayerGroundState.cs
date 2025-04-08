@@ -10,54 +10,53 @@ public class PlayerGroundState : PlayerBaseState
         
     }
     
-    // 바닥에 있을 때 호출
     public override void Enter()
     {
         base.Enter();
         StartAnimation(stateMachine.Player.AnimationData.GroundParameterHash);
     }
 
-    // 바닥에서 떨어질 때 호출
     public override void Exit()
     {
         base.Exit();
         StopAnimation(stateMachine.Player.AnimationData.GroundParameterHash);
     }
 
-    // 논리 업데이트
     public override void Update()
     {
         base.Update();
     }
 
-    // 물리 업데이트
     public override void PhysicsUpdate()
     {
         base.PhysicsUpdate();
-        
-        if (!IsGrounded()) // Raycast로 바닥 벗어남 감지
+        if (!IsGrounded() && stateMachine.Player.Rigidbody.velocity.y < -0.1f)
         {
             stateMachine.ChangeState(stateMachine.FallState);
+            return;
         }
     }
-    
-    // 이동 입력이 취소될 때
+    private bool IsGrounded()
+    {
+        Transform t = stateMachine.Player.transform;
+        Debug.DrawRay(t.position + Vector3.up * 0.1f, Vector3.down * 0.2f, Color.red);
+        return Physics.Raycast(t.position + Vector3.up * 0.1f, Vector3.down, 0.2f, LayerMask.GetMask("Ground"));
+    }
+
     protected override void OnMovementCanceled(InputAction.CallbackContext context)
     {
-        if(stateMachine.MovementInput == Vector2.zero)  // 입력이 완전히 없으면
+        if(stateMachine.MovementInput == Vector2.zero)  // Movement가 Canceled 되면
         {
             return;
         }
 
-        stateMachine.ChangeState(stateMachine.IdleState);   // 대기 상태로 전환
+        stateMachine.ChangeState(stateMachine.IdleState);
 
         base.OnMovementCanceled(context);
     }
-    
-    // 점프 입력이 시작될 때
     protected override void OnJumpStarted(InputAction.CallbackContext context)
     {
         base.OnJumpStarted(context);
-        stateMachine.ChangeState(stateMachine.JumpState);   // 점프 상태로 전환
+        stateMachine.ChangeState(stateMachine.JumpState);
     }
 }

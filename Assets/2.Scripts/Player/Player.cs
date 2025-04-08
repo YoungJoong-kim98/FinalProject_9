@@ -15,17 +15,21 @@ public class Player : MonoBehaviour
 
     public Animator Animator { get; private set; }              // 애니메이션 제어
     public PlayerController Input { get; private set; }         // 입력 처리
-    public Rigidbody Rigidbody { get; private set; }
-    
+    //public CharacterController Controller { get; private set; } // 물리 이동
+    public ForceReceiver ForceReceiver { get; private set; } // 중력 , 점프
     private PlayerStateMachine stateMachine;                    // FSM의 핵심 컨트롤러
+
+    public Rigidbody Rigidbody { get; private set; }
 
     private void Awake()
     {
         AnimationData.Initialize();                         // 애니메이션 파라미터 해시값 초기화
         Animator = GetComponentInChildren<Animator>();      // 애니메이터 연결
         Input = GetComponent<PlayerController>();           // 입력 시스템 연결
-        Rigidbody = GetComponent<Rigidbody>();              // Rigidbody 연결
-        
+        //Controller = GetComponent<CharacterController>();   // 캐릭터 컨트롤러(물리) 연결
+        Rigidbody = GetComponent<Rigidbody>();                // 물리 가져오기
+        ForceReceiver = GetComponent<ForceReceiver>();      // 중력,점프 연결
+
         stateMachine = new PlayerStateMachine(this);        // 상태 머신 생성
     }
 
