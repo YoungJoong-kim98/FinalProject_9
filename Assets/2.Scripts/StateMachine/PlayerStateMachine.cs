@@ -18,7 +18,9 @@ public class PlayerStateMachine : StateMachine
     
     public PlayerIdleState IdleState { get; private set; }  // 대기 상태
     public PlayerWalkState WalkState { get; private set;}   // 걷기 상태
-    public PlayerRunState RunState { get; private set;}     // 뛰기 상태
+    public PlayerRunState RunState { get; private set;}     // 달리기 상태
+    public PlayerJumpState JumpState { get; private set;}   // 점프 상태
+    public PlayerFallState FallState { get; private set;}   // 추락 상태
 
     public PlayerStateMachine(Player player)
     {
@@ -29,6 +31,9 @@ public class PlayerStateMachine : StateMachine
         IdleState = new PlayerIdleState(this);
         WalkState = new PlayerWalkState(this);
         RunState = new PlayerRunState(this);
+        
+        JumpState = new PlayerJumpState(this);
+        FallState = new PlayerFallState(this);
 
         MovementSpeed = player.Data.GroundData.BaseSpeed;   // 기본 속도 설정
         RotationDamping = player.Data.GroundData.BaseRotationDamping;
