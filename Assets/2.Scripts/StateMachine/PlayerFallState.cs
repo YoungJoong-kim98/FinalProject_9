@@ -20,24 +20,7 @@ public class PlayerFallState : PlayerAirState
         base.Exit();
         StopAnimation(stateMachine.Player.AnimationData.FallParameterHash);
     }
-    
-    // // 기존 작성
-    // public override void Update()
-    // {
-    //     base.Update();
-    //
-    //     if (IsGrounded())
-    //     {
-    //         stateMachine.ChangeState(stateMachine.IdleState);
-    //         return;
-    //     }
-    //     if (Mouse.current.leftButton.wasPressedThisFrame)
-    //     {
-    //         stateMachine.ChangeState(stateMachine.GrabState);
-    //         return;
-    //     }
-    // }
-    
+
     public override void Update()
     {
         base.Update();
@@ -58,7 +41,6 @@ public class PlayerFallState : PlayerAirState
             {
                 stateMachine.ChangeState(stateMachine.IdleState);
             }
-            stateMachine.ChangeState(stateMachine.IdleState);
             return;
         }
         if (Mouse.current.leftButton.wasPressedThisFrame && IsNearGrabbableWall())

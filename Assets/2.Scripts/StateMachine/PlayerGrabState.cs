@@ -79,7 +79,7 @@ public class PlayerGrabState : PlayerAirState
 
             hasJumped = true;
 
-            //  0.5초 뒤 이동 가능
+            //  1초 뒤 이동 가능
             stateMachine.Player.StartCoroutine(UnlockMovementAfterDelay(1f));
 
             stateMachine.ChangeState(stateMachine.FallState);
@@ -90,11 +90,6 @@ public class PlayerGrabState : PlayerAirState
         yield return new WaitForSeconds(delay);
         stateMachine.IsMovementLocked = false;
         stateMachine.Player.Rigidbody.drag = 0f;
-    }
-
-    private bool MouseLeftHeld()
-    {
-        return Mouse.current.leftButton.isPressed;
     }
 
     private IEnumerator EnableWallGrabAfterCooldown(float cooldown)
