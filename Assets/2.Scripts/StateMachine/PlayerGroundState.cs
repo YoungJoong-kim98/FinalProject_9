@@ -30,13 +30,19 @@ public class PlayerGroundState : PlayerBaseState
     public override void PhysicsUpdate()
     {
         base.PhysicsUpdate();
-        if (!stateMachine.Player.Controller.isGrounded && stateMachine.Player.Controller.velocity.y < Physics.gravity.y * Time.fixedDeltaTime)
+        if (!IsGrounded() && stateMachine.Player.Rigidbody.velocity.y < -0.1f)
         {
             stateMachine.ChangeState(stateMachine.FallState);
             return;
         }
     }
-    
+    private bool IsGrounded()
+    {
+        Transform t = stateMachine.Player.transform;
+        Debug.DrawRay(t.position + Vector3.up * 0.1f, Vector3.down * 0.2f, Color.red);
+        return Physics.Raycast(t.position + Vector3.up * 0.1f, Vector3.down, 0.2f, LayerMask.GetMask("Ground"));
+    }
+
     protected override void OnMovementCanceled(InputAction.CallbackContext context)
     {
         if(stateMachine.MovementInput == Vector2.zero)  // Movement가 Canceled 되면

@@ -1,39 +1,32 @@
-using System;
 using UnityEngine;
 
+[RequireComponent(typeof(Rigidbody))]
 public class ForceReceiver : MonoBehaviour
 {
-    [SerializeField] private CharacterController controller; //땅에 붙어있는지 아닌지 확인하는 변수가 여기있음.
+    private Rigidbody rb;
 
-    private float verticalVelocity;
-
-    public Vector3 Movement => Vector3.up * verticalVelocity;
     private float gravityScale = 1f;
+    private float defaultGravity;
 
-    private void Start()
+    private void Awake()
     {
-        controller = GetComponent<CharacterController>();
-    }
-
-    void Update()
-    {
-        if (controller.isGrounded)
-        {
-            verticalVelocity = Physics.gravity.y * gravityScale * Time.deltaTime;
-        }
-        else
-        {
-            verticalVelocity += Physics.gravity.y * gravityScale * Time.deltaTime;
-        }
+        rb = GetComponent<Rigidbody>();
+        defaultGravity = Physics.gravity.y;
     }
 
     public void Jump(float jumpForce)
     {
-        verticalVelocity += jumpForce;
+        // 점프하기 전에 Y속도 초기화 (낙하 중 점프시 반응 방지)
+        Vector3 velocity = rb.velocity;
+        velocity.y = 0;
+        rb.velocity = velocity;
+
+        rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
     }
 
     public void SetGravityScale(float scale)
     {
         gravityScale = scale;
+        Physics.gravity = new Vector3(0, defaultGravity * gravityScale, 0);
     }
 }

@@ -7,7 +7,7 @@ using UnityEngine;
 public class PlayerGroundData   // 땅에 붙어 있을 때 필요한 데이터들 묶은 클래스
 {
     [field:SerializeField][field:Range(0f, 25f)] public float BaseSpeed { get; private set; } = 5f;
-    [field:SerializeField][field: Range(0f, 25f)] public float BaseRotationDamping { get; private set; } = 1f;
+    [field:SerializeField][field: Range(0f, 25f)] public float BaseRotationDamping { get; private set; } = 20f;
 
     [field:Header("IdleData")]
 

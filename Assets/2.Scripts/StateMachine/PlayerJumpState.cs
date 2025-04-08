@@ -10,13 +10,25 @@ public class PlayerJumpState : PlayerAirState
 
     public override void Enter()
     {
-        stateMachine.JumpForce = stateMachine.Player.Data.AirData.JumpForce;
-        stateMachine.Player.ForceReceiver.Jump(stateMachine.JumpForce);
-        base.Enter();
+        Vector3 moveDir = GetMovementDirection().normalized;
 
+        float moveSpeed = stateMachine.MovementSpeed * stateMachine.MovementSpeedModifier;
+        float jumpForce = stateMachine.Player.Data.AirData.JumpForce;
+
+        Rigidbody rb = stateMachine.Player.Rigidbody;
+
+        // 기존 Y 속도 초기화
+        Vector3 currentVelocity = rb.velocity;
+        currentVelocity.y = 0f;
+        rb.velocity = currentVelocity;
+
+        //  이동 방향으로 가속도 주기 (Impulse)
+        Vector3 jumpDirection = moveDir * moveSpeed + Vector3.up * jumpForce;
+        rb.AddForce(jumpDirection, ForceMode.Impulse);  // ← 이걸로 "멀리 점프" 느낌 가능
+
+        base.Enter();
         StartAnimation(stateMachine.Player.AnimationData.JumpParameterHash);
     }
-
     public override void Exit()
     {
         base.Exit();
@@ -27,7 +39,7 @@ public class PlayerJumpState : PlayerAirState
     {
         base.Update();
 
-        if (stateMachine.Player.Controller.velocity.y <= 0)
+        if (stateMachine.Player.Rigidbody.velocity.y <= 0)
         {
             stateMachine.ChangeState(stateMachine.FallState);
             return;

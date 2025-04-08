@@ -93,8 +93,8 @@ public class PlayerBaseState : IState
         
         Rotate(movementDirection);  // 회전
     }
-    
-    private Vector3 GetMovementDirection()
+
+    protected Vector3 GetMovementDirection()
     {
         Vector3 forward = stateMachine.MainCameraTransform.forward;
         Vector3 right = stateMachine.MainCameraTransform.right;
@@ -111,8 +111,15 @@ public class PlayerBaseState : IState
     private void Move(Vector3 direction)
     {
         float movementSpeed = GetMovementSpeed();
-        
-        stateMachine.Player.Controller.Move(((direction * movementSpeed) + stateMachine.Player.ForceReceiver.Movement) * Time.deltaTime);
+        // 현재 속도 가져오기
+        Rigidbody rb = stateMachine.Player.Rigidbody;
+        Vector3 currentVelocity = rb.velocity;
+
+        // 새로운 속도 계산
+        Vector3 desiredVelocity = direction.normalized * movementSpeed;
+        desiredVelocity.y = currentVelocity.y; // y속도 유지 (중력, 점프 등)
+        // 속도 적용
+        rb.velocity = desiredVelocity;
     }
     
     private float GetMovementSpeed()
@@ -123,11 +130,18 @@ public class PlayerBaseState : IState
     
     private void Rotate(Vector3 direction)
     {
-        if(direction != Vector3.zero)
+        if (direction != Vector3.zero)
         {
-            Transform playerTransform = stateMachine.Player.transform;
             Quaternion targetRotation = Quaternion.LookRotation(direction);
-            playerTransform.rotation = Quaternion.Slerp(playerTransform.rotation, targetRotation, stateMachine.RotationDamping * Time.deltaTime);   // 보간
+            Quaternion smoothedRotation = Quaternion.Slerp(
+                stateMachine.Player.transform.rotation,
+                targetRotation,
+                stateMachine.RotationDamping * Time.deltaTime
+            );
+
+            // Rigidbody 회전 적용
+            stateMachine.Player.Rigidbody.MoveRotation(smoothedRotation);
         }
     }
+
 }
