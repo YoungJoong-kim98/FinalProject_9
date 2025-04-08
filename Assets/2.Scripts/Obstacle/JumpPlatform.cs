@@ -2,7 +2,16 @@ using UnityEngine;
 
 public class JumpPlatform : MonoBehaviour
 {
-    [SerializeField] private float _jumpPower = 10;
+    [SerializeField] private float _jumpPower = -1f;
+
+    private void Start()
+    {
+        var data = ObstacleManager.Instance.obstacleData;
+        if (_jumpPower < 0)
+        {
+            _jumpPower = data.jumpPower;
+        }
+    }
 
     private void OnCollisionStay(Collision collision)
     {
@@ -14,6 +23,13 @@ public class JumpPlatform : MonoBehaviour
 
     private void AddJumpPower(GameObject gameObject)
     {
-        gameObject.GetComponent<Rigidbody>().AddForce(Vector3.up * _jumpPower, ForceMode.Impulse);
+        if (gameObject.TryGetComponent(out Rigidbody rb))
+        {
+            rb.AddForce(Vector3.up * _jumpPower, ForceMode.Impulse);
+        }
+        else
+        {
+            Debug.LogWarning($"{gameObject.name} does not have rigidbody");
+        }
     }
 }

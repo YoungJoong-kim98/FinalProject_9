@@ -3,21 +3,36 @@ using UnityEngine;
 
 public class PunchObstacle : MonoBehaviour
 {
-    [SerializeField] private float _pushPower = 15f;
-    [SerializeField] private float _pushSpeed = 15f;
-    [SerializeField] private float _backSpeed = 5f;
-    [SerializeField] private float _moveDistance = 5f;
+    [SerializeField] private float _pushPower = -1f;
+    [SerializeField] private float _pushSpeed = -1f;
+    [SerializeField] private float _backSpeed = -1f;
+    [SerializeField] private float _moveDistance = -1f;
     [SerializeField] private Vector3 _direction = Vector3.forward;
     
     private Vector3 _startPos;
     private Vector3 _targetPos;
     private bool _isPunching = false;
 
-    //testcode
-    //private void Start()
-    //{
-    //    Punch();
-    //}
+    private void Start()
+    {
+        var data = ObstacleManager.Instance.obstacleData;
+        if (_pushPower < 0f)
+        {
+            _pushPower = data.pushPower;
+        }
+        if (_pushSpeed < 0f)
+        {
+            _pushSpeed = data.pushSpeed;
+        }
+        if (_backSpeed < 0f)
+        {
+            _backSpeed = data.backSpeed;
+        }
+        if (_moveDistance < 0f)
+        {
+            _moveDistance = data.moveDistance;
+        }
+    }
 
     private void OnCollisionEnter(Collision collision)
     {
