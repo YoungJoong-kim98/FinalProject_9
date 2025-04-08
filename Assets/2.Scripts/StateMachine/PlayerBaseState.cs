@@ -151,7 +151,9 @@ public class PlayerBaseState : IState
     {
         float movementSpeed = GetMovementSpeed();   // 현재 속도 계산
         
-        stateMachine.Player.Controller.Move(((direction * movementSpeed) + stateMachine.Player.ForceReceiver.Movement ) * Time.deltaTime); 
+        Vector3 velocity = direction * movementSpeed;
+        velocity.y = stateMachine.Player.Rigidbody.velocity.y; // y축은 물리로 유지
+        stateMachine.Player.Rigidbody.velocity = velocity; // Rigidbody로 이동
     }
     
     // 이동 속도 계산
@@ -170,5 +172,10 @@ public class PlayerBaseState : IState
             Quaternion targetRotation = Quaternion.LookRotation(direction); // 목표 회전각 계산
             playerTransform.rotation = Quaternion.Slerp(playerTransform.rotation, targetRotation, stateMachine.RotationDamping * Time.deltaTime);   // 현재 회전에서 목표 회전으로 보간
         }
+    }
+    
+    protected bool IsGrounded() // 착지 감지
+    {
+        return Physics.Raycast(stateMachine.Player.transform.position, Vector3.down, 0.1f);
     }
 }

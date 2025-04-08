@@ -37,5 +37,6 @@ public class PlayerStateMachine : StateMachine
 
         MovementSpeed = player.Data.GroundData.BaseSpeed;   // 기본 속도 설정
         RotationDamping = player.Data.GroundData.BaseRotationDamping;
+        JumpForce = player.Data.AirData.JumpForce; // 점프 힘 초기화
     }
 }

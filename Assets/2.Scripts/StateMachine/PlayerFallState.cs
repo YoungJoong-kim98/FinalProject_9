@@ -22,15 +22,14 @@ public class PlayerFallState : PlayerAirState
         StopAnimation(stateMachine.Player.AnimationData.FallParameterHash);     // 추락 종료
     }
     
-    // 논리 업데이트
-    public override void Update()
+    // 물리 업데이트
+    public override void PhysicsUpdate()
     {
-        base.Update();
-
-        if (stateMachine.Player.Controller.isGrounded)  // 플레이어가 바닥에 착지하면
+        base.PhysicsUpdate();
+        
+        if (IsGrounded()) // Raycast로 착지 확인
         {
-            stateMachine.ChangeState(stateMachine.IdleState);   // 대기 상태로 전환
-            return;
+            stateMachine.ChangeState(stateMachine.IdleState);
         }
     }
 }

@@ -11,8 +11,8 @@ public class PlayerJumpState : PlayerAirState
     // 점프 상태 진입 시 호출
     public override void Enter()
     {
-        stateMachine.JumpForce = stateMachine.Player.Data.AirData.JumpForce;    // 점프 힘 설정 (PlayerSO에서 가져옴)
-        stateMachine.Player.ForceReceiver.Jump(stateMachine.JumpForce);         // ForceReceiver에 점프 요청
+        // stateMachine.JumpForce = stateMachine.Player.Data.AirData.JumpForce;    // 점프 힘 설정 (PlayerSO에서 가져옴)
+        stateMachine.Player.Rigidbody.AddForce(Vector3.up * stateMachine.JumpForce, ForceMode.Impulse); // 점프 힘 적용
 
         base.Enter();
         StartAnimation(stateMachine.Player.AnimationData.JumpParameterHash);    // 점프 시작
@@ -30,10 +30,9 @@ public class PlayerJumpState : PlayerAirState
     {
         base.PhysicsUpdate();
 
-        if (stateMachine.Player.Controller.velocity.y <= 0) // 플레이어가 최고점에 도달한 후 내려가기 시작하면 (y 속도가 0 이하)
+        if (stateMachine.Player.Rigidbody.velocity.y <= 0) // 하강 시작하면
         {
-            stateMachine.ChangeState(stateMachine.FallState);   // 추락 상태로 전환
-            return;
+            stateMachine.ChangeState(stateMachine.FallState);
         }
     }
 }

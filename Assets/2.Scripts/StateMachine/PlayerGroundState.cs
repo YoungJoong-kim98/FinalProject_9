@@ -35,12 +35,9 @@ public class PlayerGroundState : PlayerBaseState
     {
         base.PhysicsUpdate();
         
-        // 플레이어가 바닥에 있지 않고 아래로 떨어지는 속도가 중력보다 크면 (공중에 떠 있는 상태)
-        if (!stateMachine.Player.Controller.isGrounded 
-            && stateMachine.Player.Controller.velocity.y < Physics.gravity.y * Time.fixedDeltaTime)
+        if (!IsGrounded()) // Raycast로 바닥 벗어남 감지
         {
-            stateMachine.ChangeState(stateMachine.FallState);   // 추락 상태로 전환
-            return;
+            stateMachine.ChangeState(stateMachine.FallState);
         }
     }
     
