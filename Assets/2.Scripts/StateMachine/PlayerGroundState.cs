@@ -54,6 +54,19 @@ public class PlayerGroundState : PlayerBaseState
 
         base.OnMovementCanceled(context);
     }
+    
+    protected override void OnRunCanceled(InputAction.CallbackContext context)
+    {
+        if (stateMachine.MovementInput != Vector2.zero)
+        {
+            stateMachine.ChangeState(stateMachine.WalkState);
+        }
+        else
+        {
+            stateMachine.ChangeState(stateMachine.IdleState);
+        }
+    }
+    
     protected override void OnJumpStarted(InputAction.CallbackContext context)
     {
         base.OnJumpStarted(context);

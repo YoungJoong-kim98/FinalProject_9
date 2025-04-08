@@ -31,6 +31,7 @@ public class PlayerBaseState : IState
         PlayerController input = stateMachine.Player.Input;
         input.playerActions.Movement.canceled += OnMovementCanceled;    // 이동 취소 시 호출
         input.playerActions.Run.started += OnRunStarted;                // 달리기 시작 시 호출
+        input.playerActions.Run.canceled += OnRunCanceled;              // 달리기 종료 (Shift 뗄 때)
         input.playerActions.Jump.started += OnJumpStarted;              // 점프 시 호출
     }
 
@@ -39,6 +40,7 @@ public class PlayerBaseState : IState
         PlayerController input = stateMachine.Player.Input;
         input.playerActions.Movement.canceled -= OnMovementCanceled;
         input.playerActions.Run.started -= OnRunStarted;
+        input.playerActions.Run.canceled -= OnRunCanceled;
         input.playerActions.Jump.started -= OnJumpStarted;
     }
 
@@ -66,6 +68,12 @@ public class PlayerBaseState : IState
     {
 
     }
+
+    protected virtual void OnRunCanceled(InputAction.CallbackContext context)
+    {
+        
+    }
+    
     protected virtual void OnJumpStarted(InputAction.CallbackContext context)
     {
 
@@ -130,7 +138,7 @@ public class PlayerBaseState : IState
     
     private void Rotate(Vector3 direction)
     {
-        if (direction != Vector3.zero)
+        if (direction != Vector3.zero)  // WASD 입력이 있으면 회전 시작
         {
             Quaternion targetRotation = Quaternion.LookRotation(direction);
             Quaternion smoothedRotation = Quaternion.Slerp(

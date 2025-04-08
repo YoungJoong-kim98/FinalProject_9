@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 // 달리는 상태 (달리기 속도와 애니메이션을 적용)
 public class PlayerRunState : PlayerGroundState
@@ -20,5 +21,17 @@ public class PlayerRunState : PlayerGroundState
     {
         base.Exit();
         StopAnimation(stateMachine.Player.AnimationData.RunParameterHash);
+    }
+    
+    protected override void OnRunCanceled(InputAction.CallbackContext context)
+    {
+        if (stateMachine.MovementInput != Vector2.zero)
+        {
+            stateMachine.ChangeState(stateMachine.WalkState); // Shift 뗐을 때 걷기 상태로 전환
+        }
+        else
+        {
+            stateMachine.ChangeState(stateMachine.IdleState); // 입력이 없으면 대기 상태로 전환
+        }
     }
 }

@@ -19,7 +19,7 @@ public class PlayerGroundData   // 땅에 붙어 있을 때 필요한 데이터�
 }
 
 [Serializable]
-public class PlayerAirData
+public class PlayerAirData      // 공중에 있을 때 필요한 데이터들 묶은 클래스
 {
     [field: Header("JumpData")]
     [field:SerializeField][field: Range(0f, 25f)] public float JumpForce { get; private set; } = 5f;

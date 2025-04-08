@@ -20,21 +20,48 @@ public class PlayerFallState : PlayerAirState
         base.Exit();
         StopAnimation(stateMachine.Player.AnimationData.FallParameterHash);
     }
+    
+    // // 기존 작성
+    // public override void Update()
+    // {
+    //     base.Update();
+    //
+    //     if (IsGrounded())
+    //     {
+    //         stateMachine.ChangeState(stateMachine.IdleState);
+    //         return;
+    //     }
+    //     if (Mouse.current.leftButton.wasPressedThisFrame)
+    //     {
+    //         stateMachine.ChangeState(stateMachine.GrabState);
+    //         return;
+    //     }
+    // }
+    
     public override void Update()
     {
         base.Update();
 
         if (IsGrounded())
         {
-            stateMachine.ChangeState(stateMachine.IdleState);
-            return;
-        }
-        if (Mouse.current.leftButton.wasPressedThisFrame)
-        {
-            stateMachine.ChangeState(stateMachine.GrabState);
+            PlayerController input = stateMachine.Player.Input;
+            
+            if (input.playerActions.Run.IsPressed())    // Shift 누르고 있으면
+            {
+                stateMachine.ChangeState(stateMachine.RunState);
+            }
+            else if (stateMachine.MovementInput != Vector2.zero)    // 이동 중이면
+            {
+                stateMachine.ChangeState(stateMachine.WalkState);
+            }
+            else  // 이동 없다면
+            {
+                stateMachine.ChangeState(stateMachine.IdleState);
+            }
             return;
         }
     }
+    
 
     private bool IsGrounded()
     {
