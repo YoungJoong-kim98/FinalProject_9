@@ -9,7 +9,7 @@ public class PlayerBaseState : IState
 {
     protected PlayerStateMachine stateMachine;
     protected readonly PlayerGroundData groundData;
-    
+
     public PlayerBaseState(PlayerStateMachine stateMachine)
     {
         this.stateMachine = stateMachine;
@@ -25,7 +25,7 @@ public class PlayerBaseState : IState
     {
         RemoveInputActionsCallbacks();  // 입력 이벤트 해제
     }
-    
+
     protected virtual void AddInputActionsCallbacks()
     {
         PlayerController input = stateMachine.Player.Input;
@@ -51,14 +51,14 @@ public class PlayerBaseState : IState
 
     public virtual void PhysicsUpdate()
     {
-        
+
     }
 
     public virtual void Update()
     {
         Move();     // 이동 및 회전 실행
     }
-    
+
     protected virtual void OnMovementCanceled(InputAction.CallbackContext context)
     {
 
@@ -87,18 +87,18 @@ public class PlayerBaseState : IState
     {
         stateMachine.Player.Animator.SetBool(animationHash, false);
     }
-    
+
     private void ReadMovementInput()
     {
         stateMachine.MovementInput = stateMachine.Player.Input.playerActions.Movement.ReadValue<Vector2>();
     }
-    
+
     private void Move()
     {
         Vector3 movementDirection = GetMovementDirection(); // 카메라 기준 이동 방향 계산
-        
+
         Move(movementDirection);    // 이동
-        
+
         Rotate(movementDirection);  // 회전
     }
 
@@ -113,11 +113,15 @@ public class PlayerBaseState : IState
         forward.Normalize();
         right.Normalize();
 
-        return forward * stateMachine.MovementInput.y + right * stateMachine.MovementInput.x; 
+        return forward * stateMachine.MovementInput.y + right * stateMachine.MovementInput.x;
     }
-    
+
     private void Move(Vector3 direction)
     {
+        if (stateMachine.IsMovementLocked)
+        {
+            return; // 이동 금지 중일 땐 처리 안 함
+        }
         float movementSpeed = GetMovementSpeed();
         // 현재 속도 가져오기
         Rigidbody rb = stateMachine.Player.Rigidbody;
@@ -128,14 +132,15 @@ public class PlayerBaseState : IState
         desiredVelocity.y = currentVelocity.y; // y속도 유지 (중력, 점프 등)
         // 속도 적용
         rb.velocity = desiredVelocity;
+
     }
-    
+
     private float GetMovementSpeed()
     {
         float moveSpeed = stateMachine.MovementSpeed * stateMachine.MovementSpeedModifier;
         return moveSpeed;
     }
-    
+
     private void Rotate(Vector3 direction)
     {
         if (direction != Vector3.zero)  // WASD 입력이 있으면 회전 시작

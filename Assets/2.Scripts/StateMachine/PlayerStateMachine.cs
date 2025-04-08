@@ -22,6 +22,8 @@ public class PlayerStateMachine : StateMachine
     public PlayerJumpState JumpState { get; private set; } // 점프 상태
     public PlayerFallState FallState { get; private set; } //추락 상태
     public PlayerGrabState GrabState { get; private set; } //잡기 상태
+    public bool CanGrabWall { get; set; } = true; // 잡기 가능 여부
+    public bool IsMovementLocked { get; set; } = false; // 이동 잠금
     public PlayerStateMachine(Player player)
     {
         this.Player = player;

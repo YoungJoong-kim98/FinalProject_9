@@ -36,7 +36,7 @@ public class PlayerGroundState : PlayerBaseState
             return;
         }
     }
-    private bool IsGrounded()
+    private bool IsGrounded() //땅 체크
     {
         Transform t = stateMachine.Player.transform;
         Debug.DrawRay(t.position + Vector3.up * 0.1f, Vector3.down * 0.2f, Color.red);

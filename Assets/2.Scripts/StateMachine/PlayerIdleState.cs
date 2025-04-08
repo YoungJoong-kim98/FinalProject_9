@@ -13,6 +13,7 @@ public class PlayerIdleState : PlayerGroundState
     {
         stateMachine.MovementSpeedModifier = 0f;    // 속도 0으로 설정
         base.Enter();
+        //stateMachine.WallGrabUsed = false; // 다시 땅에 닿으면 초기화
         StartAnimation(stateMachine.Player.AnimationData.IdleParameterHash);    // Idle 애니메이션 시작
     }
 
