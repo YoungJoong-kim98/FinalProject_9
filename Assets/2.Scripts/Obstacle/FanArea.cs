@@ -1,3 +1,4 @@
+using UnityEditor.Playables;
 using UnityEngine;
 
 public class FanArea : MonoBehaviour
@@ -8,10 +9,7 @@ public class FanArea : MonoBehaviour
     private void Start()
     {
         var data = ObstacleManager.Instance.obstacleData;
-        if (forceStrength < 0)
-        {
-            forceStrength = data.forceStrength;
-        }
+        Utilitys.SetIfNegative(ref forceStrength, data.forceStrength);
     }
 
     private void OnTriggerStay(Collider other)

@@ -10,10 +10,7 @@ public class RotateObstacle : MonoBehaviour
         ObstacleManager.Instance.rotateObstacles.Add(this);
  
         var data = ObstacleManager.Instance.obstacleData;
-        if (_rotateSpeed < 0f)
-        {
-            _rotateSpeed = data.rotateSpeed;
-        }
+        Utilitys.SetIfNegative(ref _rotateSpeed, data.rotateSpeed);
     }
 
     public void Rotate()

@@ -15,10 +15,7 @@ public class MovePlatform : MonoBehaviour
         ObstacleManager.Instance.movePlatforms.Add(this);
 
         var data = ObstacleManager.Instance.obstacleData;
-        if (_moveSpeed < 0)
-        {
-            _moveSpeed = data.moveSpeed;
-        }
+        Utilitys.SetIfNegative(ref _moveSpeed, data.moveSpeed);
     }
     private void OnCollisionEnter(Collision collision)
     {

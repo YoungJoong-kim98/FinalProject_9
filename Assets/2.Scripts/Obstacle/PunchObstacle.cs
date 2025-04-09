@@ -16,22 +16,10 @@ public class PunchObstacle : MonoBehaviour
     private void Start()
     {
         var data = ObstacleManager.Instance.obstacleData;
-        if (_pushPower < 0f)
-        {
-            _pushPower = data.pushPower;
-        }
-        if (_pushSpeed < 0f)
-        {
-            _pushSpeed = data.pushSpeed;
-        }
-        if (_backSpeed < 0f)
-        {
-            _backSpeed = data.backSpeed;
-        }
-        if (_moveDistance < 0f)
-        {
-            _moveDistance = data.moveDistance;
-        }
+        Utilitys.SetIfNegative(ref _pushPower, data.pushPower);
+        Utilitys.SetIfNegative(ref _pushSpeed, data.pushSpeed);
+        Utilitys.SetIfNegative(ref _backSpeed, data.backSpeed);
+        Utilitys.SetIfNegative(ref _moveDistance, data.moveDistance);
     }
 
     private void OnCollisionEnter(Collision collision)

@@ -11,14 +11,8 @@ public class Platform : MonoBehaviour
     private void Start()
     {
         var data = ObstacleManager.Instance.obstacleData;
-        if (_disappearTime < 0f)
-        {
-            _disappearTime = data.disapearTime;
-        }
-        if(_appearTime < 0f)
-        {
-            _appearTime = data.apearTime;
-        }
+        Utilitys.SetIfNegative(ref _disappearTime, data.disapearTime);
+        Utilitys.SetIfNegative(ref _appearTime, data.apearTime);
 
         StartCoroutine("HideAndRestoreCoroutine");
     }

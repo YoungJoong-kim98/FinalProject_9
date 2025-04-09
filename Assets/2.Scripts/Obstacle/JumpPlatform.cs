@@ -7,10 +7,7 @@ public class JumpPlatform : MonoBehaviour
     private void Start()
     {
         var data = ObstacleManager.Instance.obstacleData;
-        if (_jumpPower < 0)
-        {
-            _jumpPower = data.jumpPower;
-        }
+        Utilitys.SetIfNegative(ref _jumpPower, data.jumpPower);
     }
 
     private void OnCollisionStay(Collision collision)

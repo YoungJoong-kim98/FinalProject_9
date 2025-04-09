@@ -7,10 +7,7 @@ public class ReflectObstacle : MonoBehaviour
     private void Start()
     {
         var data = ObstacleManager.Instance.obstacleData;
-        if (_reflectPower < 0f)
-        {
-            _reflectPower = data.reflectPower;
-        }
+        Utilitys.SetIfNegative(ref _reflectPower, data.reflectPower);
     }
 
     private void OnCollisionEnter(Collision collision)
