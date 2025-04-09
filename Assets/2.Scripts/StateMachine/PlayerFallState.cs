@@ -58,7 +58,7 @@ public class PlayerFallState : PlayerAirState
             {
                 stateMachine.ChangeState(stateMachine.IdleState);
             }
-            stateMachine.ChangeState(stateMachine.IdleState);
+            // stateMachine.ChangeState(stateMachine.IdleState);
             return;
         }
         if (Mouse.current.leftButton.wasPressedThisFrame && IsNearGrabbableWall())
