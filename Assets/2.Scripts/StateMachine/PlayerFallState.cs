@@ -72,7 +72,7 @@ public class PlayerFallState : PlayerAirState
         float distance = 1f;
 
 
-        // ���� Raycast �˻�
+        // Raycast
         return Physics.Raycast(origin, direction, distance, LayerMask.GetMask("Ground"));
     }
     private bool IsNearRope()
