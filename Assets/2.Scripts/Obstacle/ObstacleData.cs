@@ -23,4 +23,7 @@ public class ObstacleData : MonoBehaviour
 
     [Header("Fan Area")]
     public float forceStrength = 1f;
+
+    [Header("Move Platform")]
+    public float moveSpeed = 5f;
 }
