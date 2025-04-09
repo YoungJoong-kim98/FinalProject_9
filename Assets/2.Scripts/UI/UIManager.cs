@@ -1,15 +1,46 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
+
 
 public class UIManager : MonoBehaviour
 {
+    public static UIManager Instance;
     private const string UIResourceFolderPath = "UI/"; //UI리소스 위치 폴더 경로 - 이후 ui 프리팹으로 만들어 관리
 
     private Dictionary<string, BaseUI> permanentUIs = new Dictionary<string, BaseUI>(); // 상시 UI들
     private Dictionary<string, BaseUI> activePopupUIs = new Dictionary<string, BaseUI>(); // 팝업 UI들
 
-    public void ShowPermanentUI<UIType>() where UIType : BaseUI//상시 UI
+    void Start()
+    {
+        InitializeUI();
+    }
+    private void Awake()
+    {
+        Instance = this;
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            ShowPopupUI<GoToStartUI>();
+        }
+    }
+
+    private void InitializeUI()
+    {
+        // 모든 UI 비활성화
+        foreach (var ui in permanentUIs.Values)
+        {
+            ui.gameObject.SetActive(false);
+        }
+        foreach (var ui in activePopupUIs.Values)
+        {
+            ui.gameObject.SetActive(false);
+        }
+
+        // 게임 시작 시 StartUI만 활성화
+        ShowPopupUI<StartUI>();
+    }
+    public void ShowPermanentUI<UIType>() where UIType : BaseUI//상시 UI표시
     {
         string uiName = typeof(UIType).Name;
 
@@ -72,6 +103,7 @@ public class UIManager : MonoBehaviour
         if (activePopupUIs.ContainsKey(uiName))
         {
             activePopupUIs[uiName].OnHide(); // 팝업 UI 숨기기
+            Destroy(activePopupUIs[uiName].gameObject); //팝업ui객체 파괴
             activePopupUIs.Remove(uiName); // 팝업 UI 딕셔너리에서 제거
         }
         else

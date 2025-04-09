@@ -37,7 +37,7 @@ public class SettingUI : PopUpUI
     public Button afterLanguageButton;
 
     [Header("Other")]
-    public Button settingUIBackButton;
+    public Button settingUIBackButton; //뒤로가기
     public Button settingUIDefalutValueButton;
     public Button settingUIApplyButton;
 
@@ -63,6 +63,8 @@ public class SettingUI : PopUpUI
         masterSoundController.onValueChanged.AddListener(MasterSoundControl);
         backGroungMusicController.onValueChanged.AddListener(BGMSoundControl);
         effectSoundController.onValueChanged.AddListener(EfSoundControl);
+
+        settingUIBackButton.onClick.AddListener(OnClickedBackButton);
 
         UpdateScreenConditionText();
         UpdateResolutionText();
@@ -176,5 +178,10 @@ public class SettingUI : PopUpUI
         //colors.highlightedColor = color;
         //colors.pressedColor = color;
         button.colors = colors;
+    }
+
+    private void OnClickedBackButton()
+    {
+        UIManager.Instance.HidePopupUI<SettingUI>();
     }
 }
