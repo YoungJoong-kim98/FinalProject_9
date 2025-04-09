@@ -32,4 +32,11 @@ public class JumpPlatform : MonoBehaviour
             Debug.LogWarning($"{gameObject.name} does not have rigidbody");
         }
     }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.yellow;
+
+        Gizmos.DrawLine(transform.position, transform.position + Vector3.up);
+    }
 }

@@ -81,4 +81,11 @@ public class PunchObstacle : MonoBehaviour
         _isPunching = false;
         yield return null;
     }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.yellow;
+
+        Gizmos.DrawLine(transform.position, transform.position + _direction * 2f);
+    }
 }
