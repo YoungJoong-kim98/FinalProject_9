@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class ObstacleManager : MonoBehaviour
@@ -10,6 +11,8 @@ public class ObstacleManager : MonoBehaviour
     public ObstacleData obstacleData;
 
     public List<RotateObstacle> rotateObstacles = new List<RotateObstacle>();
+
+    public List<MovePlatform> movePlatforms = new List<MovePlatform>();
 
     private void Awake()
     {
@@ -24,8 +27,8 @@ public class ObstacleManager : MonoBehaviour
         }
 
         obstacleData = GetComponent<ObstacleData>();
-        
-        if(obstacleData == null)
+
+        if (obstacleData == null)
         {
             obstacleData = gameObject.AddComponent<ObstacleData>();
         }
@@ -33,27 +36,14 @@ public class ObstacleManager : MonoBehaviour
 
     private void FixedUpdate()
     {
-        foreach (var obstacle in rotateObstacles)
+        foreach (var Rotateobstacle in rotateObstacles)
         {
-            obstacle.Rotate();
+            Rotateobstacle.Rotate();
         }
-    }
 
-    public void HideAndRestore(GameObject platform, float disappearTime, float appearTime)
-    {
-        if (!platform.TryGetComponent(out Platform go))
-        { 
-            return;
+        foreach (var movePlatform in movePlatforms)
+        {
+            movePlatform.Move();
         }
-            StartCoroutine(HideAndRestoreCoroutine(platform, disappearTime, appearTime));
-    }
-
-    private IEnumerator HideAndRestoreCoroutine(GameObject platform, float disappearTime, float appearTime)
-    {
-        yield return new WaitForSeconds(disappearTime);
-        platform.SetActive(false);
-
-        yield return new WaitForSeconds(appearTime);
-        platform.SetActive(true);
     }
 }
