@@ -26,7 +26,6 @@ public class PlayerFallState : PlayerAirState
     {
         base.Update();
         DebugDrawGrabRay();
-        IsNearRope();
         if (IsGrounded())
         {
             PlayerController input = stateMachine.Player.Input;
@@ -45,14 +44,16 @@ public class PlayerFallState : PlayerAirState
             }
             return;
         }
-        if (Mouse.current.leftButton.wasPressedThisFrame && IsNearRope())
+        if (Mouse.current.leftButton.wasPressedThisFrame && TryDetectGrabTarget(out string tag))
         {
-            stateMachine.ChangeState(stateMachine.RopeGrabState); // ← 로프 잡기 상태로!
-            return;
-        }
-        if (Mouse.current.leftButton.wasPressedThisFrame && IsNearGrabbableWall())
-        {
-            stateMachine.ChangeState(stateMachine.GrabState);
+            if (tag == "Rope")
+            {
+                stateMachine.ChangeState(stateMachine.RopeGrabState);
+            }
+            else if (tag == "Wall")
+            {
+                stateMachine.ChangeState(stateMachine.GrabState);
+            }
             return;
         }
     }
@@ -64,35 +65,46 @@ public class PlayerFallState : PlayerAirState
         return Physics.Raycast(t.position + Vector3.up * 0.1f, Vector3.down, 0.2f, LayerMask.GetMask("Ground"));
     }
 
-    private bool IsNearGrabbableWall() // 벽이 있는지 체크
+    private bool TryDetectGrabTarget(out string targetTag)
     {
+        targetTag = null;
+
         Transform t = stateMachine.Player.transform;
         Vector3 origin = t.position + Vector3.up * 0.5f;
-        Vector3 direction = t.forward;
-        float distance = 1f;
+        float distance = 1.5f;
 
+        // 로프 감지 (위쪽)
+        if (Physics.Raycast(origin, Vector3.up, distance, LayerMask.GetMask("Rope")))
+        {
+            Debug.DrawRay(origin, Vector3.up * distance, Color.green);
+            targetTag = "Rope";
+            return true;
+        }
 
-        // Raycast
-        return Physics.Raycast(origin, direction, distance, LayerMask.GetMask("Ground"));
-    }
-    private bool IsNearRope()
-    {
-        Transform t = stateMachine.Player.transform;
-        Vector3 origin = t.position + Vector3.up * 1.0f; //시작위치
-        Vector3 direction = Vector3.up; //방향
-        float distance = 1.5f; //길이
+        // 벽 감지 (앞쪽)
+        if (Physics.Raycast(origin, t.forward, distance, LayerMask.GetMask("Ground")))
+        {
+            Debug.DrawRay(origin, t.forward * distance, Color.red);
+            targetTag = "Wall";
+            return true;
+        }
 
-        Debug.DrawRay(origin, direction * distance, Color.green); // 더 보기 쉽게
-
-        return Physics.Raycast(origin, direction, distance, LayerMask.GetMask("Rope"));
+        return false;
     }
     private void DebugDrawGrabRay()
     {
         Transform t = stateMachine.Player.transform;
         Vector3 origin = t.position + Vector3.up * 0.5f;
-        Vector3 direction = t.forward;
-        float distance = 1f;
+        float distance = 1.5f;
 
-        Debug.DrawRay(origin, direction * distance, Color.red);
+        // 위쪽 (로프용)
+        Debug.DrawRay(origin, Vector3.up * distance, Color.green);
+
+        // 앞쪽 (벽용)
+        Debug.DrawRay(origin, t.forward * distance, Color.red);
+
+        // 땅 체크용 아래 방향도 보고 싶으면 아래도 추가
+        Debug.DrawRay(t.position + Vector3.up * 0.1f, Vector3.down * 0.1f, Color.yellow);
     }
+
 }
