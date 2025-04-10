@@ -1016,8 +1016,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b74a9c3380279e045bbc718b8da15758, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  narrationText: dsadasdasdas
-  duration: 3
+  narrationText: defg
+  duration: 2
   playOnce: 1
 --- !u!1 &964455905
 GameObject:
@@ -1051,8 +1051,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b74a9c3380279e045bbc718b8da15758, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  narrationText: dsadasdafgdsfxc
-  duration: 1
+  narrationText: abcd
+  duration: 2
   playOnce: 1
 --- !u!65 &964455907
 BoxCollider:
@@ -2274,7 +2274,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2144287903
 RectTransform:
   m_ObjectHideFlags: 0
