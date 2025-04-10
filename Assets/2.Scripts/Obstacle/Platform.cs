@@ -6,7 +6,7 @@ public class Platform : MonoBehaviour
     [SerializeField] private float _disappearTime = -1f;
     [SerializeField] private float _appearTime = -1f;
 
-    [SerializeField] private bool _isInteracting = false;
+    private bool _isInteracting = false;
 
     private void Start()
     {
