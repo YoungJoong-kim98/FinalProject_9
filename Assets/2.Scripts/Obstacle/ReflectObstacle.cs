@@ -20,7 +20,9 @@ public class ReflectObstacle : MonoBehaviour
 
     private void Reflect(GameObject target)
     {
-        Vector3 direction = Vector3.Normalize(target.transform.position - transform.position);
+        Vector3 direction = target.transform.position - transform.position;
+        direction.y = 0f;
+        direction = direction.normalized;
 
         if (target.TryGetComponent(out Rigidbody rb))
         {
