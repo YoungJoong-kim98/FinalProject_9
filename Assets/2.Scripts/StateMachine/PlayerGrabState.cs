@@ -17,13 +17,14 @@ public class PlayerGrabState : PlayerAirState
             stateMachine.ChangeState(stateMachine.FallState);
             return;
         }
-
-        base.Enter();
         stateMachine.CanGrabWall = false;
 
         stateMachine.Player.StartCoroutine(EnableWallGrabAfterCooldown(0.5f)); // 1초 후 다시 가능
 
-        StartAnimation(stateMachine.Player.AnimationData.FallParameterHash);
+        base.Enter();
+
+
+        StartAnimation(stateMachine.Player.AnimationData.GrabParameterHash);
 
         stateMachine.Player.Rigidbody.velocity = Vector3.zero;
         stateMachine.Player.Rigidbody.useGravity = false;
@@ -49,6 +50,13 @@ public class PlayerGrabState : PlayerAirState
     public override void Update()
     {
         base.Update();
+        // 계속 붙어있는지 확인
+        if (!IsStillGrabbing())
+        {
+            stateMachine.ChangeState(stateMachine.FallState);
+            return;
+        }
+
         // 수동으로 아주 천천히 낙하
         Vector3 velocity = stateMachine.Player.Rigidbody.velocity;
 
@@ -81,11 +89,6 @@ public class PlayerGrabState : PlayerAirState
 
             Vector3 inputDir = camForward * input.y + camRight * input.x;
 
-            // 입력이 없으면 현재 바라보는 방향으로
-            if (inputDir == Vector3.zero)
-            {
-                inputDir = -stateMachine.Player.transform.forward;
-            }
 
             Vector3 jumpDirection = inputDir.normalized * directionalForce + Vector3.up * jumpPower;
 
@@ -112,6 +115,18 @@ public class PlayerGrabState : PlayerAirState
     {
         yield return new WaitForSeconds(cooldown);
         stateMachine.CanGrabWall = true;
+    }
+    private bool IsStillGrabbing()
+    {
+        Transform t = stateMachine.Player.transform;
+        Vector3 origin = t.position + Vector3.up * 0.5f;
+        float distance = 1.0f;
+
+        // 벽 또는 로프를 유지 조건으로 판단
+        bool nearWall = Physics.Raycast(origin, t.forward, distance, LayerMask.GetMask("Ground"));
+        bool nearRope = Physics.Raycast(origin, Vector3.up, distance, LayerMask.GetMask("Rope"));
+
+        return nearWall || nearRope;
     }
 
 }

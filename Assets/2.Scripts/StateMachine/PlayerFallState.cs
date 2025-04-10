@@ -29,7 +29,7 @@ public class PlayerFallState : PlayerAirState
         if (IsGrounded())
         {
             PlayerController input = stateMachine.Player.Input;
-            
+
             if (input.playerActions.Run.IsPressed())    // Shift 누르고 있으면
             {
                 stateMachine.ChangeState(stateMachine.RunState);
@@ -48,7 +48,7 @@ public class PlayerFallState : PlayerAirState
         {
             if (tag == "Rope")
             {
-                stateMachine.ChangeState(stateMachine.RopeGrabState);
+                stateMachine.ChangeState(stateMachine.GrabState);
             }
             else if (tag == "Wall")
             {
@@ -57,21 +57,25 @@ public class PlayerFallState : PlayerAirState
             return;
         }
     }
-    
+
 
     private bool IsGrounded() //땅인지 체크
     {
         Transform t = stateMachine.Player.transform;
         return Physics.Raycast(t.position + Vector3.up * 0.1f, Vector3.down, 0.2f, LayerMask.GetMask("Ground"));
     }
-
+    /// <summary>
+    /// 떨어지는 상태시 정면 , 위 , 땅과 로프 확인 로직 값 수정시 GrabState스크립트 IsStillGrabbing 함수도 같이 수정 바람!
+    /// </summary>
+    /// <param name="targetTag"></param>
+    /// <returns></returns>
     private bool TryDetectGrabTarget(out string targetTag)
     {
         targetTag = null;
 
         Transform t = stateMachine.Player.transform;
         Vector3 origin = t.position + Vector3.up * 0.5f;
-        float distance = 1.5f;
+        float distance = 1.0f;
 
         // 로프 감지 (위쪽)
         if (Physics.Raycast(origin, Vector3.up, distance, LayerMask.GetMask("Rope")))
@@ -95,7 +99,7 @@ public class PlayerFallState : PlayerAirState
     {
         Transform t = stateMachine.Player.transform;
         Vector3 origin = t.position + Vector3.up * 0.5f;
-        float distance = 1.5f;
+        float distance = 0.5f;
 
         // 위쪽 (로프용)
         Debug.DrawRay(origin, Vector3.up * distance, Color.green);
