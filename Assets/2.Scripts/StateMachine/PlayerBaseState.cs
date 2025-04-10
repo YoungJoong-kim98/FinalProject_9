@@ -23,9 +23,10 @@ public class PlayerBaseState : IState
 
     public virtual void Exit()
     {
+        
         RemoveInputActionsCallbacks();  // 입력 이벤트 해제
     }
-
+    
     protected virtual void AddInputActionsCallbacks()
     {
         PlayerController input = stateMachine.Player.Input;
@@ -93,7 +94,7 @@ public class PlayerBaseState : IState
         stateMachine.MovementInput = stateMachine.Player.Input.playerActions.Movement.ReadValue<Vector2>();
     }
 
-    private void Move()
+    protected virtual void Move()
     {
         Vector3 movementDirection = GetMovementDirection(); // 카메라 기준 이동 방향 계산
 
@@ -116,7 +117,7 @@ public class PlayerBaseState : IState
         return forward * stateMachine.MovementInput.y + right * stateMachine.MovementInput.x;
     }
 
-    private void Move(Vector3 direction)
+    protected virtual void Move(Vector3 direction)
     {
         if (stateMachine.IsMovementLocked)
         {
@@ -135,7 +136,7 @@ public class PlayerBaseState : IState
 
     }
 
-    private float GetMovementSpeed()
+    protected float GetMovementSpeed()
     {
         float moveSpeed = stateMachine.MovementSpeed * stateMachine.MovementSpeedModifier;
         return moveSpeed;
