@@ -12,6 +12,9 @@ public class UIManager : MonoBehaviour
     private Dictionary<string, BaseUI> permanentUIs = new Dictionary<string, BaseUI>(); // 상시 UI들
     private Dictionary<string, BaseUI> activePopupUIs = new Dictionary<string, BaseUI>(); // 팝업 UI들
 
+    [SerializeField] private NarrationManager narrationManager;
+    public NarrationManager NarrationManager => narrationManager;
+
     void Start()
     {
         InitializeUI();
