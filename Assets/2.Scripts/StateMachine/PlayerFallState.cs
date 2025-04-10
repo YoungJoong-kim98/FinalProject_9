@@ -99,7 +99,7 @@ public class PlayerFallState : PlayerAirState
     {
         Transform t = stateMachine.Player.transform;
         Vector3 origin = t.position + Vector3.up * 0.5f;
-        float distance = 0.5f;
+        float distance = 1.0f;
 
         // 위쪽 (로프용)
         Debug.DrawRay(origin, Vector3.up * distance, Color.green);
