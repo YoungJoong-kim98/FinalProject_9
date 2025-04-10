@@ -10,36 +10,33 @@ public class PlayerJumpState : PlayerAirState
 
     public override void Enter()
     {
-        Vector3 moveDir = GetMovementDirection().normalized;    // WASD ÀÔ·Â ¹æÇâ (Ä«¸Ş¶ó ±âÁØ)
-
-        float moveSpeed = stateMachine.MovementSpeed * stateMachine.MovementSpeedModifier;  // ÇöÀç ¼Óµµ (´Ş¸®±â ¹İ¿µ)
-        float jumpForce = stateMachine.Player.Data.AirData.JumpForce;   // Á¡ÇÁ Èû
+        Vector3 moveDir = GetMovementDirection().normalized;    // WASD ì…ë ¥ ë°©í–¥ (ì¹´ë©”ë¼ ê¸°ì¤€)
+        
+        float currentMoveSpeed = stateMachine.CurrentMoveSpeed; // í˜„ì¬ ì†ë„ ë°˜ì˜ (ê±·ê¸° ì†ë„ or ë‹¬ë¦¬ê¸° ê°€ì†ë„)
+        float jumpForce = stateMachine.Player.Data.AirData.JumpForce;   // ì í”„ í˜
 
         Rigidbody rb = stateMachine.Player.Rigidbody;
-
-        // // ±âÁ¸ ÀÛ¼º ºÎºĞ
-        // // ±âÁ¸ Y ¼Óµµ ÃÊ±âÈ­
-        // Vector3 currentVelocity = rb.velocity;
-        // currentVelocity.y = 0f;
-        // rb.velocity = currentVelocity;
-        //
-        // //  ÀÌµ¿ ¹æÇâÀ¸·Î °¡¼Óµµ ÁÖ±â (Impulse)
-        // Vector3 jumpDirection = moveDir * moveSpeed + Vector3.up * jumpForce;
-        // rb.AddForce(jumpDirection, ForceMode.Impulse);  // ¡ç ÀÌ°É·Î "¸Ö¸® Á¡ÇÁ" ´À³¦ °¡´É
         
-        // ÇöÀç ¼öÆò ¼Óµµ °¡Á®¿À±â (´Ş¸®±â ¼Óµµ À¯Áö)
+        // í˜„ì¬ ìˆ˜í‰ ì†ë„ ê°€ì ¸ì˜¤ê¸° (ë‹¬ë¦¬ê¸° ì†ë„ ìœ ì§€)
         Vector3 currentVelocity = rb.velocity;
+        currentVelocity.y = 0f; // y ì†ë„ ì´ˆê¸°í™” (ë‚™í•˜í•˜ë©° ì í”„í•  ë•Œ yê°€ ìŒìˆ˜ë¡œ ê³±í•´ì§€ëŠ” ê²ƒ ë°©ì§€)
         Vector3 horizontalVelocity = new Vector3(currentVelocity.x, 0, currentVelocity.z);
-
-        // Á¡ÇÁ ¼Óµµ = ±âÁ¸ ¼öÆò ¼Óµµ + ¼öÁ÷ Á¡ÇÁ Èû + ¾à°£ÀÇ ¹æÇâ °¡¼Ó
+        
+        // ì í”„ ì†ë„ = í˜„ì¬ ìˆ˜í‰ ì†ë„ + ìˆ˜ì§ ì í”„ í˜ + ë°©í–¥ë³„ ê°€ì†ë„
         Vector3 jumpVelocity = horizontalVelocity + (Vector3.up * jumpForce);
-        jumpVelocity += moveDir * moveSpeed * 0.5f; // ÀÌµ¿ ¹æÇâÀ¸·Î ´Ş¸®±â °ü¼º °­È­
+        if (currentMoveSpeed > stateMachine.MovementSpeed) // ë‹¬ë¦¬ê¸° ì¤‘ì¼ ë•Œë§Œ ì¶”ê°€ ê°€ì† (í˜„ì¬ ì†ë„ > 2f)
+        {
+            jumpVelocity += moveDir * (currentMoveSpeed - stateMachine.MovementSpeed) * 0.5f; // ê°€ì†ë„ ì°¨ì´ ë°˜ì˜ ((5f - 2f = 3f) * 0.5f)
+        }
 
-        rb.velocity = jumpVelocity; // ¼Óµµ Àû¿ë
+        rb.velocity = jumpVelocity; // ì†ë„ ì ìš©
 
         base.Enter();
         StartAnimation(stateMachine.Player.AnimationData.JumpParameterHash);
+        
+        Debug.Log($"Jump - í˜„ì¬ ì´ë™ ì†ë„: {currentMoveSpeed}, ìˆ˜í‰ ì†ë„: {horizontalVelocity.magnitude}, ì ìš© í›„ ì†ë„: {rb.velocity.magnitude}");
     }
+    
     public override void Exit()
     {
         base.Exit();

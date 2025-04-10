@@ -11,6 +11,7 @@ public class PlayerStateMachine : StateMachine
     public float MovementSpeed { get; private set; }    // 기본 이동 속도
     public float RotationDamping { get; private set; }  
     public float MovementSpeedModifier { get; set; } = 1f;  // 속도 배율 (Walk, Run 등)
+    public float CurrentMoveSpeed { get; set; }  // 현재 이동 속도 저장 (RunState, JumpState 공용 변수)
 
     public float JumpForce { get; set; }
 
@@ -39,6 +40,7 @@ public class PlayerStateMachine : StateMachine
         GrabState = new PlayerGrabState(this);
 
         MovementSpeed = player.Data.GroundData.BaseSpeed;   // 기본 속도 설정
+        CurrentMoveSpeed = MovementSpeed;    // 초기값 2f
         RotationDamping = player.Data.GroundData.BaseRotationDamping;
     }
 }
