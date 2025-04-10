@@ -6,7 +6,7 @@ using static UnityEngine.LightAnchor;
 public class PlayerGrabState : PlayerAirState
 {
     private bool hasJumped = false;
-    private float slowFallSpeed = -0.5f;
+    private float slowFallSpeed = -0.2f;
     public PlayerGrabState(PlayerStateMachine stateMachine) : base(stateMachine) { }
 
     public override void Enter()
@@ -17,13 +17,14 @@ public class PlayerGrabState : PlayerAirState
             stateMachine.ChangeState(stateMachine.FallState);
             return;
         }
-
-        base.Enter();
         stateMachine.CanGrabWall = false;
 
-        stateMachine.Player.StartCoroutine(EnableWallGrabAfterCooldown(1f)); // 1초 후 다시 가능
+        stateMachine.Player.StartCoroutine(EnableWallGrabAfterCooldown(0.5f)); // 1초 후 다시 가능
 
-        StartAnimation(stateMachine.Player.AnimationData.FallParameterHash);
+        base.Enter();
+
+
+        StartAnimation(stateMachine.Player.AnimationData.GrabParameterHash);
 
         stateMachine.Player.Rigidbody.velocity = Vector3.zero;
         stateMachine.Player.Rigidbody.useGravity = false;
@@ -49,6 +50,13 @@ public class PlayerGrabState : PlayerAirState
     public override void Update()
     {
         base.Update();
+        // 계속 붙어있는지 확인
+        if (!IsStillGrabbing())
+        {
+            stateMachine.ChangeState(stateMachine.FallState);
+            return;
+        }
+
         // 수동으로 아주 천천히 낙하
         Vector3 velocity = stateMachine.Player.Rigidbody.velocity;
 
@@ -66,11 +74,23 @@ public class PlayerGrabState : PlayerAirState
         {
             stateMachine.IsMovementLocked = true;
 
-            float reducedJumpForce = stateMachine.Player.Data.AirData.JumpForce * 1.5f;
-            float backwardForce = 5.0f;
+            float jumpPower = stateMachine.Player.Data.AirData.JumpForce * 1.2f;
+            float directionalForce = 10.0f;
 
-            Vector3 forceVector = -stateMachine.Player.transform.forward;
-            Vector3 jumpDirection = forceVector * backwardForce + Vector3.up * reducedJumpForce;
+            // 방향키 입력 → 카메라 기준 방향으로 변환
+            Vector2 input = stateMachine.MovementInput;
+            Vector3 camForward = stateMachine.MainCameraTransform.forward;
+            Vector3 camRight = stateMachine.MainCameraTransform.right;
+
+            camForward.y = 0;
+            camRight.y = 0;
+            camForward.Normalize();
+            camRight.Normalize();
+
+            Vector3 inputDir = camForward * input.y + camRight * input.x;
+
+
+            Vector3 jumpDirection = inputDir.normalized * directionalForce + Vector3.up * jumpPower;
 
             Rigidbody rb = stateMachine.Player.Rigidbody;
             rb.velocity = Vector3.zero;
@@ -79,11 +99,10 @@ public class PlayerGrabState : PlayerAirState
 
             hasJumped = true;
 
-            //  0.5초 뒤 이동 가능
             stateMachine.Player.StartCoroutine(UnlockMovementAfterDelay(1f));
-
             stateMachine.ChangeState(stateMachine.FallState);
         }
+
     }
     private IEnumerator UnlockMovementAfterDelay(float delay)
     {
@@ -92,15 +111,22 @@ public class PlayerGrabState : PlayerAirState
         stateMachine.Player.Rigidbody.drag = 0f;
     }
 
-    private bool MouseLeftHeld()
-    {
-        return Mouse.current.leftButton.isPressed;
-    }
-
     private IEnumerator EnableWallGrabAfterCooldown(float cooldown)
     {
         yield return new WaitForSeconds(cooldown);
         stateMachine.CanGrabWall = true;
+    }
+    private bool IsStillGrabbing()
+    {
+        Transform t = stateMachine.Player.transform;
+        Vector3 origin = t.position + Vector3.up * 0.5f;
+        float distance = 1.0f;
+
+        // 벽 또는 로프를 유지 조건으로 판단
+        bool nearWall = Physics.Raycast(origin, t.forward, distance, LayerMask.GetMask("Ground"));
+        bool nearRope = Physics.Raycast(origin, Vector3.up, distance, LayerMask.GetMask("Rope"));
+
+        return nearWall || nearRope;
     }
 
 }

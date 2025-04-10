@@ -22,6 +22,7 @@ public class PlayerStateMachine : StateMachine
     public PlayerJumpState JumpState { get; private set; } // 점프 상태
     public PlayerFallState FallState { get; private set; } //추락 상태
     public PlayerGrabState GrabState { get; private set; } //잡기 상태
+    //public PlayerRopeGrabState RopeGrabState { get; private set; } // 로프 잡기 상태
     public bool CanGrabWall { get; set; } = true; // 잡기 가능 여부
     public bool IsMovementLocked { get; set; } = false; // 이동 잠금
     public PlayerStateMachine(Player player)
@@ -37,6 +38,7 @@ public class PlayerStateMachine : StateMachine
         JumpState = new PlayerJumpState(this);
         FallState = new PlayerFallState(this);
         GrabState = new PlayerGrabState(this);
+        //RopeGrabState = new PlayerRopeGrabState(this);
 
         MovementSpeed = player.Data.GroundData.BaseSpeed;   // 기본 속도 설정
         RotationDamping = player.Data.GroundData.BaseRotationDamping;

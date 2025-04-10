@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -20,24 +21,7 @@ public class PlayerFallState : PlayerAirState
         base.Exit();
         StopAnimation(stateMachine.Player.AnimationData.FallParameterHash);
     }
-    
-    // // 기존 작성
-    // public override void Update()
-    // {
-    //     base.Update();
-    //
-    //     if (IsGrounded())
-    //     {
-    //         stateMachine.ChangeState(stateMachine.IdleState);
-    //         return;
-    //     }
-    //     if (Mouse.current.leftButton.wasPressedThisFrame)
-    //     {
-    //         stateMachine.ChangeState(stateMachine.GrabState);
-    //         return;
-    //     }
-    // }
-    
+
     public override void Update()
     {
         base.Update();
@@ -45,7 +29,7 @@ public class PlayerFallState : PlayerAirState
         if (IsGrounded())
         {
             PlayerController input = stateMachine.Player.Input;
-            
+
             if (input.playerActions.Run.IsPressed())    // Shift 누르고 있으면
             {
                 stateMachine.ChangeState(stateMachine.RunState);
@@ -58,41 +42,73 @@ public class PlayerFallState : PlayerAirState
             {
                 stateMachine.ChangeState(stateMachine.IdleState);
             }
-            stateMachine.ChangeState(stateMachine.IdleState);
             return;
         }
-        if (Mouse.current.leftButton.wasPressedThisFrame && IsNearGrabbableWall())
+        if (Mouse.current.leftButton.wasPressedThisFrame && TryDetectGrabTarget(out string tag))
         {
-            stateMachine.ChangeState(stateMachine.GrabState);
+            if (tag == "Rope")
+            {
+                stateMachine.ChangeState(stateMachine.GrabState);
+            }
+            else if (tag == "Wall")
+            {
+                stateMachine.ChangeState(stateMachine.GrabState);
+            }
             return;
         }
     }
-    
 
-    private bool IsGrounded()
+
+    private bool IsGrounded() //땅인지 체크
     {
         Transform t = stateMachine.Player.transform;
         return Physics.Raycast(t.position + Vector3.up * 0.1f, Vector3.down, 0.2f, LayerMask.GetMask("Ground"));
     }
-
-    private bool IsNearGrabbableWall()
+    /// <summary>
+    /// 떨어지는 상태시 정면 , 위 , 땅과 로프 확인 로직 값 수정시 GrabState스크립트 IsStillGrabbing 함수도 같이 수정 바람!
+    /// </summary>
+    /// <param name="targetTag"></param>
+    /// <returns></returns>
+    private bool TryDetectGrabTarget(out string targetTag)
     {
+        targetTag = null;
+
         Transform t = stateMachine.Player.transform;
         Vector3 origin = t.position + Vector3.up * 0.5f;
-        Vector3 direction = t.forward;
-        float distance = 1f;
+        float distance = 1.0f;
 
+        // 로프 감지 (위쪽)
+        if (Physics.Raycast(origin, Vector3.up, distance, LayerMask.GetMask("Rope")))
+        {
+            Debug.DrawRay(origin, Vector3.up * distance, Color.green);
+            targetTag = "Rope";
+            return true;
+        }
 
-        // ���� Raycast �˻�
-        return Physics.Raycast(origin, direction, distance, LayerMask.GetMask("Ground"));
+        // 벽 감지 (앞쪽)
+        if (Physics.Raycast(origin, t.forward, distance, LayerMask.GetMask("Ground")))
+        {
+            Debug.DrawRay(origin, t.forward * distance, Color.red);
+            targetTag = "Wall";
+            return true;
+        }
+
+        return false;
     }
     private void DebugDrawGrabRay()
     {
         Transform t = stateMachine.Player.transform;
         Vector3 origin = t.position + Vector3.up * 0.5f;
-        Vector3 direction = t.forward;
-        float distance = 1f;
+        float distance = 1.0f;
 
-        Debug.DrawRay(origin, direction * distance, Color.red);
+        // 위쪽 (로프용)
+        Debug.DrawRay(origin, Vector3.up * distance, Color.green);
+
+        // 앞쪽 (벽용)
+        Debug.DrawRay(origin, t.forward * distance, Color.red);
+
+        // 땅 체크용 아래 방향도 보고 싶으면 아래도 추가
+        Debug.DrawRay(t.position + Vector3.up * 0.1f, Vector3.down * 0.1f, Color.yellow);
     }
+
 }
