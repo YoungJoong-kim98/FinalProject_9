@@ -1,8 +1,10 @@
+using System.Collections;
 using UnityEngine;
 
 public class ReflectObstacle : MonoBehaviour
 {
     [SerializeField] private float _reflectPower = -1f;
+    private GameObject target;
 
     private void Start()
     {
@@ -24,13 +26,17 @@ public class ReflectObstacle : MonoBehaviour
         direction.y = 0f;
         direction = direction.normalized;
 
-        if (target.TryGetComponent(out Rigidbody rb))
+        target.transform.forward = -direction;
+
+        if (target.TryGetComponent(out Player player))
         {
-            rb.AddForce(direction * _reflectPower, ForceMode.Impulse);
-        }
-        else
-        {
-            return;
+            ObstacleManager.Instance.StartLockMovement(player);
+
+            if (target.TryGetComponent(out Rigidbody rb))
+            {
+                rb.velocity = Vector3.zero;
+                rb.AddForce(direction * _reflectPower, ForceMode.Impulse);
+            }
         }
     }
 }

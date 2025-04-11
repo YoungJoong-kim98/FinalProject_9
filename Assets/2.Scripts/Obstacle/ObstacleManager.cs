@@ -14,6 +14,8 @@ public class ObstacleManager : MonoBehaviour
 
     public List<MovePlatform> movePlatforms = new List<MovePlatform>();
 
+    private Coroutine _moveCoroutine;
+
     private void Awake()
     {
         if (instance == null)
@@ -25,6 +27,8 @@ public class ObstacleManager : MonoBehaviour
             Destroy(gameObject);
             return;
         }
+
+        _moveCoroutine = null;
 
         obstacleData = GetComponent<ObstacleData>();
 
@@ -45,5 +49,23 @@ public class ObstacleManager : MonoBehaviour
         {
             movePlatform.Move();
         }
+    }
+
+    public void StartLockMovement(Player player)
+    {
+        if(_moveCoroutine != null)
+        {
+            StopCoroutine(_moveCoroutine);
+        }
+
+        _moveCoroutine = StartCoroutine(SetIsMovementLocked(player));
+    }
+
+    private IEnumerator SetIsMovementLocked(Player player)
+    {
+        player.stateMachine.IsMovementLocked = true;
+        yield return new WaitForSeconds(obstacleData.reflectTime);
+        player.stateMachine.IsMovementLocked = false;
+        _moveCoroutine = null;
     }
 }

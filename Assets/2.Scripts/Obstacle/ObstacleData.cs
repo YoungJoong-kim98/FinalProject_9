@@ -16,7 +16,8 @@ public class ObstacleData : MonoBehaviour
     public float moveDistance = 5f;
 
     [Header("Reflect Obstacle")]
-    public float reflectPower = 15f;
+    public float reflectPower = 30f;
+    public float reflectTime = 0.5f;
 
     [Header("Rotate Obstacle")]
     public float rotateSpeed = 10f;
