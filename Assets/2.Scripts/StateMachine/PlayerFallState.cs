@@ -9,19 +9,27 @@ public class PlayerFallState : PlayerAirState
     private float _fallSpeed;       // 추락 속도 증가 값
     private float _maxFallSpeed;    // 최대 낙하 속도 제한
     private float _fallTime;        // 낙하 시간 측정
-    
+    public float JumpAirControlLockTime = 1.5f; //점프 잠금 시간 설정
+    private float _airControlLockTimer = 0f; // 점프 잠금 시간
     public PlayerFallState(PlayerStateMachine playerStateMachine) : base(playerStateMachine)
     {
         _fallSpeed = stateMachine.Player.Data.AirData.FallSpeed;
         _maxFallSpeed = stateMachine.Player.Data.AirData.MaxFallSpeed;
     }
 
-    public override void Enter()
+public override void Enter()
+{
+    base.Enter();
+    _fallTime = 0f;
+    
+    if (stateMachine.HasJustJumpedFromGrab)
     {
-        base.Enter();
-        _fallTime = 0f;
-        StartAnimation(stateMachine.Player.AnimationData.FallParameterHash);
+        _airControlLockTimer = JumpAirControlLockTime;
     }
+
+    stateMachine.HasJustJumpedFromGrab = false;
+    StartAnimation(stateMachine.Player.AnimationData.FallParameterHash);
+}
 
     public override void Exit()
     {
@@ -81,7 +89,12 @@ public class PlayerFallState : PlayerAirState
     public override void PhysicsUpdate()
     {
         base.PhysicsUpdate();
-
+        if (_airControlLockTimer > 0f)
+        {
+            _airControlLockTimer -= Time.fixedDeltaTime;
+            return; // 공중 제어 잠시 비활성화
+        }
+        _airControlLockTimer = JumpAirControlLockTime;
         // 입력 방향 → 카메라 기준 변환
         Vector3 inputDir = GetMovementDirection().normalized;
 

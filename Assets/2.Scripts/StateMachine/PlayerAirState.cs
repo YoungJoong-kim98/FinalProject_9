@@ -28,6 +28,10 @@ public class PlayerAirState : PlayerBaseState
     // 공중에서 달리기 속도를 유지해 주는 메서드 (중력, 저항 등의 문제로 속도가 줄어드는 것을 방지)
     protected override void Move(Vector3 direction)
     {
+        if (stateMachine.IsMovementLocked)
+        {
+            return; // 이동 금지 중일 땐 처리 안 함
+        }
         Rigidbody rb = stateMachine.Player.Rigidbody;   // 플레이어 Rigidbody 가져옴
         Vector3 currentVelocity = rb.velocity;          // 플레이어의 현재 속도 확인
         float moveSpeed = stateMachine.CurrentMoveSpeed > stateMachine.MovementSpeed // 달리기 중이면 5f, 아니면 2f
