@@ -45,12 +45,23 @@ public class PlayerJumpState : PlayerAirState
 
     public override void PhysicsUpdate()
     {
-        base.Update();
+        base.PhysicsUpdate();
 
-        if (stateMachine.Player.Rigidbody.velocity.y <= 0)
+        //  공중 수평 이동 제어
+        Vector3 inputDir = GetMovementDirection();
+        inputDir.Normalize();
+
+        Vector3 airControlForce = inputDir * stateMachine.Player.Data.AirData.AirControlSpeed;
+        Vector3 velocity = stateMachine.Player.Rigidbody.velocity;
+
+        // y 속도는 그대로 유지하고 x,z만 수정
+        Vector3 newVelocity = new Vector3(airControlForce.x, velocity.y, airControlForce.z);
+        stateMachine.Player.Rigidbody.velocity = newVelocity;
+
+        // 낙하 상태로 전환
+        if (velocity.y <= 0)
         {
             stateMachine.ChangeState(stateMachine.FallState);
-            return;
         }
     }
 }
