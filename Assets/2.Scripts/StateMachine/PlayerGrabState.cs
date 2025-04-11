@@ -121,10 +121,10 @@ public class PlayerGrabState : PlayerAirState
         Transform t = stateMachine.Player.transform;
         Vector3 origin = t.position + Vector3.up * 0.5f;
         float distance = 1.0f;
-
+        Vector3 grab = new Vector3(0f, 1.5f, 1f);
         // 벽 또는 로프를 유지 조건으로 판단
         bool nearWall = Physics.Raycast(origin, t.forward, distance, LayerMask.GetMask("Ground"));
-        bool nearRope = Physics.Raycast(origin, Vector3.up, distance, LayerMask.GetMask("Rope"));
+        bool nearRope = Physics.Raycast(origin+grab, Vector3.up, distance, LayerMask.GetMask("Rope"));
 
         return nearWall || nearRope;
     }

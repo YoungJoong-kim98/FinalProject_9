@@ -100,9 +100,9 @@ public class PlayerFallState : PlayerAirState
         Transform t = stateMachine.Player.transform;
         Vector3 origin = t.position + Vector3.up * 0.5f;
         float distance = 1.0f;
-
+        Vector3 grab = new Vector3(0f, 1.5f, 1f);
         // 로프 감지 (위쪽)
-        if (Physics.Raycast(origin, Vector3.up, distance, LayerMask.GetMask("Rope")))
+        if (Physics.Raycast(origin+ grab, Vector3.up, distance, LayerMask.GetMask("Rope")))
         {
             Debug.DrawRay(origin, Vector3.up * distance, Color.green);
             targetTag = "Rope";
@@ -124,9 +124,9 @@ public class PlayerFallState : PlayerAirState
         Transform t = stateMachine.Player.transform;
         Vector3 origin = t.position + Vector3.up * 0.5f;
         float distance = 1.0f;
-
+        Vector3 grab = new Vector3(0f, 1.5f, 1f);
         // 위쪽 (로프용)
-        Debug.DrawRay(origin, Vector3.up * distance, Color.green);
+        Debug.DrawRay(origin+ grab, Vector3.up * distance, Color.green);
 
         // 앞쪽 (벽용)
         Debug.DrawRay(origin, t.forward * distance, Color.red);
