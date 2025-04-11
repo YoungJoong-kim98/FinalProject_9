@@ -42,50 +42,13 @@ public class PlayerJumpState : PlayerAirState
         base.Exit();
         StopAnimation(stateMachine.Player.AnimationData.JumpParameterHash);
     }
-
-    // public override void PhysicsUpdate()
-    // {
-    //     base.PhysicsUpdate();
-    //
-    //     //  공중 수평 이동 제어
-    //     Vector3 inputDir = GetMovementDirection();
-    //     inputDir.Normalize();
-    //
-    //     Vector3 airControlForce = inputDir * stateMachine.Player.Data.AirData.AirControlSpeed;
-    //     Vector3 velocity = stateMachine.Player.Rigidbody.velocity;
-    //
-    //     // y 속도는 그대로 유지하고 x,z만 수정
-    //     Vector3 newVelocity = new Vector3(airControlForce.x, velocity.y, airControlForce.z);
-    //     stateMachine.Player.Rigidbody.velocity = newVelocity;
-    //
-    //     // 낙하 상태로 전환
-    //     if (velocity.y <= 0)
-    //     {
-    //         stateMachine.ChangeState(stateMachine.FallState);
-    //     }
-    // }
     
     public override void PhysicsUpdate()
     {
-        base.PhysicsUpdate();
-
-        Rigidbody rb = stateMachine.Player.Rigidbody;
-        Vector3 velocity = rb.velocity; // 현재 속도 가져옴
-        
-        Vector3 horizontalVelocity = new Vector3(velocity.x, 0, velocity.z);    // 초기 수평 속도 값 가져옴
-        
-        if (horizontalVelocity.magnitude < stateMachine.MovementSpeed) // 걷기 속도 미만이면 제자리 점프에서 이동 진행
-        {
-            Vector3 inputDir = GetMovementDirection().normalized;   // WASD 입력 방향
-            Vector3 airControlForce = inputDir * stateMachine.Player.Data.AirData.AirControlSpeed;  // AirControlSpeed 반영
-            velocity.x = airControlForce.x; // x축 갱신
-            velocity.z = airControlForce.z; // y축 갱신
-        }
-
-        rb.velocity = velocity; // 최종 속도 적용
+        base.PhysicsUpdate();   // AirState.PhysicsUpdate 호출
         
         // 낙하 상태로 전환
-        if (velocity.y <= 0)
+        if (stateMachine.Player.Rigidbody.velocity.y <= 0)
         {
             stateMachine.ChangeState(stateMachine.FallState);
         }

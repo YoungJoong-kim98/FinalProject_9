@@ -46,7 +46,7 @@ public class PlayerFallState : PlayerAirState
         
         if (IsGrounded()) // Raycast로 착지 확인
         {
-            Debug.Log($"낙하 시간: {_fallTime}초"); // 착지 시 낙하 시간 출력
+            // Debug.Log($"낙하 시간: {_fallTime}초"); // 착지 시 낙하 시간 출력
             
             float preservedSpeed = stateMachine.CurrentMoveSpeed; // 착지 전 속도 저장
             
@@ -78,23 +78,31 @@ public class PlayerFallState : PlayerAirState
             return;
         }
     }
+    
+    // public override void PhysicsUpdate()
+    // {
+    //     base.PhysicsUpdate();
+    //
+    //     Rigidbody rb = stateMachine.Player.Rigidbody;
+    //     Vector3 velocity = rb.velocity; // 현재 속도 가져옴
+    //     
+    //     Vector3 horizontalVelocity = new Vector3(velocity.x, 0, velocity.z);    // 초기 수평 속도 값 가져옴
+    //     
+    //     if (horizontalVelocity.magnitude < stateMachine.MovementSpeed) // 걷기 속도 미만이면 제자리/잡기 후 점프
+    //     {
+    //         Vector3 inputDir = GetMovementDirection().normalized;   // WASD 입력 방향
+    //         Vector3 airControlForce = inputDir * stateMachine.Player.Data.AirData.AirControlSpeed;  // AirControlSpeed 반영
+    //         velocity.x = airControlForce.x; // x축 갱신
+    //         velocity.z = airControlForce.z; // y축 갱신
+    //     }
+    //
+    //     rb.velocity = velocity; // 최종 속도 적용
+    // }
+    
     public override void PhysicsUpdate()
     {
-        base.PhysicsUpdate();
-
-        // 입력 방향 → 카메라 기준 변환
-        Vector3 inputDir = GetMovementDirection().normalized;
-
-        // 입력 기반 속도 계산
-        Vector3 airControlForce = inputDir * stateMachine.Player.Data.AirData.AirControlSpeed;
-
-        // 현재 y속도 유지하고 x,z만 제어
-        Vector3 currentVelocity = stateMachine.Player.Rigidbody.velocity;
-        Vector3 newVelocity = new Vector3(airControlForce.x, currentVelocity.y, airControlForce.z);
-
-        stateMachine.Player.Rigidbody.velocity = newVelocity;
+        base.PhysicsUpdate();   // AirState.PhysicsUpdate 호출
     }
-
 
     private bool IsGrounded() //땅인지 체크
     {
