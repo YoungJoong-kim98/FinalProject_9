@@ -6,9 +6,9 @@ using UnityEngine.InputSystem;
 
 public class PlayerFallState : PlayerAirState
 {
-    private float _fallSpeed = 1f;  // 추락 속도 초당 1f 증가
-    private float _maxFallSpeed = 15f;  // 최대 낙하 속도 제한
-    private float _fallTime;    // 낙하 시간 측정
+    private float _fallSpeed;       // 추락 속도 증가 값
+    private float _maxFallSpeed;    // 최대 낙하 속도 제한
+    private float _fallTime;        // 낙하 시간 측정
     
     public PlayerFallState(PlayerStateMachine playerStateMachine) : base(playerStateMachine)
     {
@@ -58,12 +58,12 @@ public class PlayerFallState : PlayerAirState
             }
             else if (stateMachine.MovementInput != Vector2.zero) // 이동 입력 있으면
             {
-                stateMachine.CurrentMoveSpeed = stateMachine.MovementSpeed; // 2f
+                stateMachine.CurrentMoveSpeed = stateMachine.MovementSpeed; 
                 stateMachine.ChangeState(stateMachine.WalkState);
             }
             else // 입력 없으면
             {
-                stateMachine.CurrentMoveSpeed = stateMachine.MovementSpeed; // 2f
+                stateMachine.CurrentMoveSpeed = stateMachine.MovementSpeed;
                 stateMachine.ChangeState(stateMachine.IdleState);
             }
             return;
