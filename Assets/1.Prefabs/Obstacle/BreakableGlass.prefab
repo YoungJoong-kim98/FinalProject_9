@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5600041012031611371}
   - component: {fileID: 1430204438496707303}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: BreakableGlass
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -56,6 +56,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5600041012031611371}
     m_Modifications:
+    - target: {fileID: -9092237992908752040, guid: 48d7138f9dc7f1145abce55792c5d20d,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 48d7138f9dc7f1145abce55792c5d20d,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -106,6 +111,31 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -8018695773568045222, guid: 48d7138f9dc7f1145abce55792c5d20d,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: -4802177655686205927, guid: 48d7138f9dc7f1145abce55792c5d20d,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: -1011851978766341700, guid: 48d7138f9dc7f1145abce55792c5d20d,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: -259199459689003643, guid: 48d7138f9dc7f1145abce55792c5d20d,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 137704935924252171, guid: 48d7138f9dc7f1145abce55792c5d20d,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 48d7138f9dc7f1145abce55792c5d20d,
         type: 3}
       propertyPath: m_Name
@@ -113,8 +143,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 48d7138f9dc7f1145abce55792c5d20d,
         type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 48d7138f9dc7f1145abce55792c5d20d,
+        type: 3}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7234023659629549302, guid: 48d7138f9dc7f1145abce55792c5d20d,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -636,6 +676,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Glass
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 864085767a5ac644db04855542da933c,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
