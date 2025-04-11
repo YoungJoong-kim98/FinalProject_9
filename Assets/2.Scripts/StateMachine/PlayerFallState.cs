@@ -78,6 +78,22 @@ public class PlayerFallState : PlayerAirState
             return;
         }
     }
+    public override void PhysicsUpdate()
+    {
+        base.PhysicsUpdate();
+
+        // 입력 방향 → 카메라 기준 변환
+        Vector3 inputDir = GetMovementDirection().normalized;
+
+        // 입력 기반 속도 계산
+        Vector3 airControlForce = inputDir * stateMachine.Player.Data.AirData.AirControlSpeed;
+
+        // 현재 y속도 유지하고 x,z만 제어
+        Vector3 currentVelocity = stateMachine.Player.Rigidbody.velocity;
+        Vector3 newVelocity = new Vector3(airControlForce.x, currentVelocity.y, airControlForce.z);
+
+        stateMachine.Player.Rigidbody.velocity = newVelocity;
+    }
 
 
     private bool IsGrounded() //땅인지 체크
