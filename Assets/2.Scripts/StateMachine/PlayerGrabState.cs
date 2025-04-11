@@ -51,11 +51,11 @@ public class PlayerGrabState : PlayerAirState
     {
         base.Update();
         // 계속 붙어있는지 확인
-        if (!IsStillGrabbing())
-        {
-            stateMachine.ChangeState(stateMachine.FallState);
-            return;
-        }
+        //if (!IsStillGrabbing())
+        //{
+        //    stateMachine.ChangeState(stateMachine.FallState);
+        //    return;
+        //}
 
         // 수동으로 아주 천천히 낙하
         Vector3 velocity = stateMachine.Player.Rigidbody.velocity;
@@ -73,9 +73,9 @@ public class PlayerGrabState : PlayerAirState
         if (!hasJumped && Keyboard.current.spaceKey.wasPressedThisFrame)
         {
             stateMachine.IsMovementLocked = true;
-
+            stateMachine.HasJustJumpedFromGrab = true;
             float jumpPower = stateMachine.Player.Data.AirData.JumpForce * 1.2f;
-            float directionalForce = 10.0f;
+            float directionalForce = 15.0f;
 
             // 방향키 입력 → 카메라 기준 방향으로 변환
             Vector2 input = stateMachine.MovementInput;
@@ -93,17 +93,27 @@ public class PlayerGrabState : PlayerAirState
             Vector3 jumpDirection = inputDir.normalized * directionalForce + Vector3.up * jumpPower;
 
             Rigidbody rb = stateMachine.Player.Rigidbody;
+            rb.constraints = RigidbodyConstraints.FreezeRotation; //  XZ 고정 해제!
             rb.velocity = Vector3.zero;
             rb.drag = 1.5f;
             rb.AddForce(jumpDirection, ForceMode.Impulse);
 
             hasJumped = true;
 
+            //stateMachine.Player.StartCoroutine(DelayedFallStateChange(0.5f)); // 상태 전환 살짝 딜레이
             stateMachine.Player.StartCoroutine(UnlockMovementAfterDelay(1f));
+            
             stateMachine.ChangeState(stateMachine.FallState);
+            
         }
 
     }
+    private IEnumerator DelayedFallStateChange(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        stateMachine.ChangeState(stateMachine.FallState);
+    }
+
     private IEnumerator UnlockMovementAfterDelay(float delay)
     {
         yield return new WaitForSeconds(delay);
@@ -121,10 +131,10 @@ public class PlayerGrabState : PlayerAirState
         Transform t = stateMachine.Player.transform;
         Vector3 origin = t.position + Vector3.up * 0.5f;
         float distance = 1.0f;
-
+        Vector3 grab = new Vector3(0f, 1.5f, 1f);
         // 벽 또는 로프를 유지 조건으로 판단
         bool nearWall = Physics.Raycast(origin, t.forward, distance, LayerMask.GetMask("Ground"));
-        bool nearRope = Physics.Raycast(origin, Vector3.up, distance, LayerMask.GetMask("Rope"));
+        bool nearRope = Physics.Raycast(origin+grab, Vector3.up, distance, LayerMask.GetMask("Rope"));
 
         return nearWall || nearRope;
     }
