@@ -26,6 +26,10 @@ public class PlayerAirData // 공중에 있을 때 필요한 데이터들 묶은
     [field: SerializeField]
     [field: Range(0f, 75f)]
     public float JumpForce { get; private set; } = 10f;
+    [field: SerializeField]
+    [field:Range(0f,5f)]
+    public float AirControlSpeed { get; private set; } = 2f; // 공중에서의 수평 속도
+
 
     [field: Header("FallData")]
     [field: SerializeField]

@@ -51,11 +51,11 @@ public class PlayerGrabState : PlayerAirState
     {
         base.Update();
         // 계속 붙어있는지 확인
-        if (!IsStillGrabbing())
-        {
-            stateMachine.ChangeState(stateMachine.FallState);
-            return;
-        }
+        //if (!IsStillGrabbing())
+        //{
+        //    stateMachine.ChangeState(stateMachine.FallState);
+        //    return;
+        //}
 
         // 수동으로 아주 천천히 낙하
         Vector3 velocity = stateMachine.Player.Rigidbody.velocity;
@@ -75,7 +75,7 @@ public class PlayerGrabState : PlayerAirState
             stateMachine.IsMovementLocked = true;
 
             float jumpPower = stateMachine.Player.Data.AirData.JumpForce * 1.2f;
-            float directionalForce = 10.0f;
+            float directionalForce = 20.0f;
 
             // 방향키 입력 → 카메라 기준 방향으로 변환
             Vector2 input = stateMachine.MovementInput;

@@ -70,13 +70,10 @@ public class PlayerFallState : PlayerAirState
         }
         if (Mouse.current.leftButton.wasPressedThisFrame && TryDetectGrabTarget(out string tag))
         {
-            if (tag == "Rope")
+            if (tag == "Rope" || tag == "Wall")
             {
                 stateMachine.ChangeState(stateMachine.GrabState);
-            }
-            else if (tag == "Wall")
-            {
-                stateMachine.ChangeState(stateMachine.GrabState);
+                
             }
             return;
         }
@@ -98,13 +95,16 @@ public class PlayerFallState : PlayerAirState
         targetTag = null;
 
         Transform t = stateMachine.Player.transform;
-        Vector3 origin = t.position + Vector3.up * 0.5f;
-        float distance = 1.0f;
-        Vector3 grab = new Vector3(0f, 1.5f, 1f);
+        Vector3 origin = t.position + Vector3.up * 1.0f;
+        float distance = 1.2f;
+        float radius = 1.0f;
+
+        Vector3 diagonalDir = (t.forward + Vector3.up).normalized; //로프용 레이 방향
+
         // 로프 감지 (위쪽)
-        if (Physics.Raycast(origin+ grab, Vector3.up, distance, LayerMask.GetMask("Rope")))
+        if (Physics.SphereCast(origin, radius, Vector3.up, out RaycastHit hit, distance, LayerMask.GetMask("Rope")))
         {
-            Debug.DrawRay(origin, Vector3.up * distance, Color.green);
+            Debug.DrawRay(origin, diagonalDir * distance * 2, Color.cyan); // 디버그용
             targetTag = "Rope";
             return true;
         }
@@ -119,20 +119,25 @@ public class PlayerFallState : PlayerAirState
 
         return false;
     }
+
     private void DebugDrawGrabRay()
     {
         Transform t = stateMachine.Player.transform;
-        Vector3 origin = t.position + Vector3.up * 0.5f;
-        float distance = 1.0f;
-        Vector3 grab = new Vector3(0f, 1.5f, 1f);
-        // 위쪽 (로프용)
-        Debug.DrawRay(origin+ grab, Vector3.up * distance, Color.green);
+        Vector3 origin = t.position + Vector3.up * 1f; // 레이 시작위치
+        float distance = 1.2f; //레이 길이
 
-        // 앞쪽 (벽용)
+        Vector3 diagonalDir = (t.forward + Vector3.up).normalized; //로프용 레이 방향
+
+        Vector3 RopeRay = new Vector3(0, 1, 0);
+        // 위쪽 (로프용 SphereCast 감지 방향)
+        Debug.DrawRay(origin, diagonalDir * distance*2, Color.cyan);
+
+        // 앞쪽 (벽 감지용 Raycast)
         Debug.DrawRay(origin, t.forward * distance, Color.red);
 
-        // 땅 체크용 아래 방향도 보고 싶으면 아래도 추가
-        Debug.DrawRay(t.position + Vector3.up * 0.1f, Vector3.down * 0.1f, Color.yellow);
+        // 아래쪽 (땅 체크용)
+        Debug.DrawRay(t.position + Vector3.up * 0.1f, Vector3.down * 0.2f, Color.yellow);
     }
+
 
 }

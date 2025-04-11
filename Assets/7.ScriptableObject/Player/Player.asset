@@ -20,5 +20,6 @@ MonoBehaviour:
     <RunAcceleration>k__BackingField: 8
   <AirData>k__BackingField:
     <JumpForce>k__BackingField: 10
+    <AirControlSpeed>k__BackingField: 3.13
     <FallSpeed>k__BackingField: 40
     <MaxFallSpeed>k__BackingField: 70
