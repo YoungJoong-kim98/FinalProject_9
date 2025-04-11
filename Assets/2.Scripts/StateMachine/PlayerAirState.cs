@@ -52,6 +52,10 @@ public class PlayerAirState : PlayerBaseState
     // 공중에서 속도를 유지 or 추가해 주는 메서드
     protected override void Move(Vector3 direction)
     {
+        if (stateMachine.IsMovementLocked)
+        {
+            return; // 이동 금지 중일 땐 처리 안 함
+        }
         Rigidbody rb = stateMachine.Player.Rigidbody;   // 플레이어 Rigidbody 가져옴
         Vector3 currentVelocity = rb.velocity;          // 플레이어의 현재 속도 가져옴
         Vector3 horizontalVelocity = new Vector3(currentVelocity.x, 0, currentVelocity.z); // 수평 속도 계산
