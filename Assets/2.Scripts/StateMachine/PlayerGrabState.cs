@@ -9,6 +9,9 @@ public class PlayerGrabState : PlayerAirState
     private float slowFallSpeed = -0.2f;
     public PlayerGrabState(PlayerStateMachine stateMachine) : base(stateMachine) { }
 
+    private Coroutine unlockCoroutine; // 이동 상태 만드는 코루틴
+    private Coroutine wallCooldownCoroutine; //벽 잡기 가능 상태 만드는 코루틴
+
     public override void Enter()
     {
         // 벽 잡기 이미 했으면 안 들어가게 하기
@@ -17,10 +20,12 @@ public class PlayerGrabState : PlayerAirState
             stateMachine.ChangeState(stateMachine.FallState);
             return;
         }
-        stateMachine.CanGrabWall = false;
-
-        stateMachine.Player.StartCoroutine(EnableWallGrabAfterCooldown(0.5f)); // 1초 후 다시 가능
-
+        //stateMachine.CanGrabWall = false;
+        //if(wallCooldownCoroutine != null)
+        //{
+        //    stateMachine.Player.StopCoroutine(wallCooldownCoroutine);    
+        //}
+        //wallCooldownCoroutine = stateMachine.Player.StartCoroutine(EnableWallGrabAfterCooldown(2f)); //1초 후 다시가능
         base.Enter();
 
 
@@ -72,8 +77,15 @@ public class PlayerGrabState : PlayerAirState
 
         if (!hasJumped && Keyboard.current.spaceKey.wasPressedThisFrame)
         {
-            stateMachine.IsMovementLocked = true;
-            stateMachine.HasJustJumpedFromGrab = true;
+
+            stateMachine.IsMovementLocked = true; // 이동 잠금
+            stateMachine.CanGrabWall = false; //잡기 잠금 
+            if (wallCooldownCoroutine != null)
+            {
+                stateMachine.Player.StopCoroutine(wallCooldownCoroutine);
+            }
+            wallCooldownCoroutine = stateMachine.Player.StartCoroutine(EnableWallGrabAfterCooldown(1f)); //잡기 잠금 해제 코루틴
+
             float jumpPower = stateMachine.Player.Data.AirData.JumpForce * 1.2f;
             float directionalForce = 15.0f;
 
@@ -100,18 +112,15 @@ public class PlayerGrabState : PlayerAirState
 
             hasJumped = true;
 
-            //stateMachine.Player.StartCoroutine(DelayedFallStateChange(0.5f)); // 상태 전환 살짝 딜레이
-            stateMachine.Player.StartCoroutine(UnlockMovementAfterDelay(1f));
-            
+            if (unlockCoroutine != null) //코루틴 중복 방지 예외처리
+            {
+                stateMachine.Player.StopCoroutine(unlockCoroutine);
+            }
+            unlockCoroutine = stateMachine.Player.StartCoroutine(UnlockMovementAfterDelay(1f)); // 이동 잠금 해제 코루틴
             stateMachine.ChangeState(stateMachine.FallState);
-            
+
         }
 
-    }
-    private IEnumerator DelayedFallStateChange(float delay)
-    {
-        yield return new WaitForSeconds(delay);
-        stateMachine.ChangeState(stateMachine.FallState);
     }
 
     private IEnumerator UnlockMovementAfterDelay(float delay)
@@ -126,6 +135,7 @@ public class PlayerGrabState : PlayerAirState
         yield return new WaitForSeconds(cooldown);
         stateMachine.CanGrabWall = true;
     }
+
     private bool IsStillGrabbing()
     {
         Transform t = stateMachine.Player.transform;
@@ -134,7 +144,7 @@ public class PlayerGrabState : PlayerAirState
         Vector3 grab = new Vector3(0f, 1.5f, 1f);
         // 벽 또는 로프를 유지 조건으로 판단
         bool nearWall = Physics.Raycast(origin, t.forward, distance, LayerMask.GetMask("Ground"));
-        bool nearRope = Physics.Raycast(origin+grab, Vector3.up, distance, LayerMask.GetMask("Rope"));
+        bool nearRope = Physics.Raycast(origin + grab, Vector3.up, distance, LayerMask.GetMask("Rope"));
 
         return nearWall || nearRope;
     }

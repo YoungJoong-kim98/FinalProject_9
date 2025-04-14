@@ -9,39 +9,30 @@ public class PlayerFallState : PlayerAirState
     private float _fallSpeed;       // 추락 속도 증가 값
     private float _maxFallSpeed;    // 최대 낙하 속도 제한
     private float _fallTime;        // 낙하 시간 측정
-    public float JumpAirControlLockTime = 1.5f; //점프 잠금 시간 설정
-    private float _airControlLockTimer = 0f; // 점프 잠금 시간
+
     public PlayerFallState(PlayerStateMachine playerStateMachine) : base(playerStateMachine)
     {
         _fallSpeed = stateMachine.Player.Data.AirData.FallSpeed;
         _maxFallSpeed = stateMachine.Player.Data.AirData.MaxFallSpeed;
     }
 
-public override void Enter()
-{
-    base.Enter();
-    _fallTime = 0f;
-    
-    if (stateMachine.HasJustJumpedFromGrab)
+    public override void Enter()
     {
-        _airControlLockTimer = JumpAirControlLockTime;
+        base.Enter();
+        _fallTime = 0f;
+        StartAnimation(stateMachine.Player.AnimationData.FallParameterHash);
     }
-
-    stateMachine.HasJustJumpedFromGrab = false;
-    StartAnimation(stateMachine.Player.AnimationData.FallParameterHash);
-}
 
     public override void Exit()
     {
         base.Exit();
         StopAnimation(stateMachine.Player.AnimationData.FallParameterHash);
     }
-    
+
     public override void Update()
     {
         base.Update();
         DebugDrawGrabRay();
-        
         if (!IsGrounded())  // 추락 가속도 적용
         {
             _fallTime += Time.deltaTime; // 낙하 시간 누적
@@ -51,13 +42,13 @@ public override void Enter()
             velocity.y = Mathf.Max(velocity.y, -_maxFallSpeed); // 최대 속도 설정
             rb.velocity = velocity; // 수평 속도는 AirState에서 관리
         }
-        
+
         if (IsGrounded()) // Raycast로 착지 확인
         {
             // Debug.Log($"낙하 시간: {_fallTime}초"); // 착지 시 낙하 시간 출력
-            
+
             float preservedSpeed = stateMachine.CurrentMoveSpeed; // 착지 전 속도 저장
-            
+
             if (stateMachine.Player.Input.playerActions.Run.IsPressed()) // Shift 누르고 있으면
             {
                 stateMachine.CurrentMoveSpeed = preservedSpeed; // 감소된 속도 사용
@@ -66,7 +57,7 @@ public override void Enter()
             }
             else if (stateMachine.MovementInput != Vector2.zero) // 이동 입력 있으면
             {
-                stateMachine.CurrentMoveSpeed = stateMachine.MovementSpeed; 
+                stateMachine.CurrentMoveSpeed = stateMachine.MovementSpeed;
                 stateMachine.ChangeState(stateMachine.WalkState);
             }
             else // 입력 없으면
@@ -81,12 +72,12 @@ public override void Enter()
             if (tag == "Rope" || tag == "Wall")
             {
                 stateMachine.ChangeState(stateMachine.GrabState);
-                
+
             }
             return;
         }
     }
-    
+
     // public override void PhysicsUpdate()
     // {
     //     base.PhysicsUpdate();
@@ -106,7 +97,7 @@ public override void Enter()
     //
     //     rb.velocity = velocity; // 최종 속도 적용
     // }
-    
+
     public override void PhysicsUpdate()
     {
         base.PhysicsUpdate();   // AirState.PhysicsUpdate 호출
