@@ -17,6 +17,8 @@ public class ObstacleData : MonoBehaviour
 
     [Header("Reflect Obstacle")]
     public float reflectPower = 30f;
+    public float reflectMinPower = 15f;
+    public float reflectMaxPower = 60f;
     public float reflectTime = 0.5f;
 
     [Header("Rotate Obstacle")]
