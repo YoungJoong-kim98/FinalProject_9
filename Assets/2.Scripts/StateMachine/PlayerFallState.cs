@@ -112,11 +112,39 @@ public override void Enter()
         base.PhysicsUpdate();   // AirState.PhysicsUpdate 호출
     }
 
-    private bool IsGrounded() //땅인지 체크
+    private bool IsGrounded()
     {
         Transform t = stateMachine.Player.transform;
-        return Physics.Raycast(t.position + Vector3.up * 0.1f, Vector3.down, 0.2f, LayerMask.GetMask("Ground"));
+        Vector3 origin = t.position + Vector3.up * 0.1f;
+        float rayLength = 1.5f;
+        LayerMask groundMask = LayerMask.GetMask("Ground");
+
+        // 중심
+        if (Physics.Raycast(origin, Vector3.down, rayLength, groundMask)) return true;
+
+        // 좌우 앞뒤 방향을 약간 퍼뜨려서 쏘기
+        float offset = 0.3f;
+
+        Vector3[] offsets = new Vector3[]
+        {
+        t.right * offset,     // 오른쪽
+        -t.right * offset,    // 왼쪽
+        t.forward * offset,   // 앞쪽
+        -t.forward * offset   // 뒤쪽
+        };
+
+        foreach (var dir in offsets)
+        {
+            Vector3 offsetOrigin = origin + dir;
+            if (Physics.Raycast(offsetOrigin, Vector3.down, rayLength, groundMask))
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
+
     /// <summary>
     /// 떨어지는 상태시 정면 , 위 , 땅과 로프 확인 로직 값 수정시 GrabState스크립트 IsStillGrabbing 함수도 같이 수정 바람!
     /// </summary>
@@ -155,21 +183,27 @@ public override void Enter()
     private void DebugDrawGrabRay()
     {
         Transform t = stateMachine.Player.transform;
-        Vector3 origin = t.position + Vector3.up * 1f; // 레이 시작위치
-        float distance = 1.2f; //레이 길이
+        Vector3 origin = t.position + Vector3.up * 0.1f;
+        float rayLength = 1.5f;
+        float offset = 0.3f;
 
-        Vector3 diagonalDir = (t.forward + Vector3.up).normalized; //로프용 레이 방향
+        // 중심
+        Debug.DrawRay(origin, Vector3.down * rayLength, Color.yellow);
 
-        Vector3 RopeRay = new Vector3(0, 1, 0);
-        // 위쪽 (로프용 SphereCast 감지 방향)
-        Debug.DrawRay(origin, diagonalDir * distance*2, Color.cyan);
+        // 네 방향 (좌우앞뒤)
+        Debug.DrawRay(origin + t.right * offset, Vector3.down * rayLength, Color.red);   // 오른쪽
+        Debug.DrawRay(origin - t.right * offset, Vector3.down * rayLength, Color.red);   // 왼쪽
+        Debug.DrawRay(origin + t.forward * offset, Vector3.down * rayLength, Color.red); // 앞쪽
+        Debug.DrawRay(origin - t.forward * offset, Vector3.down * rayLength, Color.red); // 뒤쪽
 
-        // 앞쪽 (벽 감지용 Raycast)
-        Debug.DrawRay(origin, t.forward * distance, Color.red);
-
-        // 아래쪽 (땅 체크용)
-        Debug.DrawRay(t.position + Vector3.up * 0.1f, Vector3.down * 0.2f, Color.yellow);
+        // 기존 로프 & 벽 감지용 레이
+        Vector3 origin2 = t.position + Vector3.up * 1f;
+        float distance = 1.2f;
+        Vector3 diagonalDir = (t.forward + Vector3.up).normalized;
+        Debug.DrawRay(origin2, diagonalDir * distance * 2, Color.cyan);
+        Debug.DrawRay(origin2, t.forward * distance, Color.red);
     }
+
 
 
 }
