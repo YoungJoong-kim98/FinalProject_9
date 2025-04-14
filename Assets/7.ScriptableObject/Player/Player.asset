@@ -22,4 +22,4 @@ MonoBehaviour:
     <JumpForce>k__BackingField: 10
     <AirControlSpeed>k__BackingField: 5
     <FallSpeed>k__BackingField: 1
-    <MaxFallSpeed>k__BackingField: 70
+    <MaxFallSpeed>k__BackingField: 30

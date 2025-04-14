@@ -6,7 +6,8 @@ using UnityEngine;
 public class PlayerStateMachine : StateMachine
 {
     public Player Player { get; }       // 플레이어 객체 참조
-
+    
+    public PlayerBaseState CurrentState { get; private set; }
     public Vector2 MovementInput { get; set; }  // 이동 입력값 (WASD 등)
     public float MovementSpeed { get; private set; }    // 기본 이동 속도
     public float RotationDamping { get; private set; }  
@@ -23,10 +24,12 @@ public class PlayerStateMachine : StateMachine
     public PlayerJumpState JumpState { get; private set; } // 점프 상태
     public PlayerFallState FallState { get; private set; } //추락 상태
     public PlayerGrabState GrabState { get; private set; } //잡기 상태
+    public PlayerFallCrashState FallCrashState { get; private set; } // 추락 충돌 상태
+    // public PlayerStandUpState StandUpState { get; private set; }     // 일어나는 상태
+    
     //public PlayerRopeGrabState RopeGrabState { get; private set; } // 로프 잡기 상태
     public bool CanGrabWall { get; set; } = true; // 잡기 가능 여부
     public bool IsMovementLocked { get; set; } = false; // 이동 잠금
-    public bool HasJustJumpedFromGrab { get; set; }
     public PlayerStateMachine(Player player)
     {
         this.Player = player;
@@ -36,10 +39,14 @@ public class PlayerStateMachine : StateMachine
         IdleState = new PlayerIdleState(this);
         WalkState = new PlayerWalkState(this);
         RunState = new PlayerRunState(this);
+        
+        FallCrashState = new PlayerFallCrashState(this);
+        // StandUpState = new PlayerStandUpState(this);
 
         JumpState = new PlayerJumpState(this);
         FallState = new PlayerFallState(this);
         GrabState = new PlayerGrabState(this);
+        
         //RopeGrabState = new PlayerRopeGrabState(this);
 
         MovementSpeed = player.Data.GroundData.BaseSpeed;   // 기본 속도 설정
