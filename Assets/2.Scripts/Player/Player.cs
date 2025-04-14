@@ -17,6 +17,7 @@ public class Player : MonoBehaviour
     public PlayerController Input { get; private set; }         // 입력 처리
     public ForceReceiver ForceReceiver { get; private set; }    // 중력, 점프
     public PlayerStateMachine stateMachine;                    // FSM의 핵심 컨트롤러
+    private bool _loggedMovementLocked = false; // 로그 제어
 
     public Rigidbody Rigidbody { get; private set; }
 
@@ -37,14 +38,45 @@ public class Player : MonoBehaviour
         stateMachine.ChangeState(stateMachine.IdleState);   // 초기 상태를 Idle로 설정
     }
     
+    // private void Update()
+    // {
+    //     stateMachine.HandleInput();     // 입력 처리 (키보드, 마우스 입력 감지)
+    //     stateMachine.Update();          // 논리 업데이트 (상태 전환 등)
+    // }
+    
     private void Update()
     {
-        stateMachine.HandleInput();     // 입력 처리 (키보드, 마우스 입력 감지)
-        stateMachine.Update();          // 논리 업데이트 (상태 전환 등)
+        if (stateMachine.IsMovementLocked)
+        {
+            stateMachine.MovementInput = Vector2.zero;
+            if (!_loggedMovementLocked)
+            {
+                Debug.Log("Movement Locked - Input Ignored");
+                _loggedMovementLocked = true;
+            }
+        }
+        else
+        {
+            stateMachine.MovementInput = Input.MoveInput;
+            _loggedMovementLocked = false;
+        }
+        stateMachine.Update();
     }
 
     private void FixedUpdate()
     {
         stateMachine.PhysicsUpdate();   // 물리 업데이트 (이동, 회전 등)
     }
+    
+    // private void OnCollisionEnter(Collision collision)
+    // {
+    //     if (collision.gameObject.layer == LayerMask.NameToLayer("Ground"))
+    //     {
+    //         Debug.Log($"Player OnCollisionEnter - Velocity: {Rigidbody.velocity.y}");
+    //         if (stateMachine.CurrentState is PlayerFallState fallState)
+    //         {
+    //             fallState.Update(); // 강제로 Update 호출
+    //         }
+    //     }
+    // }
 }
