@@ -8,10 +8,12 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] private AchievementSystem achievementSystem;
     [SerializeField] private SkillManager skillManager;
-    [SerializeField] private NarrationManager narrationManager;
+    //[SerializeField] private NarrationManager narrationManager;
+    [SerializeField] private SkillUnlockUI skillUnlockUI;
     public AchievementSystem AchievementSystem => achievementSystem;
     public SkillManager SkillManager => skillManager;
-    public NarrationManager NarrationManager => narrationManager;
+    //public NarrationManager NarrationManager => narrationManager;
+    public SkillUnlockUI SkillUnlockUI => skillUnlockUI;
     private void Awake()
     {
         if (Instance == null)
