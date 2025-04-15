@@ -71,13 +71,7 @@ public class PlayerFallState : PlayerAirState
         // 마우스 클릭 입력 확인
         if (Mouse.current.leftButton.wasPressedThisFrame)
         {
-            if (grabTag == "Rope" || grabTag == "Wall")
-            {
-                GameManager.Instance.AchievementSystem.GrabCount(); // 잡기 횟수 증가
-                stateMachine.ChangeState(stateMachine.GrabState);
-                Debug.Log("잡기 성공!");
-            }
-            return;
+            if (GrabAttempt(out string _)) return;
         }
     }
     
@@ -91,6 +85,7 @@ public class PlayerFallState : PlayerAirState
             {
                 if (grabTag == validTag)
                 {
+                    GameManager.Instance.AchievementSystem.GrabCount(); // 잡기 횟수 증가
                     stateMachine.ChangeState(stateMachine.GrabState);
                     Debug.Log($"잡기 성공: {grabTag}");
                     return true;
