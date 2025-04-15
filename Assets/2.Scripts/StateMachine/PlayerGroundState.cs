@@ -70,6 +70,7 @@ public class PlayerGroundState : PlayerBaseState
     protected override void OnJumpStarted(InputAction.CallbackContext context)
     {
         base.OnJumpStarted(context);
+        GameManager.Instance.AchievementSystem.JumpCount(); //점프 횟수 카운트
         stateMachine.ChangeState(stateMachine.JumpState);
     }
 }
