@@ -33,6 +33,7 @@ public class AchievementSystem : MonoBehaviour
     public void GrabCount()
     {
         grabCount += 1;
+        Debug.Log(grabCount);
     }
 
 }

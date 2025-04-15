@@ -32,7 +32,7 @@ public class PlayerGrabState : PlayerAirState
         //wallCooldownCoroutine = stateMachine.Player.StartCoroutine(EnableWallGrabAfterCooldown(2f)); //1초 후 다시가능
         base.Enter();
 
-
+        GameManager.Instance.AchievementSystem.GrabCount(); // 잡기 횟수 증가
         StartAnimation(stateMachine.Player.AnimationData.GrabParameterHash);
 
         // 물리 설정
