@@ -24,6 +24,7 @@ public class PlayerGrabState : PlayerAirState
             stateMachine.ChangeState(stateMachine.FallState);
             return;
         }
+        stateMachine.CanDoubleJump = false; // 점프하고 나서 바로 더블점프 못 하게 차단
         //stateMachine.CanGrabWall = false;
         //if(wallCooldownCoroutine != null)
         //{
@@ -87,6 +88,7 @@ public class PlayerGrabState : PlayerAirState
 
             stateMachine.IsMovementLocked = true; // 이동 잠금
             stateMachine.CanGrabWall = false; //잡기 잠금 
+
 
             float jumpPower = stateMachine.Player.Data.AirData.JumpForce * 0.8f;
             float directionalForce = 20.0f;
