@@ -42,15 +42,15 @@ public class PlayerJumpState : PlayerAirState
         base.Exit();
         StopAnimation(stateMachine.Player.AnimationData.JumpParameterHash);
     }
-
+    
     public override void PhysicsUpdate()
     {
-        base.Update();
-
+        base.PhysicsUpdate();   // AirState.PhysicsUpdate 호출
+        
+        // 낙하 상태로 전환
         if (stateMachine.Player.Rigidbody.velocity.y <= 0)
         {
             stateMachine.ChangeState(stateMachine.FallState);
-            return;
         }
     }
 }

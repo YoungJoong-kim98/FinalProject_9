@@ -16,7 +16,8 @@ public class Player : MonoBehaviour
     public Animator Animator { get; private set; }              // 애니메이션 제어
     public PlayerController Input { get; private set; }         // 입력 처리
     public ForceReceiver ForceReceiver { get; private set; }    // 중력, 점프
-    private PlayerStateMachine stateMachine;                    // FSM의 핵심 컨트롤러
+    public PlayerStateMachine stateMachine;                    // FSM의 핵심 컨트롤러
+    private bool _loggedMovementLocked = false; // 로그 제어
 
     public Rigidbody Rigidbody { get; private set; }
 
@@ -37,11 +38,30 @@ public class Player : MonoBehaviour
         stateMachine.ChangeState(stateMachine.IdleState);   // 초기 상태를 Idle로 설정
     }
     
+    // private void Update()
+    // {
+    //     stateMachine.HandleInput();     // 입력 처리 (키보드, 마우스 입력 감지)
+    //     stateMachine.Update();          // 논리 업데이트 (상태 전환 등)
+    // }
+    
     private void Update()
     {
-        stateMachine.HandleInput();     // 입력 처리 (키보드, 마우스 입력 감지)
-        stateMachine.Update();          // 논리 업데이트 (상태 전환 등)
-    }
+        if (stateMachine.IsMovementLocked)
+        {
+            stateMachine.MovementInput = Vector2.zero;
+            if (!_loggedMovementLocked)
+            {
+                Debug.Log("이동 잠금 - 입력 무시됨");
+                _loggedMovementLocked = true;
+            }
+        }
+        else
+        {
+            stateMachine.MovementInput = Input.MoveInput;
+            _loggedMovementLocked = false;
+        }
+        stateMachine.Update();
+    } 
 
     private void FixedUpdate()
     {
