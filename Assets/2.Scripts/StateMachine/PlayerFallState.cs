@@ -80,6 +80,7 @@ public class PlayerFallState : PlayerAirState
         {
             if (grabTag == "Rope" || grabTag == "Wall")
             {
+                GameManager.Instance.AchievementSystem.GrabCount(); // 잡기 횟수 증가
                 stateMachine.ChangeState(stateMachine.GrabState);
                 Debug.Log("잡기 성공!");
             }
