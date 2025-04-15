@@ -16,7 +16,7 @@ public class PunchObstacle : MonoBehaviour
      
     //정기적으로 실행되는지 여부
     [SerializeField] private bool _isReglar = false;
-    //실행 빈도
+    //주기
     [SerializeField] private float _regularTime = 1f;
 
     //원래 위치
