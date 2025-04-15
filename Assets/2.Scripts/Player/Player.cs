@@ -51,7 +51,7 @@ public class Player : MonoBehaviour
             stateMachine.MovementInput = Vector2.zero;
             if (!_loggedMovementLocked)
             {
-                Debug.Log("Movement Locked - Input Ignored");
+                Debug.Log("이동 잠금 - 입력 무시됨");
                 _loggedMovementLocked = true;
             }
         }
@@ -61,22 +61,10 @@ public class Player : MonoBehaviour
             _loggedMovementLocked = false;
         }
         stateMachine.Update();
-    }
+    } 
 
     private void FixedUpdate()
     {
         stateMachine.PhysicsUpdate();   // 물리 업데이트 (이동, 회전 등)
     }
-    
-    // private void OnCollisionEnter(Collision collision)
-    // {
-    //     if (collision.gameObject.layer == LayerMask.NameToLayer("Ground"))
-    //     {
-    //         Debug.Log($"Player OnCollisionEnter - Velocity: {Rigidbody.velocity.y}");
-    //         if (stateMachine.CurrentState is PlayerFallState fallState)
-    //         {
-    //             fallState.Update(); // 강제로 Update 호출
-    //         }
-    //     }
-    // }
 }

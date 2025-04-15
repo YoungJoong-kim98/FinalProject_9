@@ -6,10 +6,11 @@ using UnityEngine.InputSystem;
 
 public class PlayerFallState : PlayerAirState
 {
-    private float _fallSpeed;       // 추락 속도 증가 값
+    private float _fallSpeed;       // 초당 가속도
     private float _maxFallSpeed;    // 최대 낙하 속도 제한
-    private float _fallTime;        // 낙하 시간 측정
-    private bool _wasGroundedLastFrame; // 착지 지연 체크
+    private bool _wasGrounded;      // 이전 프레임 착지 여부 (연속 착지 방지)
+    private readonly string[] validGrabTags = { "Rope", "Wall" };   // 잡을 수 있는 대상
+    
     public PlayerFallState(PlayerStateMachine playerStateMachine) : base(playerStateMachine)
     {
         _fallSpeed = stateMachine.Player.Data.AirData.FallSpeed;
@@ -19,8 +20,7 @@ public class PlayerFallState : PlayerAirState
     public override void Enter()
     {
         base.Enter();
-        _fallTime = 0f;
-        _wasGroundedLastFrame = false;
+        _wasGrounded = false;  // 착지 플래그 초기화
         StartAnimation(stateMachine.Player.AnimationData.FallParameterHash);
     }
 
@@ -30,61 +30,69 @@ public class PlayerFallState : PlayerAirState
         StopAnimation(stateMachine.Player.AnimationData.FallParameterHash);
     }
 
+    // 낙하 로직 처리
     public override void Update()
     {
         base.Update();
         DebugDrawGrabRay();
-
-        _fallTime += Time.deltaTime;
-        Rigidbody rb = stateMachine.Player.Rigidbody;
-        Vector3 velocity = rb.velocity;
         
-        velocity.y -= _fallSpeed * Time.deltaTime;
-        velocity.y = Mathf.Max(velocity.y, -_maxFallSpeed);
-        rb.velocity = velocity;
+        Rigidbody rb = stateMachine.Player.Rigidbody;   // 플레이어 물리 가져옴
+        Vector3 velocity = rb.velocity; // 현재 속도 가져오기
+        
+        // 낙하 속도 계산
+        velocity.y -= _fallSpeed * Time.deltaTime;  // y 속도 더하기
+        velocity.y = Mathf.Max(velocity.y, -_maxFallSpeed); // 최대 속도 제한
+        rb.velocity = velocity; // 속도 적용
         
         float savedVelocity = velocity.y; // 착지 전 속도 저장
-        Debug.Log($"Fall - Velocity: {velocity.y}, FallTime: {_fallTime}, MaxFallSpeed: {_maxFallSpeed}");
+        Debug.Log($"Fall - y 속도: {velocity.y}, MaxFallSpeed: {_maxFallSpeed}");
 
         // 착지 확인
-        bool isGrounded = IsGrounded();
-        if (isGrounded && !_wasGroundedLastFrame) // 첫 착지 프레임
+        bool isGrounded = IsGrounded(); // 바닥 감지
+        if (isGrounded && !_wasGrounded) // 첫 착지 프레임만 처리
         {
-            Debug.Log($"Grounded - Saved Velocity: {savedVelocity}, Current Velocity: {velocity.y}");
-            if (savedVelocity <= -30f)
+            Debug.Log($"착지 - 저장 속도: {savedVelocity}");
+            
+            if (savedVelocity <= -_maxFallSpeed * 0.9f)  // 최대 낙하 속도라면 (-27f 이하)
             {
-                if (TryDetectGrabTarget(out string tag))
-                {
-                    if (tag == "Rope" || tag == "Wall")
-                    {
-                        stateMachine.ChangeState(stateMachine.GrabState);
-                        Debug.Log("Grab Success");
-                        return;
-                    }
-
-                    Debug.Log("Grab Failed");
-                }
-
-                Debug.Log("Triggering FallCrashState");
+                if (GrabAttempt(out string _)) return;  // 잡기 시도 메서드
+                Debug.Log("철푸덕");
                 stateMachine.ChangeState(stateMachine.FallCrashState);
                 return;
             }
-            HandleGroundedState();
+            
+            Debug.Log("정상 착지");
+            HandleGroundedState();  // 저속 낙하 -> 정상 착지 (Idle/Walk/Run으로 전환)
             return;
         }
 
-        _wasGroundedLastFrame = isGrounded;
-
-        // 잡기 입력
-        if (Mouse.current.leftButton.wasPressedThisFrame && TryDetectGrabTarget(out string grabTag))
+        _wasGrounded = isGrounded; // 다음 프레임 대비
+        
+        // 마우스 클릭 입력 확인
+        if (Mouse.current.leftButton.wasPressedThisFrame)
         {
-            if (grabTag == "Rope" || grabTag == "Wall")
-            {
-                stateMachine.ChangeState(stateMachine.GrabState);
-                Debug.Log("잡기 성공!");
-            }
-            return;
+            if (GrabAttempt(out string _)) return;  // 잡기 시도
         }
+    }
+    
+    // 잡기 시도 메서드
+    private bool GrabAttempt(out string grabTag)
+    {
+        grabTag = null;
+        if (TryDetectGrabTarget(out grabTag))
+        {
+            foreach (var validTag in validGrabTags)
+            {
+                if (grabTag == validTag)
+                {
+                    stateMachine.ChangeState(stateMachine.GrabState);
+                    Debug.Log($"잡기 성공: {grabTag}");
+                    return true;
+                }
+            }
+            Debug.Log($"잡기 실패: Invalid tag {grabTag}");
+        }
+        return false;
     }
 
     public override void PhysicsUpdate()
@@ -92,6 +100,7 @@ public class PlayerFallState : PlayerAirState
         base.PhysicsUpdate();   // AirState.PhysicsUpdate 호출
     }
     
+    // 바닥 감지
     private bool IsGrounded()
     {
         Transform t = stateMachine.Player.transform;
@@ -99,23 +108,15 @@ public class PlayerFallState : PlayerAirState
         float rayLength = 1.0f;
         LayerMask groundMask = LayerMask.GetMask("Ground");
         
-        bool isGrounded = Physics.Raycast(origin, Vector3.down, rayLength, groundMask);
-        if (isGrounded)
+        // 중앙 레이
+        if (Physics.Raycast(origin, Vector3.down, rayLength, groundMask))
         {
-            // 속도가 거의 0인지 확인
-            float velocityY = stateMachine.Player.Rigidbody.velocity.y;
-            bool isStable = Mathf.Abs(velocityY) < 0.1f;
-            
-            Debug.Log("Ground detected at center");
+            Debug.Log($"중앙 접지 감지, 속도: {stateMachine.Player.Rigidbody.velocity.y}");
             return true;
         }
 
-        // 중심
-        if (Physics.Raycast(origin, Vector3.down, rayLength, groundMask)) return true;
-
         // 좌우 앞뒤 방향을 약간 퍼뜨려서 쏘기
         float offset = 0.3f;
-
         Vector3[] offsets = new Vector3[]
         {
             t.right * offset,     // 오른쪽
@@ -129,10 +130,11 @@ public class PlayerFallState : PlayerAirState
             Vector3 offsetOrigin = origin + dir;
             if (Physics.Raycast(offsetOrigin, Vector3.down, rayLength, groundMask))
             {
+                Debug.Log($"오프셋 접지 감지: {dir}, Velocity: {stateMachine.Player.Rigidbody.velocity.y}");
                 return true;
             }
         }
-        Debug.Log("No ground detected");
+        Debug.Log("접지 감지 안 됨");
         return false;
     }
     
@@ -146,11 +148,11 @@ public class PlayerFallState : PlayerAirState
         targetTag = null;
 
         Transform t = stateMachine.Player.transform;
-        Vector3 origin = t.position + Vector3.up * 2.0f;
+        Vector3 origin = t.position + Vector3.up * 2.0f;    // 머리 위
         float distance = 1.0f;
         float radius = 0.1f; // ← 필요에 따라 값 조절 가능 (0.1 ~ 0.5 추천)
 
-        Vector3 diagonalDir = (t.forward + Vector3.up).normalized; // 로프 감지용 방향
+        Vector3 diagonalDir = (t.forward + Vector3.up).normalized; // 로프 감지용 방향 (대각선)
 
         // 로프 감지 (위쪽 대각선 방향 - Raycast로)
         //if (Physics.Raycast(origin, diagonalDir, out RaycastHit hit, distance, LayerMask.GetMask("Rope")))
@@ -179,6 +181,7 @@ public class PlayerFallState : PlayerAirState
         return false;
     }
     
+    // 레이 시각화
     private void DebugDrawGrabRay()
     {
         Transform t = stateMachine.Player.transform;
@@ -203,115 +206,28 @@ public class PlayerFallState : PlayerAirState
         Debug.DrawRay(origin2, t.forward * castDistance, Color.blue);   // 벽 감지용 Ray
     }
         
+    // 착지 후 상태 전환
     private void HandleGroundedState()
     {
-        float preservedSpeed = stateMachine.CurrentMoveSpeed;
-        if (stateMachine.Player.Input.playerActions.Run.IsPressed())
+        float preservedSpeed = stateMachine.CurrentMoveSpeed;   // 이전 속도 유지
+        
+        if (stateMachine.Player.Input.playerActions.Run.IsPressed())    // Shift 누르고 있으면
         {
             stateMachine.CurrentMoveSpeed = preservedSpeed;
             stateMachine.ChangeState(stateMachine.RunState);
-            Debug.Log($"Fall to Run - Speed: {stateMachine.CurrentMoveSpeed}");
+            Debug.Log($"Fall to Run - 속도: {stateMachine.CurrentMoveSpeed}");
         }
-        else if (stateMachine.MovementInput != Vector2.zero)
+        else if (stateMachine.MovementInput != Vector2.zero)    // 이동 입력 있으면
         {
             stateMachine.CurrentMoveSpeed = stateMachine.MovementSpeed;
             stateMachine.ChangeState(stateMachine.WalkState);
             Debug.Log("Fall to Walk");
         }
-        else
+        else   // 입력 없으면
         {
             stateMachine.CurrentMoveSpeed = stateMachine.MovementSpeed;
             stateMachine.ChangeState(stateMachine.IdleState);
             Debug.Log("Fall to Idle");
         }
     }
-        
-        // if (IsGrounded()) // Raycast로 착지 확인
-        // {
-        //     // Debug.Log($"낙하 시간: {_fallTime}초"); // 착지 시 낙하 시간 출력
-        //     
-        //     float preservedSpeed = stateMachine.CurrentMoveSpeed; // 착지 전 속도 저장
-        //     
-        //     if (stateMachine.Player.Input.playerActions.Run.IsPressed()) // Shift 누르고 있으면
-        //     {
-        //         stateMachine.CurrentMoveSpeed = preservedSpeed; // 감소된 속도 사용
-        //         stateMachine.ChangeState(stateMachine.RunState);
-        //         Debug.Log($"Fall to Run - 현재 이동 속도: {stateMachine.CurrentMoveSpeed}");
-        //     }
-        //     else if (stateMachine.MovementInput != Vector2.zero) // 이동 입력 있으면
-        //     {
-        //         stateMachine.CurrentMoveSpeed = stateMachine.MovementSpeed; 
-        //         stateMachine.ChangeState(stateMachine.WalkState);
-        //     }
-        //     else // 입력 없으면
-        //     {
-        //         stateMachine.CurrentMoveSpeed = stateMachine.MovementSpeed;
-        //         stateMachine.ChangeState(stateMachine.IdleState);
-        //     }
-        //     return;
-        // }
-        // if (Mouse.current.leftButton.wasPressedThisFrame && TryDetectGrabTarget(out string tag))
-        // {
-        //     if (tag == "Rope" || tag == "Wall")
-        //     {
-        //         stateMachine.ChangeState(stateMachine.GrabState);
-        //         
-        //     }
-        //     return;
-        // }
-        
-        
-    // if (!IsGrounded()) // 추락 가속도 적용
-    //         {
-    //             _fallTime += Time.deltaTime; // 낙하 시간 누적
-    //             Rigidbody rb = stateMachine.Player.Rigidbody;
-    //             Vector3 velocity = rb.velocity;
-    //             velocity.y -= _fallSpeed * Time.deltaTime; // 추락 속도 증가
-    //             velocity.y = Mathf.Max(velocity.y, -_maxFallSpeed); // 최대 속도 설정
-    //             rb.velocity = velocity; // 수평 속도는 AirState에서 관리
-    //         }
-    //
-    //         if (IsGrounded()) // Raycast로 착지 확인
-    //         {
-    //             // Debug.Log($"낙하 시간: {_fallTime}초"); // 착지 시 낙하 시간 출력
-    //
-    //             float preservedSpeed = stateMachine.CurrentMoveSpeed; // 착지 전 속도 저장
-    //
-    //             if (stateMachine.Player.Input.playerActions.Run.IsPressed()) // Shift 누르고 있으면
-    //             {
-    //                 stateMachine.CurrentMoveSpeed = preservedSpeed; // 감소된 속도 사용
-    //                 stateMachine.ChangeState(stateMachine.RunState);
-    //                 Debug.Log($"Fall to Run - 현재 이동 속도: {stateMachine.CurrentMoveSpeed}");
-    //             }
-    //             else if (stateMachine.MovementInput != Vector2.zero) // 이동 입력 있으면
-    //             {
-    //                 stateMachine.CurrentMoveSpeed = stateMachine.MovementSpeed;
-    //                 stateMachine.ChangeState(stateMachine.WalkState);
-    //             }
-    //             else // 입력 없으면
-    //             {
-    //                 stateMachine.CurrentMoveSpeed = stateMachine.MovementSpeed;
-    //                 stateMachine.ChangeState(stateMachine.IdleState);
-    //             }
-    //
-    //             Debug.Log("Normal Landing");
-    //             HandleGroundedState();
-    //             return;
-    //         }
-    //
-    //         _wasGroundedLastFrame = isGrounded; // 다음 프레임 대비
-    //
-    //         // 잡기 입력
-    //         if (Mouse.current.leftButton.wasPressedThisFrame && TryDetectGrabTarget(out string grabTag))
-    //         {
-    //             if (grabTag == "Rope" || grabTag == "Wall")
-    //             {
-    //                 stateMachine.ChangeState(stateMachine.GrabState);
-    //                 Debug.Log("잡기 성공!");
-    //             }
-    //
-    //             return;
-    //         }
-    //     }
-    // }
 }
