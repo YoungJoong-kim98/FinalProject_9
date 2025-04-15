@@ -9,7 +9,7 @@ public class PlayerController : MonoBehaviour
     public PlayerInputs playerInputs { get; private set; }  // 인풋 시스템에서 전체 입력을 다루는 객체
     public PlayerInputs.PlayerActions playerActions { get; private set; }   // Player 액션 맵 (이동, 점프 등 액션)
     public Vector2 MoveInput { get; private set; }
-    public bool IsRunning { get; private set; }
+    public bool IsRunPressed() => playerActions.Run.IsPressed();
 
     private void Awake()
     {
@@ -20,7 +20,6 @@ public class PlayerController : MonoBehaviour
     private void Update()
     {
         MoveInput = playerActions.Movement.ReadValue<Vector2>();
-        IsRunning = playerActions.Run.IsPressed();
     }
 
     private void OnEnable()     // 켜질 때

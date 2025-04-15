@@ -6,8 +6,6 @@ using UnityEngine;
 public class PlayerStateMachine : StateMachine
 {
     public Player Player { get; }       // 플레이어 객체 참조
-    
-    public PlayerBaseState CurrentState { get; private set; }
     public Vector2 MovementInput { get; set; }  // 이동 입력값 (WASD 등)
     public float MovementSpeed { get; private set; }    // 기본 이동 속도
     public float RotationDamping { get; private set; }  

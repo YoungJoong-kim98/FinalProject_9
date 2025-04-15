@@ -6,8 +6,8 @@ using static UnityEngine.UI.Image;
 
 public class PlayerGrabState : PlayerAirState
 {
-    private bool hasJumped = false;
-    private float slowFallSpeed = -0.1f;
+    private bool hasJumped = false; // 점프 여부
+    private float slowFallSpeed = -0.1f;    // 잡기 중 느린 낙하 속도
     public PlayerGrabState(PlayerStateMachine stateMachine) : base(stateMachine) { }
 
     private Coroutine unlockCoroutine; // 이동 상태 만드는 코루틴
@@ -15,6 +15,7 @@ public class PlayerGrabState : PlayerAirState
 
     private readonly WaitForSeconds move_unlockTime = new WaitForSeconds(1f);
     private readonly WaitForSeconds wall_unlockTime = new WaitForSeconds(1f);
+    
     public override void Enter()
     {
         // 벽 잡기 이미 했으면 안 들어가게 하기
@@ -34,11 +35,12 @@ public class PlayerGrabState : PlayerAirState
         GameManager.Instance.AchievementSystem.GrabCount(); // 잡기 횟수 증가
         StartAnimation(stateMachine.Player.AnimationData.GrabParameterHash);
 
-        stateMachine.Player.Rigidbody.velocity = Vector3.zero;
-        stateMachine.Player.Rigidbody.useGravity = false;
-        stateMachine.Player.Rigidbody.constraints = RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionZ;
+        // 물리 설정
+        stateMachine.Player.Rigidbody.velocity = Vector3.zero;  // 속도 0으로
+        stateMachine.Player.Rigidbody.useGravity = false;       // 중력 비활성화
+        stateMachine.Player.Rigidbody.constraints = RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionZ; // x, z 이동 차단
 
-        hasJumped = false;
+        hasJumped = false;  // 점프 여부 초기화
     }
 
 
@@ -55,6 +57,7 @@ public class PlayerGrabState : PlayerAirState
         stateMachine.Player.Rigidbody.constraints = RigidbodyConstraints.FreezeRotation;
     }
 
+    // 잡기 유지/해제
     public override void Update()
     {
         base.Update();
@@ -78,6 +81,7 @@ public class PlayerGrabState : PlayerAirState
             return;
         }
 
+        // 점프 입력
         if (!hasJumped && Keyboard.current.spaceKey.wasPressedThisFrame)
         {
 
