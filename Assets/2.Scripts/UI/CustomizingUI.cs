@@ -10,14 +10,7 @@ public class CustomizingUI : PopUpUI
     public Button BackButton;
 
     [Header("character slots")]
-    public Button slot1;
-    public Button slot2;
-    public Button slot3;
-    public Button slot4;
-    public Button slot5;
-    public Button slot6;
-    public Button slot7;
-    public Button slot8;
+    public List<CharacterSlot> characterSlots;
 
     [Header("colorButtons")]
     public Button aButton;
@@ -25,25 +18,8 @@ public class CustomizingUI : PopUpUI
     public Button cButton;
     public Button dButton;
 
-    [Header("HiddenImages")]
-    public GameObject hiddenImage3;
-    public GameObject hiddenImage4;
-    public GameObject hiddenImage5;
-    public GameObject hiddenImage6;
-    public GameObject hiddenImage7;
-    public GameObject hiddenImage8;
-
-    [Header("Achievement")]
-    public GameObject Unlock3;
-    public GameObject Unlock4;
-    public GameObject Unlock5;
-    public GameObject Unlock6;
-    public GameObject Unlock7;
-    public GameObject Unlock8;
-
     [Header("All character prefabs(순서바꾸면안됨)")]
     public List<GameObject> allCharacterPrefabs;
-
     public GameObject mainCharacter;
 
     private int currentCharacterBaseIndex = 0;  // 색상 변경 시 기준이 되는 캐릭터 인덱스
@@ -52,14 +28,7 @@ public class CustomizingUI : PopUpUI
 
     void Start()
     {
-        slot1.onClick.AddListener(() => SelectCharacter(0));  // Boss B A
-        slot2.onClick.AddListener(() => SelectCharacter(4));  // Boss A A
-        slot3.onClick.AddListener(() => SelectCharacter(8));  // Intern A A
-        slot4.onClick.AddListener(() => SelectCharacter(12)); // Intern B A
-        slot5.onClick.AddListener(() => SelectCharacter(16)); // Supervisor A A
-        slot6.onClick.AddListener(() => SelectCharacter(20)); // Supervisor B A
-        slot7.onClick.AddListener(() => SelectCharacter(24)); // Worker A A
-        slot8.onClick.AddListener(() => SelectCharacter(28)); // Worker B A
+        SetupCharacterSlots();
 
         aButton.onClick.AddListener(() => ChangeColor(0));
         bButton.onClick.AddListener(() => ChangeColor(1));
@@ -68,6 +37,32 @@ public class CustomizingUI : PopUpUI
 
         ApplyButton.onClick.AddListener(OnClickApply);
         BackButton.onClick.AddListener(OnClickBack);
+    }
+
+    void SetupCharacterSlots()
+    {
+        for (int i = 0; i < characterSlots.Count; i++)
+        {
+            var capturedSlot = characterSlots[i];
+
+            Debug.Log($"[Setup] 슬롯 {i} → BaseIndex: {capturedSlot.characterBaseIndex}");
+
+            capturedSlot.slotButton.onClick.RemoveAllListeners();
+
+            capturedSlot.EvaluateUnlock();
+            capturedSlot.UpdateLockVisual();
+
+            if (capturedSlot.isUnlocked)
+            {
+                capturedSlot.slotButton.onClick.AddListener(() =>
+                    SelectCharacter(capturedSlot.characterBaseIndex));
+            }
+            else
+            {
+                capturedSlot.slotButton.onClick.AddListener(() =>
+                    ShowUnlockInfo(capturedSlot));
+            }
+        }
     }
     void OnClickBack()
     {
@@ -120,5 +115,18 @@ public class CustomizingUI : PopUpUI
         //TODO: 플레이어 캐릭터 시스템과 연결할 부분
         //PlayerManager.Instance.SetCharacter(selectedCharacterPrefab);
         this.gameObject.SetActive(false);
+    }
+    void ShowUnlockInfo(CharacterSlot slot)
+    {
+        Debug.Log($"[잠금] 슬롯 {slot.characterBaseIndex}는 아직 해금되지 않았음");
+       
+    }
+    public void RefreshCharacterSlots()
+    {
+        foreach (var slot in characterSlots)
+        {
+            slot.EvaluateUnlock();
+            slot.UpdateLockVisual();
+        }
     }
 }
