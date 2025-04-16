@@ -16,6 +16,7 @@ public class PlayerRunState : PlayerGroundState
     public override void Enter()
     {
         base.Enter();
+        stateMachine.Player.PlayRunDust();
         _currentRunSpeed = stateMachine.CurrentMoveSpeed; // 이전 속도(2f~5f) 가져오기
         if (_currentRunSpeed < stateMachine.MovementSpeed) // 최소 2f 보장
         {
@@ -30,6 +31,7 @@ public class PlayerRunState : PlayerGroundState
     public override void Exit()
     {
         base.Exit();
+        stateMachine.Player.StopRunDust();
         stateMachine.MovementSpeedModifier = 1f; // 기본 속도로 복귀
         stateMachine.Player.Animator.speed = 1f; // 애니메이션 속도 초기화
         StopAnimation(stateMachine.Player.AnimationData.RunParameterHash);

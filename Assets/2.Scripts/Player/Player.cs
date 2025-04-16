@@ -18,6 +18,8 @@ public class Player : MonoBehaviour
     public ForceReceiver ForceReceiver { get; private set; }    // 중력, 점프
     public PlayerStateMachine stateMachine;                     // FSM의 핵심 컨트롤러
 
+    [SerializeField] private ParticleSystem runDust;
+
     public Rigidbody Rigidbody { get; private set; }
 
     private void Awake()
@@ -55,5 +57,15 @@ public class Player : MonoBehaviour
     private void FixedUpdate()
     {
         stateMachine.PhysicsUpdate();   // 물리 업데이트 (이동, 회전 등)
+    }
+    public void PlayRunDust()
+    {
+        if (runDust != null && !runDust.isPlaying)
+            runDust.Play();
+    }
+    public void StopRunDust()
+    {
+        if (runDust != null && runDust.isPlaying)
+            runDust.Stop();
     }
 }
