@@ -33,6 +33,31 @@ public class AchievementSystem : MonoBehaviour
     public void GrabCount()
     {
         grabCount += 1;
+        Debug.Log(grabCount);
     }
 
+    public AchievementData ToData()
+    {
+        return new AchievementData
+        {
+            jumpCount = this.jumpCount,
+            jumpPlatform = this.jumpPlatform,
+            researcherStage = this.researcherStage,
+            fallingCrash = this.fallingCrash,
+            grabCount = this.grabCount,
+            completionTime = this.completionTime
+        };
+    }
+
+    public void LoadFromData(AchievementData data)
+    {
+        if (data == null) return;
+
+        this.jumpCount = data.jumpCount;
+        this.jumpPlatform = data.jumpPlatform;
+        this.researcherStage = data.researcherStage;
+        this.fallingCrash = data.fallingCrash;
+        this.grabCount = data.grabCount;
+        this.completionTime = data.completionTime;
+    }
 }

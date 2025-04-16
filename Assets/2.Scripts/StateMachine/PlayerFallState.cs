@@ -85,7 +85,7 @@ public class PlayerFallState : PlayerAirState
         {
             foreach (var validTag in validGrabTags)
             {
-                if (grabTag == validTag)
+                if (grabTag == validTag && GameManager.Instance.SkillManager.grab)
                 {
                     GameManager.Instance.AchievementSystem.GrabCount(); // 잡기 횟수 증가
                     stateMachine.ChangeState(stateMachine.GrabState);
