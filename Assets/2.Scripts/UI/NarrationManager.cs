@@ -9,19 +9,33 @@ public class NarrationManager : MonoBehaviour
 
     public float displayDuration = 5f;
 
+    [Header("Cartoon Voice")]
+    public CartoonTTS cartoonTTS;
     public void ShowNarration(string text, float duration = -1f)
     {
         StopAllCoroutines();  // 이전 UI 코루틴 정리
-        StartCoroutine(DisplayNarration(text, duration));
+        StartCoroutine(DisplayNarrationWithVoice(text, duration));
     }
 
-    private IEnumerator DisplayNarration(string text, float duration)
+    private IEnumerator DisplayNarrationWithVoice(string text, float duration)
     {
         narrationUI.SetActive(true);
-        narrationText.text = text;
+        narrationText.text = "";
+
+        foreach (char c in text)
+        {
+            if (char.IsWhiteSpace(c))
+            {
+                narrationText.text += c;
+                continue;
+            }
+
+            cartoonTTS.PlayCartoonSpeech(c.ToString());
+            narrationText.text += c;
+            yield return new WaitForSeconds(cartoonTTS.interval);
+        }
 
         yield return new WaitForSeconds(duration > 0 ? duration : displayDuration);
-
         narrationUI.SetActive(false);
     }
 }
