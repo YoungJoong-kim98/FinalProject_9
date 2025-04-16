@@ -22,7 +22,7 @@ public class PlayerFallCrashState : PlayerBaseState
         if (Physics.Raycast(t.position + Vector3.up * 0.1f, Vector3.down, out RaycastHit hit, 2f, LayerMask.GetMask("Ground")))
         {
             t.position = hit.point + Vector3.up * 0.1f;
-            Debug.Log($"Snapped to ground at: {hit.point}");
+            Debug.Log($"FallCrash - 바닥 진입: {hit.point}");
         }
         
         // 속도 및 중력 제어
@@ -32,17 +32,16 @@ public class PlayerFallCrashState : PlayerBaseState
         stateMachine.MovementInput = Vector2.zero;
 
         StartAnimation(stateMachine.Player.AnimationData.FallCrashParameterHash);
-        Debug.Log("FallCrashState 상태 확인");
+        Debug.Log("FallCrash 상태 진입");
     }
     
     public override void Update()
     {
         base.Update();
         _crashTimer += Time.deltaTime;
-        if (_crashTimer >= _crashDuration)  // 타이머가 1초 이상이면
+        if (_crashTimer >= _crashDuration)
         {
-            stateMachine.IsMovementLocked = false;  // 이동 잠금 해제
-            stateMachine.ChangeState(stateMachine.IdleState);
+            stateMachine.ChangeState(stateMachine.StandUpState);
         }
     }
     
@@ -53,7 +52,7 @@ public class PlayerFallCrashState : PlayerBaseState
         // 모든 속도 차단
         Rigidbody rb = stateMachine.Player.Rigidbody;
         rb.velocity = Vector3.zero;
-        Debug.Log($"FallCrash - Velocity: {rb.velocity}");
+        // Debug.Log($"FallCrash - Velocity: {rb.velocity}");
     }
     
     public override void Exit()
@@ -61,6 +60,6 @@ public class PlayerFallCrashState : PlayerBaseState
         base.Exit();
         stateMachine.Player.Rigidbody.useGravity = true; // 중력 복구
         StopAnimation(stateMachine.Player.AnimationData.FallCrashParameterHash);
-        Debug.Log($"FallCrashState 종료, FallCrash Param: {stateMachine.Player.Animator.GetBool(stateMachine.Player.AnimationData.FallCrashParameterHash)}");
+        Debug.Log($"FallCrashState 종료");
     }
 }

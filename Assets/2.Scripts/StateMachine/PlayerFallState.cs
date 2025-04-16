@@ -22,6 +22,7 @@ public class PlayerFallState : PlayerAirState
         base.Enter();
         _wasGrounded = false;  // 착지 플래그 초기화
         StartAnimation(stateMachine.Player.AnimationData.FallParameterHash);
+        Debug.Log("Fall 상태 진입");
     }
 
     public override void Exit()
@@ -45,7 +46,7 @@ public class PlayerFallState : PlayerAirState
         rb.velocity = velocity; // 속도 적용
         
         float savedVelocity = velocity.y; // 착지 전 속도 저장
-        Debug.Log($"Fall - y 속도: {velocity.y}, MaxFallSpeed: {_maxFallSpeed}");
+        // Debug.Log($"Fall - y 속도: {velocity.y}");
 
         // 착지 확인
         bool isGrounded = IsGrounded(); // 바닥 감지
@@ -53,37 +54,38 @@ public class PlayerFallState : PlayerAirState
         {
             Debug.Log($"착지 - 저장 속도: {savedVelocity}");
             
-            if (savedVelocity <= -_maxFallSpeed * 0.9f)  // 최대 낙하 속도라면 (-27f 이하)
+            if (savedVelocity <= -_maxFallSpeed * 0.98f) // 미세 속도 오차 조절 (-29.4)
             {
-                if (GrabAttempt(out string _)) return;  // 잡기 시도 메서드
+                if (GrabAttempt(out string _)) return;
                 Debug.Log("철푸덕");
                 stateMachine.ChangeState(stateMachine.FallCrashState);
                 return;
             }
             
             Debug.Log("정상 착지");
-            HandleGroundedState();  // 저속 낙하 -> 정상 착지 (Idle/Walk/Run으로 전환)
+            HandleGroundedState();
             return;
         }
 
         _wasGrounded = isGrounded; // 다음 프레임 대비
         
-        // 마우스 클릭 입력 확인
-        if (Mouse.current.leftButton.wasPressedThisFrame)
-        {
-            if (GrabAttempt(out string _)) return;
-        }
+        if (GrabAttempt(out string _)) return;
     }
     
     // 잡기 시도 메서드
     private bool GrabAttempt(out string grabTag)
     {
         grabTag = null;
+        
+        // 입력 없으면 시도 안 함
+        if (!Mouse.current.leftButton.wasPressedThisFrame)
+            return false;
+        
         if (TryDetectGrabTarget(out grabTag))
         {
             foreach (var validTag in validGrabTags)
             {
-                if (grabTag == validTag)
+                if (grabTag == validTag && GameManager.Instance.SkillManager.grab)
                 {
                     GameManager.Instance.AchievementSystem.GrabCount(); // 잡기 횟수 증가
                     stateMachine.ChangeState(stateMachine.GrabState);

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class PlayerAirState : PlayerBaseState
 {
@@ -68,6 +69,15 @@ public class PlayerAirState : PlayerBaseState
             // 공중 감속
             stateMachine.CurrentMoveSpeed -= Time.deltaTime * 0.2f; // 초당 0.2f 감소
             stateMachine.CurrentMoveSpeed = Mathf.Max(stateMachine.CurrentMoveSpeed, stateMachine.MovementSpeed);
+        }
+    }
+    protected override void OnJumpStarted(InputAction.CallbackContext context)
+    {
+        base.OnJumpStarted(context);
+        if(GameManager.Instance.SkillManager.doubleJump && stateMachine.CanDoubleJump)
+        {
+            stateMachine.CanDoubleJump = false;
+            stateMachine.ChangeState(stateMachine.JumpState);
         }
     }
 }
