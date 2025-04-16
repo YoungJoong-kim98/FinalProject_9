@@ -13,6 +13,7 @@ public class PlayerGroundState : PlayerBaseState
     public override void Enter()
     {
         base.Enter();
+        stateMachine.CanDoubleJump = true;
         StartAnimation(stateMachine.Player.AnimationData.GroundParameterHash);
     }
 
