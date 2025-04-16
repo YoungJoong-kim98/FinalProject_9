@@ -34,7 +34,7 @@ public class PlayerAirData // 공중에 있을 때 필요한 데이터들 묶은
     [field: Header("FallData")]
     [field: SerializeField]
     [field: Range(0f, 70f)]
-    public float FallSpeed { get; private set; } = 1f; // 추락 가속도
+    public float FallSpeed { get; private set; } = 5f; // 추락 가속도
 
     [field: SerializeField]
     [field: Range(0f, 100f)]
