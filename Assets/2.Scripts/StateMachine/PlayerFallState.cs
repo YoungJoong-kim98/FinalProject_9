@@ -214,7 +214,7 @@ public class PlayerFallState : PlayerAirState
     {
         float preservedSpeed = stateMachine.CurrentMoveSpeed;   // 이전 속도 유지
         
-        if (stateMachine.Player.Input.playerActions.Run.IsPressed())    // Shift 누르고 있으면
+        if (stateMachine.Player.Input.playerActions.Run.IsPressed() && GameManager.Instance.SkillManager.run)    // Shift 누르고 있으면
         {
             stateMachine.CurrentMoveSpeed = preservedSpeed;
             stateMachine.ChangeState(stateMachine.RunState);

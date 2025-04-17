@@ -12,7 +12,7 @@ public class CameraController : MonoBehaviour
 
     private Vector3 _currentVelocity;    // SmoothDamp에 쓰일 속도 저장
 
-    // 마우스 회전 관련 변수들
+    // 마우스 회전
     private float _yaw = 0f;     // 좌우 회전
     private float _pitch = 0f;   // 상하 회전
 
