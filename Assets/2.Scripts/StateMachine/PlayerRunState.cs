@@ -16,8 +16,8 @@ public class PlayerRunState : PlayerGroundState
     public override void Enter()
     {
         base.Enter();
-        _currentRunSpeed = stateMachine.CurrentMoveSpeed; // 이전 속도(2f~5f) 가져오기
-        if (_currentRunSpeed < stateMachine.MovementSpeed) // 최소 2f 보장
+        _currentRunSpeed = stateMachine.CurrentMoveSpeed;   // 이전 속도 가져오기
+        if (_currentRunSpeed < stateMachine.MovementSpeed)  // 최소 속도 (MovementSpeed) 보장
         {
             _currentRunSpeed = stateMachine.MovementSpeed;
         }
@@ -56,8 +56,8 @@ public class PlayerRunState : PlayerGroundState
         // 가속도 적용
         if (_currentRunSpeed < groundData.RunMaxSpeed)
         {
-            _currentRunSpeed += groundData.RunAcceleration * Time.deltaTime;        // 초당 3f 증가
-            _currentRunSpeed = Mathf.Min(_currentRunSpeed, groundData.RunMaxSpeed); // 5f까지 제한
+            _currentRunSpeed += groundData.RunAcceleration * Time.deltaTime;        // 초당 RunAcceleration 만큼 증가
+            _currentRunSpeed = Mathf.Min(_currentRunSpeed, groundData.RunMaxSpeed); // 최고 속도 RunMaxSpeed 만큼 제한
         }
         
         stateMachine.MovementSpeedModifier = _currentRunSpeed / stateMachine.MovementSpeed;

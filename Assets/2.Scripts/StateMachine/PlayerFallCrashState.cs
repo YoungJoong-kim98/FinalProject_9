@@ -14,6 +14,8 @@ public class PlayerFallCrashState : PlayerBaseState
     public override void Enter()
     {
         base.Enter();
+        StartAnimation(stateMachine.Player.AnimationData.FallCrashParameterHash);
+        StopAnimation(stateMachine.Player.AnimationData.FallParameterHash);
         _crashTimer = 0f;   // 타이머 초기화
         stateMachine.IsMovementLocked = true; // 이동 입력 잠금
         
@@ -30,8 +32,7 @@ public class PlayerFallCrashState : PlayerBaseState
         rb.velocity = Vector3.zero;
         rb.useGravity = false; // 중력 끄기
         stateMachine.MovementInput = Vector2.zero;
-
-        StartAnimation(stateMachine.Player.AnimationData.FallCrashParameterHash);
+        
         Debug.Log("FallCrash 상태 진입");
     }
     
