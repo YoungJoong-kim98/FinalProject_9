@@ -429,7 +429,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -686,7 +686,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -909,7 +909,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &258489939
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -954,7 +954,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &335859807
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1004,6 +1004,7 @@ GameObject:
   m_Component:
   - component: {fileID: 411454864}
   - component: {fileID: 411454865}
+  - component: {fileID: 411454866}
   m_Layer: 5
   m_Name: 'SelectedCharacter '
   m_TagString: Untagged
@@ -1045,6 +1046,27 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rotationSpeed: 5
+--- !u!95 &411454866
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 411454863}
+  m_Enabled: 1
+  m_Avatar: {fileID: 9000000, guid: f42af7d2aef2a0c44889171330a6e1a1, type: 3}
+  m_Controller: {fileID: 9100000, guid: 0183158aaa2f7d44db63c65e524b2c79, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &432605756
 GameObject:
   m_ObjectHideFlags: 0
@@ -1319,7 +1341,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 170231837}
-  m_Father: {fileID: 969964784}
+  m_Father: {fileID: 1835235433}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
@@ -1340,7 +1362,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 0.5660378, g: 0.5660378, b: 0.5660378, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -1662,6 +1684,7 @@ RectTransform:
   m_Children:
   - {fileID: 1027396362}
   - {fileID: 1783835816}
+  - {fileID: 1357954457}
   m_Father: {fileID: 514535432}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -1956,7 +1979,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 0.5660378, g: 0.5660378, b: 0.5660378, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -1993,7 +2016,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 118437394}
-  m_Father: {fileID: 1898369099}
+  m_Father: {fileID: 730939113}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
@@ -2066,6 +2089,7 @@ RectTransform:
   m_Children:
   - {fileID: 1047345839}
   - {fileID: 1898369099}
+  - {fileID: 659144210}
   m_Father: {fileID: 514535432}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -2783,7 +2807,6 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1754862379}
-  - {fileID: 493712356}
   m_Father: {fileID: 1835235433}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -3036,30 +3059,59 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ApplyButton: {fileID: 1053586124}
   BackButton: {fileID: 85461708}
-  slot1: {fileID: 2047075565}
-  slot2: {fileID: 780311111}
-  slot3: {fileID: 1263624967}
-  slot4: {fileID: 917590594}
-  slot5: {fileID: 164681684}
-  slot6: {fileID: 439437074}
-  slot7: {fileID: 1027396363}
-  slot8: {fileID: 1047345840}
+  characterSlots:
+  - slotButton: {fileID: 2047075565}
+    unlockImage: {fileID: 0}
+    hiddenImage: {fileID: 0}
+    characterBaseIndex: 0
+    unlockConditionId: 
+    isUnlocked: 1
+  - slotButton: {fileID: 780311111}
+    unlockImage: {fileID: 0}
+    hiddenImage: {fileID: 0}
+    characterBaseIndex: 4
+    unlockConditionId: 
+    isUnlocked: 1
+  - slotButton: {fileID: 1263624967}
+    unlockImage: {fileID: 1296250541}
+    hiddenImage: {fileID: 2009992430}
+    characterBaseIndex: 8
+    unlockConditionId: UNLOCK_SLOT3
+    isUnlocked: 0
+  - slotButton: {fileID: 917590594}
+    unlockImage: {fileID: 969964783}
+    hiddenImage: {fileID: 493712355}
+    characterBaseIndex: 12
+    unlockConditionId: UNLOCK_SLOT4
+    isUnlocked: 0
+  - slotButton: {fileID: 164681684}
+    unlockImage: {fileID: 432605756}
+    hiddenImage: {fileID: 1672244793}
+    characterBaseIndex: 16
+    unlockConditionId: UNLOCK_SLOT5
+    isUnlocked: 0
+  - slotButton: {fileID: 439437074}
+    unlockImage: {fileID: 1104044219}
+    hiddenImage: {fileID: 1991486194}
+    characterBaseIndex: 20
+    unlockConditionId: UNLOCK_SLOT6
+    isUnlocked: 0
+  - slotButton: {fileID: 1027396363}
+    unlockImage: {fileID: 1783835815}
+    hiddenImage: {fileID: 1357954456}
+    characterBaseIndex: 24
+    unlockConditionId: UNLOCK_SLOT7
+    isUnlocked: 0
+  - slotButton: {fileID: 1047345840}
+    unlockImage: {fileID: 1898369098}
+    hiddenImage: {fileID: 659144207}
+    characterBaseIndex: 28
+    unlockConditionId: UNLOCK_SLOT8
+    isUnlocked: 0
   aButton: {fileID: 1047608323}
   bButton: {fileID: 591603441}
   cButton: {fileID: 1169313790}
   dButton: {fileID: 180484080}
-  hiddenImage3: {fileID: 2009992430}
-  hiddenImage4: {fileID: 969964783}
-  hiddenImage5: {fileID: 432605756}
-  hiddenImage6: {fileID: 1104044219}
-  hiddenImage7: {fileID: 1783835815}
-  hiddenImage8: {fileID: 1898369098}
-  Unlock3: {fileID: 1210319275}
-  Unlock4: {fileID: 493712355}
-  Unlock5: {fileID: 1672244793}
-  Unlock6: {fileID: 1991486194}
-  Unlock7: {fileID: 1357954456}
-  Unlock8: {fileID: 659144207}
   allCharacterPrefabs:
   - {fileID: 9191777527009553827, guid: 6c7fa3b712f7ca34794d5cd3f1dc841a, type: 3}
   - {fileID: 9191777527009553827, guid: 918dbee73e1383d449e3ce90f7c6f6a6, type: 3}
@@ -3332,6 +3384,7 @@ RectTransform:
   m_Children:
   - {fileID: 1263624966}
   - {fileID: 2009992431}
+  - {fileID: 1210319276}
   m_Father: {fileID: 514535432}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -3770,7 +3823,6 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 839599178}
-  - {fileID: 1991486195}
   m_Father: {fileID: 1139888499}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -3891,6 +3943,7 @@ RectTransform:
   m_Children:
   - {fileID: 439437073}
   - {fileID: 1104044220}
+  - {fileID: 1991486195}
   m_Father: {fileID: 514535432}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -4056,7 +4109,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1892464846}
-  m_Father: {fileID: 2009992431}
+  m_Father: {fileID: 1032319552}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
@@ -4077,7 +4130,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 0.5660378, g: 0.5660378, b: 0.5660378, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -4523,7 +4576,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1782716984}
-  m_Father: {fileID: 1783835816}
+  m_Father: {fileID: 536403001}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
@@ -4544,7 +4597,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 0.5660378, g: 0.5660378, b: 0.5660378, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -6091,7 +6144,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -6209,7 +6262,6 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 758128076}
-  - {fileID: 1357954457}
   m_Father: {fileID: 536403001}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -6351,7 +6403,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -6467,6 +6519,7 @@ RectTransform:
   m_Children:
   - {fileID: 917590593}
   - {fileID: 969964784}
+  - {fileID: 493712356}
   m_Father: {fileID: 514535432}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -6525,7 +6578,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -6643,7 +6696,6 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1781367121}
-  - {fileID: 659144210}
   m_Father: {fileID: 730939113}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -6765,7 +6817,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1783872754}
-  m_Father: {fileID: 1104044220}
+  m_Father: {fileID: 1139888499}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
@@ -6786,7 +6838,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 0.5660378, g: 0.5660378, b: 0.5660378, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -6842,7 +6894,6 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1296250542}
-  - {fileID: 1210319276}
   m_Father: {fileID: 1032319552}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
