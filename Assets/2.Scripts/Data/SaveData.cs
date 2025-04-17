@@ -47,4 +47,6 @@ public class ObstacleSaveData
     public PunchObstacleState punchObstacleState;
     //
     public int moveIndex;
+    //
+    public float[] rotation;
 }
