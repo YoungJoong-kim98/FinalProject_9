@@ -1,6 +1,13 @@
 using System.Collections;
 using UnityEngine;
 
+public enum PunchObstacleState
+{
+    None,
+    Front,
+    Back
+}
+
 public class PunchObstacle : MonoBehaviour
 {
     //미는 힘
@@ -13,7 +20,7 @@ public class PunchObstacle : MonoBehaviour
     [SerializeField] private float _moveDistance = -1f;
     //움직이는 방향
     [SerializeField] private Vector3 _direction = Vector3.forward;
-     
+
     //정기적으로 실행되는지 여부
     [SerializeField] private bool _isReglar = false;
     //주기
@@ -26,7 +33,9 @@ public class PunchObstacle : MonoBehaviour
     //플레그
     private bool _isPunching = false;
     //코루틴
-    private Coroutine _punchCoroutine;    
+    private Coroutine _punchCoroutine;
+
+    public PunchObstacleState state = PunchObstacleState.None;
 
     private void Start()
     {
@@ -45,6 +54,26 @@ public class PunchObstacle : MonoBehaviour
         if (_isReglar)
         {
             Punch();
+        }
+    }
+
+    public void Init()
+    {
+        switch (state)
+        {
+            case PunchObstacleState.None:
+                break;
+
+            case PunchObstacleState.Front:
+                StartCoroutine(PunchFrontMove());
+                break;
+
+            case PunchObstacleState.Back:
+                StartCoroutine(PunchBackMove());
+                break;
+
+            default:
+                break;
         }
     }
 
@@ -82,44 +111,52 @@ public class PunchObstacle : MonoBehaviour
         //실행되는 코루틴이 없으면 코루틴 실행
         if (_punchCoroutine == null)
         {
-            _punchCoroutine = StartCoroutine(PunchMove());
+            _punchCoroutine = StartCoroutine(PunchFrontMove());
         }
     }
 
-    private IEnumerator PunchMove()
+    private IEnumerator PunchFrontMove()
     {
-        do
+        state = PunchObstacleState.Front;
+
+        //플래그
+        _isPunching = true;
+
+        //목표 위치로 이동
+        while (Vector3.Distance(transform.position, _targetPos) > 0.01f)
         {
-            //플래그
-            _isPunching = true;
+            transform.position = Vector3.MoveTowards(transform.position, _targetPos, _pushSpeed * Time.deltaTime);
+            yield return null;
+        }
 
-            //목표 위치로 이동
-            while (Vector3.Distance(transform.position, _targetPos) > 0.01f)
-            {
-                transform.position = Vector3.MoveTowards(transform.position, _targetPos, _pushSpeed * Time.deltaTime);
-                yield return null;
-            }
+        PunchBackMove();
+    }
 
-            //플래그
-            _isPunching = false;
+    private IEnumerator PunchBackMove()
+    {
+        state = PunchObstacleState.Back;
 
-            //원래 위치로 이동
-            while (Vector3.Distance(transform.position, _startPos) > 0.01f)
-            {
-                transform.position = Vector3.MoveTowards(transform.position, _startPos, _backSpeed * Time.deltaTime);
-                yield return null;
-            }
+        _isPunching = false;
 
+        //원래 위치로 이동
+        while (Vector3.Distance(transform.position, _startPos) > 0.01f)
+        {
+            transform.position = Vector3.MoveTowards(transform.position, _startPos, _backSpeed * Time.deltaTime);
+            yield return null;
+        }
+
+        if (!_isReglar)
+        {
+            _punchCoroutine = null;
+            yield return null;
+        }
+        else
+        {
             //실행 빈도 만큼 기다림
             yield return new WaitForSeconds(_regularTime);
+            PunchFrontMove();
         }
-        //일시적으로 실행될때만 while문 탈출
-        while (_isReglar);
-
-        _punchCoroutine = null;
-        yield return null;
     }
-
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.yellow;

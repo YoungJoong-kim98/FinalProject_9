@@ -3,33 +3,33 @@ using UnityEngine;
 
 public class MovePlatform : MonoBehaviour
 {
-    //¿òÁ÷ÀÌ´Â ¼Óµµ
+    //ì›€ì§ì´ëŠ” ì†ë„
     [SerializeField] private float _moveSpeed = -1;
-    //¿òÁ÷ÀÌ´Â À§Ä¡
+    //ì›€ì§ì´ëŠ” ìœ„ì¹˜
     [SerializeField] private List<Vector3> _movePositions;
 
-    //ÇöÀç À§Ä¡ÀÇ ÀÎµ¦½º
-    private int _currentIndex = 0;
+    //í˜„ì¬ ìœ„ì¹˜ì˜ ì¸ë±ìŠ¤
+    public int currentIndex = 0;
 
-    //ÇÃ·¹ÀÌ¾î rigidbody
+    //í”Œë ˆì´ì–´ rigidbody
     private Rigidbody _playerRigidbody;
 
     private void Start()
     {
-        //ObstacleManagerÀÇ movePlatforms¿¡ Ãß°¡
+        //ObstacleManagerì˜ movePlatformsì— ì¶”ê°€
         ObstacleManager.Instance.movePlatforms.Add(this);
 
-        //µ¥ÀÌÅÍ ÃÊ±âÈ­
+        //ë°ì´í„° ì´ˆê¸°í™”
         var data = ObstacleManager.Instance.obstacleData;
         Utilitys.SetIfNegative(ref _moveSpeed, data.moveSpeed);
     }
 
     private void OnCollisionEnter(Collision collision)
     {
-        //ÇÃ·¹ÀÌ¾î¿Í Ãæµ¹½Ã
+        //í”Œë ˆì´ì–´ì™€ ì¶©ëŒì‹œ
         if (collision.gameObject.CompareTag("Player"))
         {
-            //_playerRigidbody °ª ÇÒ´ç
+            //_playerRigidbody ê°’ í• ë‹¹
             Rigidbody rb = collision.gameObject.GetComponent<Rigidbody>();
             if (rb != null)
             {
@@ -40,56 +40,56 @@ public class MovePlatform : MonoBehaviour
 
     private void OnCollisionExit(Collision collision)
     {
-        //ÇÃ·¹ÀÌ¾î°¡ ³ª°¥½Ã
+        //í”Œë ˆì´ì–´ê°€ ë‚˜ê°ˆì‹œ
         if (collision.gameObject.CompareTag("Player"))
         {
-            //_playerRigidbody null °ª ÇÒ´ç
+            //_playerRigidbody null ê°’ í• ë‹¹
             _playerRigidbody = null;
         }
     }
 
-    //ObstacleManager¿¡¼­ ÀÏ°ıÀûÀ¸·Î ½ÇÇà
+    //ObstacleManagerì—ì„œ ì¼ê´„ì ìœ¼ë¡œ ì‹¤í–‰
     public void Move()
     {
-        //¿òÁ÷ÀÌ´Â À§Ä¡°¡ ¾øÀ» ¶§ Á¾·á
+        //ì›€ì§ì´ëŠ” ìœ„ì¹˜ê°€ ì—†ì„ ë•Œ ì¢…ë£Œ
         if (_movePositions == null || _movePositions.Count == 0)
             return;
 
-        //´ÙÀ½ À§Ä¡
-        Vector3 target = _movePositions[_currentIndex];
-        //ÇöÀç À§Ä¡
+        //ë‹¤ìŒ ìœ„ì¹˜
+        Vector3 target = _movePositions[currentIndex];
+        //í˜„ì¬ ìœ„ì¹˜
         Vector3 oldPosition = transform.position;
-        //ÀÌµ¿
+        //ì´ë™
         transform.position = Vector3.MoveTowards(oldPosition, target, _moveSpeed * Time.deltaTime);
 
-        //ÇÃ·¹ÀÌ¾îÀÇ À§Ä¡ Ã³¸®
+        //í”Œë ˆì´ì–´ì˜ ìœ„ì¹˜ ì²˜ë¦¬
         if(_playerRigidbody != null)
         {
             Vector3 delta = transform.position - oldPosition;
             _playerRigidbody.MovePosition(_playerRigidbody.position + delta);
         }
 
-        //¸ñÇ¥ À§Ä¡¿¡ µµ´Ş
+        //ëª©í‘œ ìœ„ì¹˜ì— ë„ë‹¬
         if (Vector3.Distance(transform.position, target) < 0.01f)
         {
-            _currentIndex = (_currentIndex + 1) % _movePositions.Count;
+            currentIndex = (currentIndex + 1) % _movePositions.Count;
         }
     }
 
     private void OnDrawGizmos()
     {
-        //¿òÁ÷ÀÌ´Â À§Ä¡°¡ ¾øÀ» ¶§ Á¾·á
+        //ì›€ì§ì´ëŠ” ìœ„ì¹˜ê°€ ì—†ì„ ë•Œ ì¢…ë£Œ
         if (_movePositions == null || _movePositions.Count == 0)
             return;
 
-        //¿òÁ÷ÀÌ´Â À§Ä¡¿¡ ±¸ µå·Î¿ì
+        //ì›€ì§ì´ëŠ” ìœ„ì¹˜ì— êµ¬ ë“œë¡œìš°
         Gizmos.color = Color.cyan;
         foreach (Vector3 pos in _movePositions)
         {
             Gizmos.DrawSphere(pos, 0.2f);
         }
 
-        //¿òÁ÷ÀÌ´Â µ¿¼±¿¡ ¼± µå·Î¿ì
+        //ì›€ì§ì´ëŠ” ë™ì„ ì— ì„  ë“œë¡œìš°
         Gizmos.color = Color.yellow;
         for (int i = 0; i < _movePositions.Count - 1; i++)
         {

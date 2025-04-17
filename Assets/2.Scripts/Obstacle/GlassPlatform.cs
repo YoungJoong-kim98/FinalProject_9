@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 
 public enum GlassPlatformState
 {
@@ -13,9 +13,9 @@ public class GlassPlatform : MonoBehaviour
     //깨진 유리 오브젝트
     [SerializeField] private GameObject _shatteredObject;
 
-    GlassPlatformState state = GlassPlatformState.None;
+    public GlassPlatformState state = GlassPlatformState.None;
 
-    private void Start()
+    public void Init()
     {
         switch (state)
         {
