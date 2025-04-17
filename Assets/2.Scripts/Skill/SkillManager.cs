@@ -11,9 +11,9 @@ public class SkillManager : MonoBehaviour
 
     private void Start()
     {
-        run = false;
-        doubleJump = false;
-        grab = false;
+        run = true;
+        doubleJump = true;
+        grab = true;
     }
 
     public void UnlockRun()

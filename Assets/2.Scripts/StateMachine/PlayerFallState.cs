@@ -152,7 +152,7 @@ public class PlayerFallState : PlayerAirState
 
         Transform t = stateMachine.Player.transform;
         Vector3 origin = t.position + Vector3.up * 2.0f;    // 머리 위
-        float distance = 1.0f;
+        float distance = 1.5f;
         float radius = 0.1f; // ← 필요에 따라 값 조절 가능 (0.1 ~ 0.5 추천)
 
         Vector3 diagonalDir = (t.forward + Vector3.up).normalized; // 로프 감지용 방향 (대각선)
@@ -202,7 +202,7 @@ public class PlayerFallState : PlayerAirState
 
         // 로프 및 벽 감지용 Ray 시각화
         Vector3 origin2 = t.position + Vector3.up * 2.0f;
-        float castDistance = 1.0f;
+        float castDistance = 1.5f;
         Vector3 diagonalDir = (t.forward + Vector3.up).normalized;
 
         Debug.DrawRay(origin2, diagonalDir * castDistance, Color.blue); // 로프 감지용 Ray

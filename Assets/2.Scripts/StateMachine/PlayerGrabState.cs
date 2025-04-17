@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -7,7 +8,7 @@ using static UnityEngine.UI.Image;
 public class PlayerGrabState : PlayerAirState
 {
     private bool hasJumped = false; // 점프 여부
-    private float slowFallSpeed = -0.1f;    // 잡기 중 느린 낙하 속도
+    private float slowFallSpeed = -0.5f;    // 잡기 중 느린 낙하 속도
     public PlayerGrabState(PlayerStateMachine stateMachine) : base(stateMachine) { }
 
     private Coroutine unlockCoroutine; // 이동 상태 만드는 코루틴
@@ -15,7 +16,9 @@ public class PlayerGrabState : PlayerAirState
 
     private readonly WaitForSeconds move_unlockTime = new WaitForSeconds(1f);
     private readonly WaitForSeconds wall_unlockTime = new WaitForSeconds(1f);
-    
+    private Coroutine grabTimeoutCoroutine; //일시적인 잡기 용 테스트
+    private readonly WaitForSeconds grabLimit = new WaitForSeconds(3f);
+
     public override void Enter()
     {
         // 벽 잡기 이미 했으면 안 들어가게 하기
@@ -42,6 +45,7 @@ public class PlayerGrabState : PlayerAirState
         stateMachine.Player.Rigidbody.constraints = RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionZ; // x, z 이동 차단
 
         hasJumped = false;  // 점프 여부 초기화
+        //grabTimeoutCoroutine = stateMachine.Player.StartCoroutine(GrabTimeout()); // 테스트용
     }
 
 
@@ -56,16 +60,21 @@ public class PlayerGrabState : PlayerAirState
 
         // 고정 해제
         stateMachine.Player.Rigidbody.constraints = RigidbodyConstraints.FreezeRotation;
+        if (grabTimeoutCoroutine != null)
+        {
+            stateMachine.Player.StopCoroutine(grabTimeoutCoroutine);
+            grabTimeoutCoroutine = null;
+        }
     }
 
     // 잡기 유지/해제
     public override void Update()
     {
         base.Update();
-        // 계속 붙어있는지 확인
+        //계속 붙어있는지 확인
         if (!IsStillGrabbing())
         {
-           stateMachine.ChangeState(stateMachine.FallState);
+            stateMachine.ChangeState(stateMachine.FallState);
             return;
         }
 
@@ -90,7 +99,7 @@ public class PlayerGrabState : PlayerAirState
             stateMachine.CanGrabWall = false; //잡기 잠금 
 
 
-            float jumpPower = stateMachine.Player.Data.AirData.JumpForce * 0.8f;
+            float jumpPower = stateMachine.Player.Data.AirData.JumpForce * 1.5f;
             float directionalForce = 20.0f;
 
             // 방향키 입력 → 카메라 기준 방향으로 변환
@@ -150,7 +159,7 @@ public class PlayerGrabState : PlayerAirState
     {
         Transform t = stateMachine.Player.transform;
         Vector3 origin = t.position + Vector3.up * 2.0f; // ← 위치 맞춤
-        float distance = 1.0f;                            // ← 거리 맞춤
+        float distance = 1.5f;                            // ← 거리 맞춤
         float radius = 0.2f;                              // ← 감지 반지름은 줄이는 걸 추천
 
         Vector3 diagonalDir = (t.forward + Vector3.up).normalized;
@@ -164,8 +173,18 @@ public class PlayerGrabState : PlayerAirState
         Debug.DrawRay(origin, diagonalDir * distance, Color.cyan); // Rope 감지
         Debug.DrawRay(origin, t.forward * distance, Color.cyan);   // Wall 감지
 
-        return nearWall || nearRope;
+        return nearRope;
     }
+    private IEnumerator GrabTimeout()
+    {
+        yield return grabLimit;
 
+        // 시간이 지나면 상태 전환
+        if (stateMachine.CurrentState is PlayerGrabState)
+        {
+            stateMachine.ChangeState(stateMachine.FallState);
+        }
+
+    }
 
 }
