@@ -8461,6 +8461,11 @@ PrefabInstance:
       propertyPath: m_VerticalAxis.m_MinValue
       value: -60
       objectReference: {fileID: 0}
+    - target: {fileID: 9203568160939954425, guid: a129a508b7eb7fc48ac0096fb932272d,
+        type: 3}
+      propertyPath: m_DampingWhenOccluded
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

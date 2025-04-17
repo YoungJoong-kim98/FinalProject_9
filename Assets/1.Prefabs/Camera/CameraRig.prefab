@@ -27,7 +27,7 @@ Transform:
   m_GameObject: {fileID: 188080550252149923}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -2.24, y: 4, z: -10}
+  m_LocalPosition: {x: 0, y: 3, z: -12.18}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -101,7 +101,7 @@ MonoBehaviour:
   m_MaximumEffort: 4
   m_SmoothingTime: 0.1
   m_Damping: 1.5
-  m_DampingWhenOccluded: 2
+  m_DampingWhenOccluded: 0
   m_OptimalTargetDistance: 0
 --- !u!1 &650727940873320028
 GameObject:
@@ -257,7 +257,7 @@ Transform:
   m_GameObject: {fileID: 5753974216576331526}
   serializedVersion: 2
   m_LocalRotation: {x: -0.5, y: 0, z: 0, w: 0.8660254}
-  m_LocalPosition: {x: -2.24, y: 3, z: -10}
+  m_LocalPosition: {x: 0, y: 2, z: -17.18}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -314,7 +314,7 @@ GameObject:
   - component: {fileID: 5941737724721837141}
   - component: {fileID: 3074852227001339429}
   - component: {fileID: 6908929346302493335}
-  - component: {fileID: 7118392369224494271}
+  - component: {fileID: 2067669425383499340}
   m_Layer: 0
   m_Name: cm
   m_TagString: Untagged
@@ -411,7 +411,7 @@ MonoBehaviour:
     m_LegacyHeadingDefinition: -1
     m_LegacyVelocityFilterStrength: -1
   m_ApplyBeforeBody: 0
---- !u!114 &7118392369224494271
+--- !u!114 &2067669425383499340
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -433,7 +433,7 @@ MonoBehaviour:
   m_TargetMovementOnly: 1
   m_ScreenX: 0.5
   m_ScreenY: 0.5
-  m_CameraDistance: 10
+  m_CameraDistance: 5
   m_DeadZoneWidth: 0
   m_DeadZoneHeight: 0
   m_DeadZoneDepth: 0
