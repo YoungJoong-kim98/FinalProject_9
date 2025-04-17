@@ -3,16 +3,16 @@ using UnityEngine;
 
 public class ReflectObstacle : MonoBehaviour
 {
-    //¹İ»çÇÏ´Â Èû
+    //ë°˜ì‚¬í•˜ëŠ” í˜
     [SerializeField] private float _reflectPower = -1f;
-    //ÃÖ¼Ò Èû
+    //ìµœì†Œ í˜
     [SerializeField] private float _reflectMinPower = -1f;
-    //ÃÖ´ë Èû
+    //ìµœëŒ€ í˜
     [SerializeField] private float _reflectMaxPower = -1f;
 
     private void Start()
     {
-        //µ¥ÀÌÅÍ ÃÊ±âÈ­
+        //ë°ì´í„° ì´ˆê¸°í™”
         var data = ObstacleManager.Instance.obstacleData;
         Utilitys.SetIfNegative(ref _reflectPower, data.reflectPower);
         Utilitys.SetIfNegative(ref _reflectMinPower, data.reflectMinPower);
@@ -21,32 +21,32 @@ public class ReflectObstacle : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        //ÇÃ·¹ÀÌ¾î¿Í Ãæµ¹½Ã
+        //í”Œë ˆì´ì–´ì™€ ì¶©ëŒì‹œ
         if (collision.gameObject.CompareTag("Player"))
         {
-            //¹İ»çÇÏ´Â ¸Ş¼­µå ½ÇÇà
+            //ë°˜ì‚¬í•˜ëŠ” ë©”ì„œë“œ ì‹¤í–‰
             Reflect(collision.gameObject, collision.relativeVelocity.magnitude);
         }
     }
 
-    //¹İ»çÇÏ´Â ¸Ş¼­µå
+    //ë°˜ì‚¬í•˜ëŠ” ë©”ì„œë“œ
     private void Reflect(GameObject target, float impactSpeed)
     {
-        //¹İ»çÇÏ´Â ¹æÇâ(¼öÆòÀ¸·Î¸¸ ¹İ»ç)
+        //ë°˜ì‚¬í•˜ëŠ” ë°©í–¥(ìˆ˜í‰ìœ¼ë¡œë§Œ ë°˜ì‚¬)
         Vector3 direction = target.transform.position - transform.position;
         direction.y = 0f;
         direction = direction.normalized;
 
-        //Å¸°ÙÀÇ Á¤¸é º¯°æ
+        //íƒ€ê²Ÿì˜ ì •ë©´ ë³€ê²½
         target.transform.forward = -direction;
 
-        //ÇÃ·¹ÀÌ¾îÀÇ ¿òÁ÷ÀÓ Á¦ÇÑ
+        //í”Œë ˆì´ì–´ì˜ ì›€ì§ì„ ì œí•œ
         if (target.TryGetComponent(out Player player))
         {
             ObstacleManager.Instance.StartLockMovement(player);
         }
 
-        //¹°¸® Ã³¸®
+        //ë¬¼ë¦¬ ì²˜ë¦¬
         if (target.TryGetComponent(out Rigidbody rb))
         {
             rb.velocity = Vector3.zero;

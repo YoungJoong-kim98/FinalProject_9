@@ -2,25 +2,25 @@ using UnityEngine;
 
 public class RotateObstacle : MonoBehaviour
 {
-    //È¸ÀüÇÏ´Â ¹æÇâ
+    //íšŒì „í•˜ëŠ” ë°©í–¥
     [SerializeField] private Vector3 _rotateDirection;
-    //È¸ÀüÇÏ´Â ¼Óµµ
+    //íšŒì „í•˜ëŠ” ì†ë„
     [SerializeField] private float _rotateSpeed = -1f;
 
     private void Start()
     {
-        //ObstacleManagerÀÇ rotateObstacles¿¡ Ãß°¡
+        //ObstacleManagerì˜ rotateObstaclesì— ì¶”ê°€
         ObstacleManager.Instance.rotateObstacles.Add(this);
  
-        //µ¥ÀÌÅÍ ÃÊ±âÈ­
+        //ë°ì´í„° ì´ˆê¸°í™”
         var data = ObstacleManager.Instance.obstacleData;
         Utilitys.SetIfNegative(ref _rotateSpeed, data.rotateSpeed);
     }
 
-    //È¸ÀüÇÏ´Â ¸Ş¼­µå
+    //íšŒì „í•˜ëŠ” ë©”ì„œë“œ
     public void Rotate()
     {
-        //¹°¸®Ã³¸®
+        //ë¬¼ë¦¬ì²˜ë¦¬
         transform.Rotate(_rotateDirection * _rotateSpeed * Time.fixedDeltaTime);
     }
 }

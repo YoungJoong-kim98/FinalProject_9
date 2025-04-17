@@ -3,45 +3,45 @@ using UnityEngine;
 
 public class PunchObstacle : MonoBehaviour
 {
-    //¹Ì´Â Èû
+    //ë¯¸ëŠ” í˜
     [SerializeField] private float _pushPower = -1f;
-    //ÆİÄ¡ÇÏ´Â ¼Óµµ
+    //í€ì¹˜í•˜ëŠ” ì†ë„
     [SerializeField] private float _pushSpeed = -1f;
-    //µ¹¾Æ°¡´Â ¼Óµµ
+    //ëŒì•„ê°€ëŠ” ì†ë„
     [SerializeField] private float _backSpeed = -1f;
-    //¿òÁ÷ÀÌ´Â °Å¸®
+    //ì›€ì§ì´ëŠ” ê±°ë¦¬
     [SerializeField] private float _moveDistance = -1f;
-    //¿òÁ÷ÀÌ´Â ¹æÇâ
+    //ì›€ì§ì´ëŠ” ë°©í–¥
     [SerializeField] private Vector3 _direction = Vector3.forward;
      
-    //Á¤±âÀûÀ¸·Î ½ÇÇàµÇ´ÂÁö ¿©ºÎ
+    //ì •ê¸°ì ìœ¼ë¡œ ì‹¤í–‰ë˜ëŠ”ì§€ ì—¬ë¶€
     [SerializeField] private bool _isReglar = false;
-    //ÁÖ±â
+    //ì£¼ê¸°
     [SerializeField] private float _regularTime = 1f;
 
-    //¿ø·¡ À§Ä¡
+    //ì›ë˜ ìœ„ì¹˜
     private Vector3 _startPos;
-    //¸ñÇ¥ À§Ä¡
+    //ëª©í‘œ ìœ„ì¹˜
     private Vector3 _targetPos;
-    //ÇÃ·¹±×
+    //í”Œë ˆê·¸
     private bool _isPunching = false;
-    //ÄÚ·çÆ¾
+    //ì½”ë£¨í‹´
     private Coroutine _punchCoroutine;    
 
     private void Start()
     {
-        //µ¥ÀÌÅÍ ÃÊ±âÈ­
+        //ë°ì´í„° ì´ˆê¸°í™”
         var data = ObstacleManager.Instance.obstacleData;
         Utilitys.SetIfNegative(ref _pushPower, data.pushPower);
         Utilitys.SetIfNegative(ref _pushSpeed, data.pushSpeed);
         Utilitys.SetIfNegative(ref _backSpeed, data.backSpeed);
         Utilitys.SetIfNegative(ref _moveDistance, data.moveDistance);
 
-        //À§Ä¡ ÃÊ±âÈ­
+        //ìœ„ì¹˜ ì´ˆê¸°í™”
         _startPos = transform.position;
         _targetPos = transform.position + _direction.normalized * _moveDistance;
 
-        //Á¤±âÀûÀÎÁö ¿©ºÎ
+        //ì •ê¸°ì ì¸ì§€ ì—¬ë¶€
         if (_isReglar)
         {
             Punch();
@@ -50,36 +50,36 @@ public class PunchObstacle : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        //ÇÃ·¹ÀÌ¾î¿Í Ãæµ¹ ÁßÀÌ°í ½ÇÇàÀÏ¶§
+        //í”Œë ˆì´ì–´ì™€ ì¶©ëŒ ì¤‘ì´ê³  ì‹¤í–‰ì¼ë•Œ
         if (collision.collider.CompareTag("Player") && _isPunching)
         {
-            //¹Ì´Â ¸Ş¼­µå ½ÇÇà
+            //ë¯¸ëŠ” ë©”ì„œë“œ ì‹¤í–‰
             Push(collision.gameObject);
         }
     }
 
-    //¹Ì´Â ¸Ş¼­µå
+    //ë¯¸ëŠ” ë©”ì„œë“œ
     private void Push(GameObject go)
     {
         Rigidbody rb = go.GetComponent<Rigidbody>();
         if (rb != null)
         {
-            //¹°¸® Ã³¸®
+            //ë¬¼ë¦¬ ì²˜ë¦¬
             rb.AddForce(_direction.normalized * _pushPower, ForceMode.Impulse);
         }
 
         Player player = go.GetComponent<Player>();
         if (player != null)
         {
-            //¿òÁ÷ÀÓ Á¦ÇÑ
+            //ì›€ì§ì„ ì œí•œ
             ObstacleManager.Instance.StartLockMovement(player);
         }
     }
 
-    //¿òÁ÷ÀÌ´Â ¸Ş¼­µå
+    //ì›€ì§ì´ëŠ” ë©”ì„œë“œ
     public void Punch()
     {
-        //½ÇÇàµÇ´Â ÄÚ·çÆ¾ÀÌ ¾øÀ¸¸é ÄÚ·çÆ¾ ½ÇÇà
+        //ì‹¤í–‰ë˜ëŠ” ì½”ë£¨í‹´ì´ ì—†ìœ¼ë©´ ì½”ë£¨í‹´ ì‹¤í–‰
         if (_punchCoroutine == null)
         {
             _punchCoroutine = StartCoroutine(PunchMove());
@@ -90,30 +90,30 @@ public class PunchObstacle : MonoBehaviour
     {
         do
         {
-            //ÇÃ·¡±×
+            //í”Œë˜ê·¸
             _isPunching = true;
 
-            //¸ñÇ¥ À§Ä¡·Î ÀÌµ¿
+            //ëª©í‘œ ìœ„ì¹˜ë¡œ ì´ë™
             while (Vector3.Distance(transform.position, _targetPos) > 0.01f)
             {
                 transform.position = Vector3.MoveTowards(transform.position, _targetPos, _pushSpeed * Time.deltaTime);
                 yield return null;
             }
 
-            //ÇÃ·¡±×
+            //í”Œë˜ê·¸
             _isPunching = false;
 
-            //¿ø·¡ À§Ä¡·Î ÀÌµ¿
+            //ì›ë˜ ìœ„ì¹˜ë¡œ ì´ë™
             while (Vector3.Distance(transform.position, _startPos) > 0.01f)
             {
                 transform.position = Vector3.MoveTowards(transform.position, _startPos, _backSpeed * Time.deltaTime);
                 yield return null;
             }
 
-            //½ÇÇà ºóµµ ¸¸Å­ ±â´Ù¸²
+            //ì‹¤í–‰ ë¹ˆë„ ë§Œí¼ ê¸°ë‹¤ë¦¼
             yield return new WaitForSeconds(_regularTime);
         }
-        //ÀÏ½ÃÀûÀ¸·Î ½ÇÇàµÉ¶§¸¸ while¹® Å»Ãâ
+        //ì¼ì‹œì ìœ¼ë¡œ ì‹¤í–‰ë ë•Œë§Œ whileë¬¸ íƒˆì¶œ
         while (_isReglar);
 
         _punchCoroutine = null;
@@ -124,7 +124,7 @@ public class PunchObstacle : MonoBehaviour
     {
         Gizmos.color = Color.yellow;
 
-        //¹æÇâÀ¸·Î ¼± µå·Î¿ì
+        //ë°©í–¥ìœ¼ë¡œ ì„  ë“œë¡œìš°
         Gizmos.DrawLine(transform.position, transform.position + _direction * 2f);
     }
 }
