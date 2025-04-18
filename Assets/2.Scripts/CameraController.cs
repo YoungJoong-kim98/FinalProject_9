@@ -1,3 +1,4 @@
+using Cinemachine;
 using UnityEngine;
 
 #if UNITY_EDITOR
@@ -20,25 +21,28 @@ public class CameraController : MonoBehaviour
     public float mouseSensitivity = 3f; // 마우스 감도
     public float pitchMin = -30f;       // 아래로 회전 가능한 최소 각도
     public float pitchMax = 80f;        // 위로 회전 가능한 최대 각도
+    
+    private CinemachineBrain _cameraBrain; // 캐싱용 변수
+    
+    private void Awake()
+    {
+        _cameraBrain = Camera.main?.GetComponent<CinemachineBrain>();
+    }
 
-#if UNITY_EDITOR
+#if UNITY_EDITOR    // 에디터에서만 작동 (플레이 중이 아니면 CinemachineBrain 켜주기 - 플레이어 이동 편하게 하기 위해)
     private void OnEnable()
     {
-        // 에디터에서만 작동 (플레이 중이 아니면 CinemachineBrain 켜주기 - 플레이어 이동 편하게 하기 위해)
-        Cinemachine.CinemachineBrain cameraBrain = Camera.main?.GetComponent<Cinemachine.CinemachineBrain>();
-        if (cameraBrain != null)
+        if (_cameraBrain != null)
         {
-            cameraBrain.enabled = !Application.isPlaying;
+            _cameraBrain.enabled = !Application.isPlaying;
         }
     }
-#else
-    void OnEnable()
+#else   // 실행 중일 땐 CinemachineBrain 꺼주기
+    private void OnEnable()
     {
-        // 실행 중일 땐 CinemachineBrain 꺼주기
-        Cinemachine.CinemachineBrain cameraBrain = Camera.main?.GetComponent<Cinemachine.CinemachineBrain>();
-        if (cameraBrain != null)
+        if (_cameraBrain != null)
         {
-            cameraBrain.enabled = false;
+            _cameraBrain.enabled = false;
         }
     }
 #endif
