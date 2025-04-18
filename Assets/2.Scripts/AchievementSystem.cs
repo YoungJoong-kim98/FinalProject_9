@@ -22,7 +22,7 @@ public class AchievementSystem : MonoBehaviour
     public void JumpCount()
     {
         jumpCount += 1;
-        Debug.Log(jumpCount);
+        //Debug.Log(jumpCount);
     }
 
     public  void JumpPlatformCount()
@@ -33,7 +33,7 @@ public class AchievementSystem : MonoBehaviour
     public void GrabCount()
     {
         grabCount += 1;
-        Debug.Log(grabCount);
+        //Debug.Log(grabCount);
     }
 
     public AchievementData ToData()

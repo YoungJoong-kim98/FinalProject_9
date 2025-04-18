@@ -56,6 +56,7 @@ public class PortalCameraTrigger : MonoBehaviour
         // 포탈 시네마틱 카메라 활성화
         moveCam.Priority = 5;
         blendCam.Priority = 20;
+
         // 시네마틱 유지 시간
         yield return new WaitForSeconds(blendHoldTime);
     

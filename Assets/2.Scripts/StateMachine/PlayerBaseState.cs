@@ -34,6 +34,7 @@ public class PlayerBaseState : IState
         input.playerActions.Run.started += OnRunStarted;                // 달리기 시작 시 호출
         input.playerActions.Run.canceled += OnRunCanceled;              // 달리기 종료 (Shift 뗄 때)
         input.playerActions.Jump.started += OnJumpStarted;              // 점프 시 호출
+        input.playerActions.Grab.started += OnGrabStarted;              // 잡기 시 호출
     }
 
     protected virtual void RemoveInputActionsCallbacks()
@@ -43,6 +44,7 @@ public class PlayerBaseState : IState
         input.playerActions.Run.started -= OnRunStarted;
         input.playerActions.Run.canceled -= OnRunCanceled;
         input.playerActions.Jump.started -= OnJumpStarted;
+        input.playerActions.Grab.started -= OnGrabStarted;
     }
 
     public virtual void HandleInput()
@@ -76,6 +78,10 @@ public class PlayerBaseState : IState
     }
     
     protected virtual void OnJumpStarted(InputAction.CallbackContext context)
+    {
+
+    }
+    protected virtual void OnGrabStarted(InputAction.CallbackContext context)
     {
 
     }

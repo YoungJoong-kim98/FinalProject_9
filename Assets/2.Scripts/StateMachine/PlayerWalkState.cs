@@ -14,7 +14,7 @@ public class PlayerWalkState : PlayerGroundState
     {
         stateMachine.MovementSpeedModifier = groundData.WalkSpeedModifier;      // 걷기 속도 설정
         base.Enter();
-        stateMachine.CurrentMoveSpeed = stateMachine.MovementSpeed * stateMachine.MovementSpeedModifier;
+        stateMachine.CurrentMoveSpeed = stateMachine.MovementSpeed * stateMachine.MovementSpeedModifier; // 2f
         StartAnimation(stateMachine.Player.AnimationData.WalkParameterHash);    // 걷기 애니메이션
     }
     
