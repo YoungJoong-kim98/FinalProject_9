@@ -26,9 +26,41 @@ public class AchievementData
 }
 
 [System.Serializable]
+public class ObstacleSaveEntry
+{
+    public string id;
+    public ObstacleSaveData data;
+
+    public ObstacleSaveEntry(string id, ObstacleSaveData data)
+    {
+        this.id = id;
+        this.data = data;
+    }
+}
+
+[System.Serializable]
 public class ObstacleSaveWrapper
 {
-    public Dictionary<string, ObstacleSaveData> obstacles = new();
+    public List<ObstacleSaveEntry> obstacleList = new();
+
+    public void FromDictionary(Dictionary<string, ObstacleSaveData> dict)
+    {
+        obstacleList.Clear();
+        foreach (var kvp in dict)
+        {
+            obstacleList.Add(new ObstacleSaveEntry(kvp.Key, kvp.Value));
+        }
+    }
+
+    public Dictionary<string, ObstacleSaveData> ToDictionary()
+    {
+        var dict = new Dictionary<string, ObstacleSaveData>();
+        foreach (var entry in obstacleList)
+        {
+            dict[entry.id] = entry.data;
+        }
+        return dict;
+    }
 }
 
 [System.Serializable]

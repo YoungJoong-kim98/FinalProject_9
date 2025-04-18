@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
@@ -23,6 +24,7 @@ public class SaveManager : MonoBehaviour
 
     public void SaveGame(Transform playerTransform, Rigidbody rigidbody ,AchievementSystem achievementSystem, float playTime)
     {
+        Debug.Log(Application.persistentDataPath);
         SavePlayerData(playerTransform, rigidbody, achievementSystem, playTime);
         SaveObstacleStates();
     }
@@ -54,13 +56,27 @@ public class SaveManager : MonoBehaviour
 
     public void SaveObstacleStates()
     {
-        var dataWrapper = new ObstacleSaveWrapper();
+        //var dataWrapper = new ObstacleSaveWrapper();
+        //foreach (var applier in FindObjectsOfType<ObstacleDataApplier>())
+        //{
+        //    dataWrapper.obstacles[applier.obstacleId] = applier.CreateSaveData();
+        //}
+
+        //string json = JsonUtility.ToJson(dataWrapper.obstacles, true);
+        //Debug.Log(json);
+        //File.WriteAllText(_saveObstaclePath, json);
+        var dict = new Dictionary<string, ObstacleSaveData>();
+
         foreach (var applier in FindObjectsOfType<ObstacleDataApplier>())
         {
-            dataWrapper.obstacles[applier.obstacleId] = applier.CreateSaveData();
+            dict[applier.obstacleId] = applier.CreateSaveData();
         }
 
+        var dataWrapper = new ObstacleSaveWrapper();
+        dataWrapper.FromDictionary(dict); // List 형태로 변환
+
         string json = JsonUtility.ToJson(dataWrapper, true);
+        Debug.Log(json);
         File.WriteAllText(_saveObstaclePath, json);
     }
 
@@ -109,18 +125,26 @@ public class SaveManager : MonoBehaviour
 
     public void LoadAllObstacleState()
     {
+        if (!File.Exists(_saveObstaclePath))
+        {
+            Debug.LogWarning("Obstacle save file not found.");
+            return;
+        }
+
         string json = File.ReadAllText(_saveObstaclePath);
         var wrapper = JsonUtility.FromJson<ObstacleSaveWrapper>(json);
+
+        var loadedData = wrapper.ToDictionary();
 
         foreach (var obstacle in FindObjectsOfType<ObstacleDataApplier>())
         {
             var id = obstacle.obstacleId;
-            if (!wrapper.obstacles.TryGetValue(id, out var data)) continue;
-
+            //if (!wrapper.obstacles.TryGetValue(id, out var data)) continue;
+            if (!loadedData.TryGetValue(id, out var data)) continue;
             switch (data.type)
             {
                 case ObstacleDataType.GlassPlatform:
-                    if(TryGetComponent(out GlassPlatform glassPlatform))
+                    if (obstacle.TryGetComponent(out GlassPlatform glassPlatform))
                     {
                         glassPlatform.state = data.glassPlatformState;
                         glassPlatform.Init();
@@ -128,15 +152,16 @@ public class SaveManager : MonoBehaviour
                     break;
 
                 case ObstacleDataType.MovePlatform:
-                    if (TryGetComponent(out MovePlatform movePlatform))
+                    if (obstacle.TryGetComponent(out MovePlatform movePlatform))
                     {
                         movePlatform.transform.position = new Vector3(data.position[0], data.position[1], data.position[2]);
                         movePlatform.currentIndex = data.moveIndex;
+                        Debug.Log($"moveIndex : {data.moveIndex}");
                     }
                     break;
 
                 case ObstacleDataType.Platform:
-                    if(TryGetComponent(out Platform platform))
+                    if (obstacle.TryGetComponent(out Platform platform))
                     {
                         platform.state = data.platformState;
                         platform.remainTime = data.remainTime;
@@ -145,7 +170,7 @@ public class SaveManager : MonoBehaviour
                     break;
 
                 case ObstacleDataType.PunchObstacle:
-                    if(TryGetComponent(out PunchObstacle punchObstacle))
+                    if (obstacle.TryGetComponent(out PunchObstacle punchObstacle))
                     {
                         punchObstacle.transform.position = new Vector3(data.position[0], data.position[1], data.position[2]);
                         punchObstacle.state = data.punchObstacleState;
@@ -154,9 +179,9 @@ public class SaveManager : MonoBehaviour
                     break;
 
                 case ObstacleDataType.RotateObstace:
-                    if(TryGetComponent(out RotateObstacle rotateObstacle))
+                    if (obstacle.TryGetComponent(out RotateObstacle rotateObstacle))
                     {
-                        rotateObstacle.transform.eulerAngles = new Vector3(data.rotation[0],data.rotation[1],data.rotation[2]);
+                        rotateObstacle.transform.eulerAngles = new Vector3(data.rotation[0], data.rotation[1], data.rotation[2]);
                     }
                     break;
 
