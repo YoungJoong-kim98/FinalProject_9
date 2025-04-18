@@ -52,11 +52,10 @@ public class PlayerFallState : PlayerAirState
         bool isGrounded = IsGrounded(); // 바닥 감지
         if (isGrounded && !_wasGrounded) // 첫 착지 프레임만 처리
         {
-            Debug.Log($"착지 - 저장 속도: {savedVelocity}");
+            //Debug.Log($"착지 - 저장 속도: {savedVelocity}");
             
             if (savedVelocity <= -_maxFallSpeed * 0.98f) // 미세 속도 오차 조절 (-29.4)
             {
-                if (GrabAttempt(out string _)) return;
                 Debug.Log("철푸덕");
                 stateMachine.ChangeState(stateMachine.FallCrashState);
                 return;
@@ -66,37 +65,12 @@ public class PlayerFallState : PlayerAirState
             HandleGroundedState();
             return;
         }
-
         _wasGrounded = isGrounded; // 다음 프레임 대비
         
-        if (GrabAttempt(out string _)) return;
+
     }
-    
-    // 잡기 시도 메서드
-    private bool GrabAttempt(out string grabTag)
-    {
-        grabTag = null;
-        
-        // 입력 없으면 시도 안 함
-        if (!Mouse.current.leftButton.wasPressedThisFrame)
-            return false;
-        
-        if (TryDetectGrabTarget(out grabTag))
-        {
-            foreach (var validTag in validGrabTags)
-            {
-                if (grabTag == validTag && GameManager.Instance.SkillManager.grab)
-                {
-                    GameManager.Instance.AchievementSystem.GrabCount(); // 잡기 횟수 증가
-                    stateMachine.ChangeState(stateMachine.GrabState);
-                    Debug.Log($"잡기 성공: {grabTag}");
-                    return true;
-                }
-            }
-            Debug.Log($"잡기 실패: Invalid tag {grabTag}");
-        }
-        return false;
-    }
+
+
 
     public override void PhysicsUpdate()
     {
@@ -114,7 +88,7 @@ public class PlayerFallState : PlayerAirState
         // 중앙 레이
         if (Physics.Raycast(origin, Vector3.down, rayLength, groundMask))
         {
-            Debug.Log($"중앙 접지 감지, 속도: {stateMachine.Player.Rigidbody.velocity.y}");
+            //Debug.Log($"중앙 접지 감지, 속도: {stateMachine.Player.Rigidbody.velocity.y}");
             return true;
         }
 
@@ -146,43 +120,7 @@ public class PlayerFallState : PlayerAirState
     /// </summary>
     /// <param name="targetTag"></param>
     /// <returns></returns>
-    private bool TryDetectGrabTarget(out string targetTag)
-    {
-        targetTag = null;
 
-        Transform t = stateMachine.Player.transform;
-        Vector3 origin = t.position + Vector3.up * 2.0f;    // 머리 위
-        float distance = 1.5f;
-        float radius = 0.1f; // ← 필요에 따라 값 조절 가능 (0.1 ~ 0.5 추천)
-
-        Vector3 diagonalDir = (t.forward + Vector3.up).normalized; // 로프 감지용 방향 (대각선)
-
-        // 로프 감지 (위쪽 대각선 방향 - Raycast로)
-        //if (Physics.Raycast(origin, diagonalDir, out RaycastHit hit, distance, LayerMask.GetMask("Rope")))
-        //{
-        //    Debug.DrawRay(origin, diagonalDir * distance, Color.yellow); // 디버그용
-        //    targetTag = "Rope";
-        //    return true;
-        //}
-
-        //sphereCast용
-        if (Physics.SphereCast(origin, radius, diagonalDir, out RaycastHit hit, distance, LayerMask.GetMask("Rope")))
-        {
-            Debug.DrawRay(origin, diagonalDir * distance, Color.yellow); // 시각화
-            targetTag = "Rope";
-            return true;
-        }
-
-        // 벽 감지 (앞쪽)
-        if (Physics.Raycast(origin, t.forward, distance, LayerMask.GetMask("Ground")))
-        {
-            Debug.DrawRay(origin, t.forward * distance, Color.yellow);
-            targetTag = "Wall";
-            return true;
-        }
-
-        return false;
-    }
     
     // 레이 시각화
     private void DebugDrawGrabRay()
@@ -218,19 +156,19 @@ public class PlayerFallState : PlayerAirState
         {
             stateMachine.CurrentMoveSpeed = preservedSpeed;
             stateMachine.ChangeState(stateMachine.RunState);
-            Debug.Log($"Fall to Run - 속도: {stateMachine.CurrentMoveSpeed}");
+            //Debug.Log($"Fall to Run - 속도: {stateMachine.CurrentMoveSpeed}");
         }
         else if (stateMachine.MovementInput != Vector2.zero)    // 이동 입력 있으면
         {
             stateMachine.CurrentMoveSpeed = stateMachine.MovementSpeed;
             stateMachine.ChangeState(stateMachine.WalkState);
-            Debug.Log("Fall to Walk");
+            //Debug.Log("Fall to Walk");
         }
         else   // 입력 없으면
         {
             stateMachine.CurrentMoveSpeed = stateMachine.MovementSpeed;
             stateMachine.ChangeState(stateMachine.IdleState);
-            Debug.Log("Fall to Idle");
+            //Debug.Log("Fall to Idle");
         }
     }
 }

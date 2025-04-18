@@ -24,7 +24,7 @@ public class PlayerAirState : PlayerBaseState
     public override void Update()
     {
         base.Update();
-        if (TryGrab()) return;
+
     }
     
     public override void PhysicsUpdate()
@@ -84,11 +84,16 @@ public class PlayerAirState : PlayerBaseState
     protected override void OnGrabStarted(InputAction.CallbackContext context)
     {
         base.OnGrabStarted(context);
+        if(TryGrab())
+        {
+            stateMachine.ChangeState(stateMachine.GrabState);
+        }
 
     }
     protected bool TryGrab()
     {
-        if (!GameManager.Instance.SkillManager.grab) return false;
+        if (!GameManager.Instance.SkillManager.grab)
+            return false;
 
         if (Mouse.current.leftButton.wasPressedThisFrame &&
             TryDetectGrabTarget(out string tag) &&
@@ -100,6 +105,7 @@ public class PlayerAirState : PlayerBaseState
 
         return false;
     }
+
     protected bool TryDetectGrabTarget(out string targetTag)
     {
         targetTag = null;
@@ -111,7 +117,7 @@ public class PlayerAirState : PlayerBaseState
 
         Vector3 diagonalDir = (t.forward + Vector3.up).normalized;
 
-        if (Physics.SphereCast(origin, radius, diagonalDir, out RaycastHit hit, distance, LayerMask.GetMask("Rope")))
+        if (Physics.SphereCast(origin, radius, diagonalDir, out _, distance, LayerMask.GetMask("Rope")))
         {
             Debug.DrawRay(origin, diagonalDir * distance, Color.yellow);
             targetTag = "Rope";

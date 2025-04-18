@@ -72,11 +72,11 @@ public class PlayerGrabState : PlayerAirState
     {
         base.Update();
         //계속 붙어있는지 확인
-        if (!IsStillGrabbing())
-        {
-            stateMachine.ChangeState(stateMachine.FallState);
-            return;
-        }
+        //if (!IsStillGrabbing())
+        //{
+        //    stateMachine.ChangeState(stateMachine.FallState);
+        //    return;
+        //}
 
         // 수동으로 아주 천천히 낙하
         Vector3 velocity = stateMachine.Player.Rigidbody.velocity;
