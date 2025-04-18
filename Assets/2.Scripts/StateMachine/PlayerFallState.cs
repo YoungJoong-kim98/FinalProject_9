@@ -35,7 +35,7 @@ public class PlayerFallState : PlayerAirState
     public override void Update()
     {
         base.Update();
-        DebugDrawGrabRay();
+        //DebugDrawGrabRay();
         
         Rigidbody rb = stateMachine.Player.Rigidbody;   // 플레이어 물리 가져옴
         Vector3 velocity = rb.velocity; // 현재 속도 가져오기
