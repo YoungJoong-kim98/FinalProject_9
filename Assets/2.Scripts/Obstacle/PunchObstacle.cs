@@ -129,7 +129,7 @@ public class PunchObstacle : MonoBehaviour
             yield return null;
         }
 
-        PunchBackMove();
+        _punchCoroutine = StartCoroutine(PunchBackMove());
     }
 
     private IEnumerator PunchBackMove()
@@ -147,6 +147,7 @@ public class PunchObstacle : MonoBehaviour
 
         if (!_isReglar)
         {
+            state = PunchObstacleState.None;
             _punchCoroutine = null;
             yield return null;
         }
@@ -154,7 +155,7 @@ public class PunchObstacle : MonoBehaviour
         {
             //실행 빈도 만큼 기다림
             yield return new WaitForSeconds(_regularTime);
-            PunchFrontMove();
+            _punchCoroutine = StartCoroutine(PunchFrontMove());
         }
     }
     private void OnDrawGizmos()
