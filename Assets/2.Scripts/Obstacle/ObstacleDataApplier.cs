@@ -71,4 +71,11 @@ public class ObstacleDataApplier : MonoBehaviour
 
         return saveData;
     }
+
+#if UNITY_EDITOR
+    public void SetId(string newId)
+    {
+        _obstacleId = newId;
+    }
+#endif
 }

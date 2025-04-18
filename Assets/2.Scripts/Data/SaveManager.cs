@@ -24,7 +24,7 @@ public class SaveManager : MonoBehaviour
 
     public void SaveGame(Transform playerTransform, Rigidbody rigidbody ,AchievementSystem achievementSystem, float playTime)
     {
-        Debug.Log(Application.persistentDataPath);
+        //Debug.Log(Application.persistentDataPath);
         SavePlayerData(playerTransform, rigidbody, achievementSystem, playTime);
         SaveObstacleStates();
     }
@@ -139,7 +139,7 @@ public class SaveManager : MonoBehaviour
         foreach (var obstacle in FindObjectsOfType<ObstacleDataApplier>())
         {
             var id = obstacle.obstacleId;
-            //if (!wrapper.obstacles.TryGetValue(id, out var data)) continue;
+            
             if (!loadedData.TryGetValue(id, out var data)) continue;
             switch (data.type)
             {
