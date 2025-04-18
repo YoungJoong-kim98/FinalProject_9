@@ -2505,7 +2505,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveCam: {fileID: 267756017}
   blendCam: {fileID: 577602327}
-  blendHoldTime: 5
+  blendHoldTime: 4
 --- !u!65 &1586379188
 BoxCollider:
   m_ObjectHideFlags: 0
