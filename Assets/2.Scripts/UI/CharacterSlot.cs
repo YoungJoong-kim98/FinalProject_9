@@ -7,8 +7,8 @@ using UnityEngine.UI;
 public class CharacterSlot
 {
     public Button slotButton;
-    public GameObject unlockImage;
     public GameObject hiddenImage;
+    public GameObject unlockImage;
     public int characterBaseIndex;
     public string unlockConditionId; // 앞으로 업적 시스템과 연결할 ID
     [HideInInspector] public bool isUnlocked;
@@ -27,9 +27,10 @@ public class CharacterSlot
     }
     public void UpdateLockVisual()
     {
-        if (unlockImage != null)
-            unlockImage.SetActive(!isUnlocked);
         if (hiddenImage != null)
-            hiddenImage.SetActive(false);
+            hiddenImage.SetActive(!isUnlocked); // 잠긴 상태일 때만 표시
+
+        if (unlockImage != null)
+            unlockImage.SetActive(isUnlocked); // 해금된 경우 표시
     }
-}
+    }

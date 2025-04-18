@@ -136,4 +136,15 @@ public class UIManager : MonoBehaviour
 
         return uiComponent;
     }
+    public UIType GetPopupUI<UIType>() where UIType : BaseUI
+    {
+        string uiName = typeof(UIType).Name;
+
+        if (activePopupUIs.ContainsKey(uiName))
+        {
+            return activePopupUIs[uiName] as UIType;
+        }
+
+        return null;
+    }
 }

@@ -6,16 +6,17 @@ using UnityEngine.UI;
 public class StartUI : PopUpUI
 {
     public Button gameplayButton;
-    public Button loadGameGutton;
+    public Button loadGameButton;
     public Button settingButton;
     public Button creditButton;
     public Button gameOverButton;
     public Button customButton;
+    public GameObject startCharacter;
 
     void Start()
     {
         gameplayButton.onClick.AddListener(OnGameplayButtonClicked);
-        loadGameGutton.onClick.AddListener(OnLoadGameButtonClicked);
+        loadGameButton.onClick.AddListener(OnLoadGameButtonClicked);
         settingButton.onClick.AddListener(OnSettingButtonClicked);
         creditButton.onClick.AddListener(OnCreditButtonClicked);
         gameOverButton.onClick.AddListener(OnGameOverButtonClicked);
@@ -28,6 +29,7 @@ public class StartUI : PopUpUI
     }
     private void OnCustomButtonClicked()
     {
+        this.gameObject.SetActive(false);
         UIManager.Instance.ShowPopupUI<CustomizingUI>();
     }
     private void OnGameplayButtonClicked()
