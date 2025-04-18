@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class PlayerAirState : PlayerBaseState
 {
@@ -23,6 +24,7 @@ public class PlayerAirState : PlayerBaseState
     public override void Update()
     {
         base.Update();
+
     }
     
     public override void PhysicsUpdate()
@@ -69,5 +71,66 @@ public class PlayerAirState : PlayerBaseState
             stateMachine.CurrentMoveSpeed -= Time.deltaTime * 0.2f; // 초당 0.2f 감소
             stateMachine.CurrentMoveSpeed = Mathf.Max(stateMachine.CurrentMoveSpeed, stateMachine.MovementSpeed);
         }
+    }
+    protected override void OnJumpStarted(InputAction.CallbackContext context)
+    {
+        base.OnJumpStarted(context);
+        if(GameManager.Instance.SkillManager.doubleJump && stateMachine.CanDoubleJump)
+        {
+            stateMachine.CanDoubleJump = false;
+            stateMachine.ChangeState(stateMachine.JumpState);
+        }
+    }
+    protected override void OnGrabStarted(InputAction.CallbackContext context)
+    {
+        base.OnGrabStarted(context);
+        if(TryGrab())
+        {
+            stateMachine.ChangeState(stateMachine.GrabState);
+        }
+
+    }
+    protected bool TryGrab()
+    {
+        if (!GameManager.Instance.SkillManager.grab)
+            return false;
+
+        if (Mouse.current.leftButton.wasPressedThisFrame &&
+            TryDetectGrabTarget(out string tag) &&
+            (tag == "Rope" || tag == "Wall"))
+        {
+            stateMachine.ChangeState(stateMachine.GrabState);
+            return true;
+        }
+
+        return false;
+    }
+
+    protected bool TryDetectGrabTarget(out string targetTag)
+    {
+        targetTag = null;
+
+        Transform t = stateMachine.Player.transform;
+        Vector3 origin = t.position + Vector3.up * 2.0f;
+        float distance = 1.5f;
+        float radius = 0.1f;
+
+        Vector3 diagonalDir = (t.forward + Vector3.up).normalized;
+
+        if (Physics.SphereCast(origin, radius, diagonalDir, out _, distance, LayerMask.GetMask("Rope")))
+        {
+            Debug.DrawRay(origin, diagonalDir * distance, Color.yellow);
+            targetTag = "Rope";
+            return true;
+        }
+
+        if (Physics.Raycast(origin, t.forward, distance, LayerMask.GetMask("Ground")))
+        {
+            Debug.DrawRay(origin, t.forward * distance, Color.yellow);
+            targetTag = "Wall";
+            return true;
+        }
+
+        return false;
     }
 }

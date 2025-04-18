@@ -10,6 +10,7 @@ public class StartUI : PopUpUI
     public Button settingButton;
     public Button creditButton;
     public Button gameOverButton;
+    public Button customButton;
 
     void Start()
     {
@@ -18,11 +19,16 @@ public class StartUI : PopUpUI
         settingButton.onClick.AddListener(OnSettingButtonClicked);
         creditButton.onClick.AddListener(OnCreditButtonClicked);
         gameOverButton.onClick.AddListener(OnGameOverButtonClicked);
+        customButton.onClick.AddListener(OnCustomButtonClicked);
     }
 
     void Update()
     {
         
+    }
+    private void OnCustomButtonClicked()
+    {
+        UIManager.Instance.ShowPopupUI<CustomizingUI>();
     }
     private void OnGameplayButtonClicked()
     {

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class PlayerJumpState : PlayerAirState
 {
@@ -34,7 +35,7 @@ public class PlayerJumpState : PlayerAirState
         base.Enter();
         StartAnimation(stateMachine.Player.AnimationData.JumpParameterHash);
         
-        Debug.Log($"Jump - 현재 이동 속도: {currentMoveSpeed}, 수평 속도: {horizontalVelocity.magnitude}, 적용 후 속도: {rb.velocity.magnitude}");
+        //Debug.Log($"Jump - 현재 이동 속도: {currentMoveSpeed}, 수평 속도: {horizontalVelocity.magnitude}, 적용 후 속도: {rb.velocity.magnitude}");
     }
     
     public override void Exit()
@@ -53,5 +54,12 @@ public class PlayerJumpState : PlayerAirState
             stateMachine.ChangeState(stateMachine.FallState);
         }
     }
+    //protected override void OnGrabStarted(InputAction.CallbackContext context)
+    //{
+    //    base.OnGrabStarted(context);
+    //    Debug.Log("클릭됨");
+    //    stateMachine.ChangeState(stateMachine.GrabState);
+
+    //}
 }
 

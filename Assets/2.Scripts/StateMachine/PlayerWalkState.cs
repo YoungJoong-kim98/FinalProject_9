@@ -27,6 +27,9 @@ public class PlayerWalkState : PlayerGroundState
     protected override void OnRunStarted(InputAction.CallbackContext context)
     {
         base.OnRunStarted(context);
-        stateMachine.ChangeState(stateMachine.RunState);    // 달리기 입력 시 Run으로 전환
+        if(GameManager.Instance.SkillManager.run)
+        {
+            stateMachine.ChangeState(stateMachine.RunState);    // 달리기 입력 시 Run으로 전환
+        }
     }
 }
