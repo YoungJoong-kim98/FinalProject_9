@@ -24,6 +24,7 @@ public class PlayerAirState : PlayerBaseState
     public override void Update()
     {
         base.Update();
+        DebugDrawGrabRay();
 
     }
     
@@ -90,21 +91,19 @@ public class PlayerAirState : PlayerBaseState
         }
 
     }
-    protected bool TryGrab()
-    {
-        if (!GameManager.Instance.SkillManager.grab)
-            return false;
-
-        if (Mouse.current.leftButton.wasPressedThisFrame &&
-            TryDetectGrabTarget(out string tag) &&
-            (tag == "Rope" || tag == "Wall"))
-        {
-            stateMachine.ChangeState(stateMachine.GrabState);
-            return true;
-        }
-
+protected bool TryGrab()
+{
+    if (!GameManager.Instance.SkillManager.grab)
         return false;
+
+    if (TryDetectGrabTarget(out string tag) && (tag == "Rope" || tag == "Wall"))
+    {
+        stateMachine.ChangeState(stateMachine.GrabState);
+        return true;
     }
+
+    return false;
+}
 
     protected bool TryDetectGrabTarget(out string targetTag)
     {
@@ -132,5 +131,28 @@ public class PlayerAirState : PlayerBaseState
         }
 
         return false;
+    }
+    private void DebugDrawGrabRay()
+    {
+        Transform t = stateMachine.Player.transform;
+        Vector3 origin = t.position + Vector3.up * 0.1f;
+        float rayLength = 1.5f;
+        float offset = 0.3f;
+
+        // 바닥 체크 (중앙 + 주변 4방향)
+        Debug.DrawRay(origin, Vector3.down * rayLength, Color.yellow); // 중앙
+
+        Debug.DrawRay(origin + t.right * offset, Vector3.down * rayLength, Color.red);   // 오른쪽
+        Debug.DrawRay(origin - t.right * offset, Vector3.down * rayLength, Color.red);   // 왼쪽
+        Debug.DrawRay(origin + t.forward * offset, Vector3.down * rayLength, Color.red); // 앞쪽
+        Debug.DrawRay(origin - t.forward * offset, Vector3.down * rayLength, Color.red); // 뒤쪽
+
+        // 로프 및 벽 감지용 Ray 시각화
+        Vector3 origin2 = t.position + Vector3.up * 2.0f;
+        float castDistance = 1.5f;
+        Vector3 diagonalDir = (t.forward + Vector3.up).normalized;
+
+        Debug.DrawRay(origin2, diagonalDir * castDistance, Color.blue); // 로프 감지용 Ray
+        Debug.DrawRay(origin2, t.forward * castDistance, Color.blue);   // 벽 감지용 Ray
     }
 }

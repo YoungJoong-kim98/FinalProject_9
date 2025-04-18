@@ -716,7 +716,7 @@ GameObject:
   - component: {fileID: 344589187}
   - component: {fileID: 344589186}
   - component: {fileID: 344589185}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5981,7 +5981,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 60
+  field of view: 50
   orthographic: 0
   orthographic size: 5
   m_Depth: -1
@@ -8445,6 +8445,36 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6642625781669851638, guid: b9ae8dab87b64bb4391c0b2e1c1ae1c2,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -2.24
+      objectReference: {fileID: 0}
+    - target: {fileID: 6642625781669851638, guid: b9ae8dab87b64bb4391c0b2e1c1ae1c2,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6642625781669851638, guid: b9ae8dab87b64bb4391c0b2e1c1ae1c2,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -10
+      objectReference: {fileID: 0}
+    - target: {fileID: 7452554962937544664, guid: b9ae8dab87b64bb4391c0b2e1c1ae1c2,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -2.24
+      objectReference: {fileID: 0}
+    - target: {fileID: 7452554962937544664, guid: b9ae8dab87b64bb4391c0b2e1c1ae1c2,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 7452554962937544664, guid: b9ae8dab87b64bb4391c0b2e1c1ae1c2,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -5
       objectReference: {fileID: 0}
     - target: {fileID: 7857444462617520380, guid: b9ae8dab87b64bb4391c0b2e1c1ae1c2,
         type: 3}
