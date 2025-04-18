@@ -2503,8 +2503,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e21038b0e51cf7e438cff97e8dc5e8e9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveCam: {fileID: 0}
-  blendCam: {fileID: 0}
+  moveCam: {fileID: 267756017}
+  blendCam: {fileID: 577602327}
   blendHoldTime: 5
 --- !u!65 &1586379188
 BoxCollider:

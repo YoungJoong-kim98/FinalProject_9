@@ -137,7 +137,6 @@ public class PlayerFallState : PlayerAirState
                 return true;
             }
         }
-        Debug.Log("접지 감지 안 됨");
         return false;
     }
     
