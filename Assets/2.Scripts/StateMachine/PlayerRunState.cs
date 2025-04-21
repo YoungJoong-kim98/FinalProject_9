@@ -17,8 +17,8 @@ public class PlayerRunState : PlayerGroundState
     {
         base.Enter();
         stateMachine.Player.PlayRunDust();
-        _currentRunSpeed = stateMachine.CurrentMoveSpeed; // 이전 속도(2f~5f) 가져오기
-        if (_currentRunSpeed < stateMachine.MovementSpeed) // 최소 2f 보장
+        _currentRunSpeed = stateMachine.CurrentMoveSpeed;   // 이전 속도 가져오기
+        if (_currentRunSpeed < stateMachine.MovementSpeed)  // 최소 속도 (MovementSpeed) 보장
         {
             _currentRunSpeed = stateMachine.MovementSpeed;
         }

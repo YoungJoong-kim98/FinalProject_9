@@ -1,13 +1,13 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 
 public class GlassTrigger : MonoBehaviour
 {
-    //À¯¸® ¹ßÆÇ
+    //ìœ ë¦¬ ë°œíŒ
     [SerializeField] private GlassPlatform _glassPlatform;
 
     private void OnCollisionEnter(Collision collision)
     {
-        //À¯¸® ¹ßÆÇ ±úÁö´Â ¸Ş¼­µå ½ÇÇà
+        //ìœ ë¦¬ ë°œíŒ ê¹¨ì§€ëŠ” ë©”ì„œë“œ ì‹¤í–‰
         _glassPlatform.Break();
     }
 }

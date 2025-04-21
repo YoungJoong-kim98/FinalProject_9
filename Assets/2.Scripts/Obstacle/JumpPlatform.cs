@@ -2,12 +2,12 @@ using UnityEngine;
 
 public class JumpPlatform : MonoBehaviour
 {
-    //Á¡ÇÁ Èû
+    //ì í”„ í˜
     [SerializeField] private float _jumpPower = -1f;
 
     private void Start()
     {
-        //µ¥ÀÌÅÍ ÃÊ±âÈ­
+        //ë°ì´í„° ì´ˆê¸°í™”
         var data = ObstacleManager.Instance.obstacleData;
         Utilitys.SetIfNegative(ref _jumpPower, data.jumpPower);
     }
@@ -16,20 +16,20 @@ public class JumpPlatform : MonoBehaviour
     {
         if (collision.collider.CompareTag("Player"))
         {
-            //Á¡ÇÁ ¸Ş¼­µå ½ÇÇà
+            //ì í”„ ë©”ì„œë“œ ì‹¤í–‰
             AddJumpPower(collision.gameObject);
         }
     }
 
-    //Á¡ÇÁ ¸Ş¼­µå
+    //ì í”„ ë©”ì„œë“œ
     private void AddJumpPower(GameObject gameObject)
     {
         if (gameObject.TryGetComponent(out Rigidbody rb))
         {
-            //¹°¸® Ã³¸®
+            //ë¬¼ë¦¬ ì²˜ë¦¬
             rb.AddForce(Vector3.up * _jumpPower, ForceMode.Impulse);
         }
-        //rigidbody°¡ ¾øÀ»¶§ ¿¡·¯ÄÚµå
+        //rigidbodyê°€ ì—†ì„ë•Œ ì—ëŸ¬ì½”ë“œ
         else
         {
             Debug.LogWarning($"{gameObject.name} does not have rigidbody");

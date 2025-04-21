@@ -2,12 +2,12 @@ using UnityEngine;
 
 public class PunchTrigger : MonoBehaviour
 {
-    //ÆİÄ¡ Àå¾Ö¹°
+    //í€ì¹˜ ì¥ì• ë¬¼
     [SerializeField] private PunchObstacle _punchObstacle;
 
     private void OnTriggerStay(Collider other)
     {
-        //ÇÃ·¹ÀÌ¾î°¡ Ãæµ¹½Ã
+        //í”Œë ˆì´ì–´ê°€ ì¶©ëŒì‹œ
         if (other.gameObject.CompareTag("Player"))
         {
             _punchObstacle.Punch();
@@ -18,7 +18,7 @@ public class PunchTrigger : MonoBehaviour
         Renderer renderer = GetComponent<Renderer>();
         if (renderer != null)
         {
-            //¹üÀ§¸¸Å­ Å¥ºê µå·Î¿ì 
+            //ë²”ìœ„ë§Œí¼ íë¸Œ ë“œë¡œìš° 
             Gizmos.color = Color.green;
             Gizmos.DrawWireCube(renderer.bounds.center, renderer.bounds.size);
         }

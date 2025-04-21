@@ -26,6 +26,13 @@ public class PlayerGroundState : PlayerBaseState
     public override void Update()
     {
         base.Update();
+        
+        // 장애물과 충돌 시 움직임 거의 0일 때 Idle로 전환
+        if (stateMachine.MovementInput == Vector2.zero && 
+            stateMachine.Player.Rigidbody.velocity.magnitude < 0.1f)
+        {
+            stateMachine.ChangeState(stateMachine.IdleState);
+        }
     }
 
     public override void PhysicsUpdate()
@@ -37,6 +44,7 @@ public class PlayerGroundState : PlayerBaseState
             return;
         }
     }
+    
     private bool IsGrounded() //땅 체크
     {
         Transform t = stateMachine.Player.transform;

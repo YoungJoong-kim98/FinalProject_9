@@ -2,55 +2,55 @@ using UnityEngine;
 
 public class ObstacleData : MonoBehaviour
 {
-    //ÇÃ·¹ÀÌ¾îÀÇ °ü·Ã
+    //í”Œë ˆì´ì–´ì˜ ê´€ë ¨
     [Header("Player")]
-    //ÇÃ·¹ÀÌÀÇ ¿òÁ÷ÀÓÀÌ Á¦ÇÑµÇ´Â ½Ã°£
+    //í”Œë ˆì´ì˜ ì›€ì§ì„ì´ ì œí•œë˜ëŠ” ì‹œê°„
     public float moveLockTime = 0.5f;
 
-    //¿òÁ÷ÀÌ´Â ¹ßÆÇ
+    //ì›€ì§ì´ëŠ” ë°œíŒ
     [Header("Platform")]
-    //»ç¶óÁö±â±îÁöÀÇ ½Ã°£
+    //ì‚¬ë¼ì§€ê¸°ê¹Œì§€ì˜ ì‹œê°„
     public float disapearTime = 1;
-    //»ı¼ºµÇ±â±îÁöÀÇ ½Ã°£
+    //ìƒì„±ë˜ê¸°ê¹Œì§€ì˜ ì‹œê°„
     public float apearTime = 5;
 
-    //Á¡ÇÁ ¹ßÆÇ
+    //ì í”„ ë°œíŒ
     [Header("Jump Platform")]
-    //Á¡ÇÁÇÏ´Â Èû
+    //ì í”„í•˜ëŠ” í˜
     public float jumpPower = 15;
 
-    //ÆİÄ¡ Àå¾Ö¹°
+    //í€ì¹˜ ì¥ì• ë¬¼
     [Header("Punch Obstacle")]
-    //¹Ì´Â Èû
+    //ë¯¸ëŠ” í˜
     public float pushPower = 15f;
-    //ÆİÄ¡ÇÏ´Â ¼Óµµ
+    //í€ì¹˜í•˜ëŠ” ì†ë„
     public float pushSpeed = 15f;
-    //µ¹¾Æ°¡´Â ¼Óµµ
+    //ëŒì•„ê°€ëŠ” ì†ë„
     public float backSpeed = 5f;
-    //¿òÁ÷ÀÌ´Â °Å¸®
+    //ì›€ì§ì´ëŠ” ê±°ë¦¬
     public float moveDistance = 5f;
 
-    //¹İ»ç Àå¾Ö¹°
+    //ë°˜ì‚¬ ì¥ì• ë¬¼
     [Header("Reflect Obstacle")]
-    //¹İ»çÇÏ´Â Èû
+    //ë°˜ì‚¬í•˜ëŠ” í˜
     public float reflectPower = 30f;
-    //ÃÖ¼Ò Èû
+    //ìµœì†Œ í˜
     public float reflectMinPower = 15f;
-    //ÃÖ´ë Èû
+    //ìµœëŒ€ í˜
     public float reflectMaxPower = 60f;
 
-    //È¸ÀüÇÏ´Â Àå¾Ö¹°
+    //íšŒì „í•˜ëŠ” ì¥ì• ë¬¼
     [Header("Rotate Obstacle")]
-    //È¸ÀüÇÏ´Â ¼Óµµ
+    //íšŒì „í•˜ëŠ” ì†ë„
     public float rotateSpeed = 10f;
 
-    //¼±Ç³±â ±¸¿ª
+    //ì„ í’ê¸° êµ¬ì—­
     [Header("Fan Area")]
-    //¼±Ç³±â Èû
+    //ì„ í’ê¸° í˜
     public float forceStrength = 1f;
 
-    //¿òÁ÷ÀÌ´Â ¹ßÆÇ
+    //ì›€ì§ì´ëŠ” ë°œíŒ
     [Header("Move Platform")]
-    //¿òÁ÷ÀÌ´Â ¼Óµµ
+    //ì›€ì§ì´ëŠ” ì†ë„
     public float moveSpeed = 5f;
 }

@@ -3,16 +3,12 @@ using UnityEngine;
 
 public class ReflectObstacle : MonoBehaviour
 {
-    //¹İ»çÇÏ´Â Èû
     [SerializeField] private float _reflectPower = -1f;
-    //ÃÖ¼Ò Èû
     [SerializeField] private float _reflectMinPower = -1f;
-    //ÃÖ´ë Èû
     [SerializeField] private float _reflectMaxPower = -1f;
 
     private void Start()
     {
-        //µ¥ÀÌÅÍ ÃÊ±âÈ­
         var data = ObstacleManager.Instance.obstacleData;
         Utilitys.SetIfNegative(ref _reflectPower, data.reflectPower);
         Utilitys.SetIfNegative(ref _reflectMinPower, data.reflectMinPower);
@@ -21,38 +17,46 @@ public class ReflectObstacle : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        //ÇÃ·¹ÀÌ¾î¿Í Ãæµ¹½Ã
         if (collision.gameObject.CompareTag("Player"))
         {
-            //¹İ»çÇÏ´Â ¸Ş¼­µå ½ÇÇà
             Reflect(collision.gameObject, collision.relativeVelocity.magnitude);
         }
     }
 
-    //¹İ»çÇÏ´Â ¸Ş¼­µå
     private void Reflect(GameObject target, float impactSpeed)
     {
-        //¹İ»çÇÏ´Â ¹æÇâ(¼öÆòÀ¸·Î¸¸ ¹İ»ç)
         Vector3 direction = target.transform.position - transform.position;
         direction.y = 0f;
         direction = direction.normalized;
 
-        //Å¸°ÙÀÇ Á¤¸é º¯°æ
         target.transform.forward = -direction;
 
-        //ÇÃ·¹ÀÌ¾îÀÇ ¿òÁ÷ÀÓ Á¦ÇÑ
         if (target.TryGetComponent(out Player player))
         {
             ObstacleManager.Instance.StartLockMovement(player);
         }
 
-        //¹°¸® Ã³¸®
         if (target.TryGetComponent(out Rigidbody rb))
         {
             rb.velocity = Vector3.zero;
+            //rb.collisionDetectionMode = CollisionDetectionMode.Continuous;  // í”Œë ˆì´ì–´ì—ì„œ ì ìš© ì¤‘ 
 
             float scaledPower = Mathf.Clamp(impactSpeed * _reflectPower, _reflectMinPower, _reflectMaxPower);
-            rb.AddForce(direction * scaledPower, ForceMode.Impulse);
+            rb.velocity = direction * scaledPower;
+
+            // ë²½ ëš«ë¦¼ ë°©ì§€ - ì¶©ëŒ ì ì‹œ ë¬´ì‹œ
+            if (target.TryGetComponent(out Collider playerCol) && TryGetComponent(out Collider obstacleCol))
+            {
+                StartCoroutine(IgnoreCollisionTemporarily(playerCol, obstacleCol, 0.3f));
+            }
         }
+    }
+
+    // ì¼ì • ì‹œê°„ ì¶©ëŒ ë¬´ì‹œ
+    private IEnumerator IgnoreCollisionTemporarily(Collider a, Collider b, float duration)
+    {
+        Physics.IgnoreCollision(a, b, true);
+        yield return new WaitForSeconds(duration);
+        Physics.IgnoreCollision(a, b, false);
     }
 }
