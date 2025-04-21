@@ -30,7 +30,7 @@ public class PlayerFallCrashState : PlayerBaseState
         rb.velocity = Vector3.zero;
         rb.useGravity = false; // 중력 끄기
         stateMachine.MovementInput = Vector2.zero;
-
+    
         StartAnimation(stateMachine.Player.AnimationData.FallCrashParameterHash);
         Debug.Log("FallCrash 상태 진입");
     }

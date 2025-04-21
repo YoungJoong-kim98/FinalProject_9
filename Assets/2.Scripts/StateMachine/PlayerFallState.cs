@@ -52,7 +52,8 @@ public class PlayerFallState : PlayerAirState
         bool isGrounded = IsGrounded(); // 바닥 감지
         if (isGrounded && !_wasGrounded) // 첫 착지 프레임만 처리
         {
-            //Debug.Log($"착지 - 저장 속도: {savedVelocity}");
+            Debug.Log($"착지 - 저장 속도: {savedVelocity}");
+            _wasGrounded = isGrounded; // 다음 프레임 대비
             
             if (savedVelocity <= -_maxFallSpeed * 0.98f) // 미세 속도 오차 조절 (-29.4)
             {
@@ -60,18 +61,15 @@ public class PlayerFallState : PlayerAirState
                 stateMachine.ChangeState(stateMachine.FallCrashState);
                 return;
             }
-            
-            Debug.Log("정상 착지");
-            HandleGroundedState();
-            return;
+            else
+            {
+                Debug.Log("정상 착지");
+                HandleGroundedState();
+                return;
+            }
         }
-        _wasGrounded = isGrounded; // 다음 프레임 대비
-        
-
     }
-
-
-
+    
     public override void PhysicsUpdate()
     {
         base.PhysicsUpdate();   // AirState.PhysicsUpdate 호출
@@ -88,7 +86,7 @@ public class PlayerFallState : PlayerAirState
         // 중앙 레이
         if (Physics.Raycast(origin, Vector3.down, rayLength, groundMask))
         {
-            //Debug.Log($"중앙 접지 감지, 속도: {stateMachine.Player.Rigidbody.velocity.y}");
+            Debug.Log($"중앙 접지 감지, 속도: {stateMachine.Player.Rigidbody.velocity.y}");
             return true;
         }
 
@@ -107,7 +105,7 @@ public class PlayerFallState : PlayerAirState
             Vector3 offsetOrigin = origin + dir;
             if (Physics.Raycast(offsetOrigin, Vector3.down, rayLength, groundMask))
             {
-                Debug.Log($"오프셋 접지 감지: {dir}, Velocity: {stateMachine.Player.Rigidbody.velocity.y}");
+                Debug.Log($"오프셋 접지 감지: {dir}, 속도: {stateMachine.Player.Rigidbody.velocity.y}");
                 return true;
             }
         }
@@ -149,12 +147,14 @@ public class PlayerFallState : PlayerAirState
     // 착지 후 상태 전환
     private void HandleGroundedState()
     {
-        float preservedSpeed = stateMachine.CurrentMoveSpeed;   // 이전 속도 유지
+        // float preservedSpeed = stateMachine.CurrentMoveSpeed;   // 이전 속도 유지
         
         if (stateMachine.Player.Input.playerActions.Run.IsPressed() && GameManager.Instance.SkillManager.run)    // Shift 누르고 있으면
         {
-            stateMachine.CurrentMoveSpeed = preservedSpeed;
+            // stateMachine.CurrentMoveSpeed = preservedSpeed;
+            
             stateMachine.ChangeState(stateMachine.RunState);
+            
             //Debug.Log($"Fall to Run - 속도: {stateMachine.CurrentMoveSpeed}");
         }
         else if (stateMachine.MovementInput != Vector2.zero)    // 이동 입력 있으면
