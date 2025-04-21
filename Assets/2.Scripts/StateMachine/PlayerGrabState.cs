@@ -15,7 +15,7 @@ public class PlayerGrabState : PlayerAirState
     private Coroutine wallCooldownCoroutine; //벽 잡기 가능 상태 만드는 코루틴
 
     private readonly WaitForSeconds move_unlockTime = new WaitForSeconds(0.5f);
-    private readonly WaitForSeconds wall_unlockTime = new WaitForSeconds(1f);
+    private readonly WaitForSeconds wall_unlockTime = new WaitForSeconds(3f);
     private Coroutine grabTimeoutCoroutine; //일시적인 잡기 용 테스트
     private readonly WaitForSeconds grabLimit = new WaitForSeconds(3f);
 
@@ -60,11 +60,11 @@ public class PlayerGrabState : PlayerAirState
 
         // 고정 해제
         stateMachine.Player.Rigidbody.constraints = RigidbodyConstraints.FreezeRotation;
-        if (grabTimeoutCoroutine != null)
-        {
-            stateMachine.Player.StopCoroutine(grabTimeoutCoroutine);
-            grabTimeoutCoroutine = null;
-        }
+        //if (grabTimeoutCoroutine != null)
+        //{
+        //    stateMachine.Player.StopCoroutine(grabTimeoutCoroutine);
+        //    grabTimeoutCoroutine = null;
+        //}
     }
 
     // 잡기 유지/해제
@@ -96,8 +96,6 @@ public class PlayerGrabState : PlayerAirState
         {
 
             stateMachine.IsMovementLocked = true; // 이동 잠금
-            stateMachine.CanGrabWall = false; //잡기 잠금 
-
 
             float jumpPower = stateMachine.Player.Data.AirData.JumpForce * 2.5f;
             float directionalForce = 20.0f;
@@ -125,16 +123,20 @@ public class PlayerGrabState : PlayerAirState
 
             hasJumped = true;
 
-            if (unlockCoroutine != null) //코루틴 중복 방지 예외처리
+            if (stateMachine.LastGrabTag == "Wall")
             {
+                stateMachine.CanGrabWall = false; //  벽일 때만 잡기 잠금 
+                if (wallCooldownCoroutine != null)
+                    stateMachine.Player.StopCoroutine(wallCooldownCoroutine);
+
+                wallCooldownCoroutine = stateMachine.Player.StartCoroutine(EnableWallGrabAfterCooldown());
+            }
+
+            // 공통 이동 락 해제 코루틴
+            if (unlockCoroutine != null)
                 stateMachine.Player.StopCoroutine(unlockCoroutine);
-            }
-            if (wallCooldownCoroutine != null)
-            {
-                stateMachine.Player.StopCoroutine(wallCooldownCoroutine);
-            }
-            unlockCoroutine = stateMachine.Player.StartCoroutine(UnlockMovementAfterDelay()); // 이동 잠금 해제 코루틴
-            wallCooldownCoroutine = stateMachine.Player.StartCoroutine(EnableWallGrabAfterCooldown()); //잡기 잠금 해제 코루틴
+
+            unlockCoroutine = stateMachine.Player.StartCoroutine(UnlockMovementAfterDelay());
 
             stateMachine.ChangeState(stateMachine.FallState);
 
