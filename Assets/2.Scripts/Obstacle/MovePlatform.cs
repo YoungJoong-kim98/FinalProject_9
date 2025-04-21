@@ -9,10 +9,11 @@ public class MovePlatform : MonoBehaviour
     [SerializeField] private List<Vector3> _movePositions;
 
     //현재 위치의 인덱스
-    public int currentIndex = 0;
+    public int currentIndex = 0; 
 
     //플레이어 rigidbody
     private Rigidbody _playerRigidbody;
+    
 
     private void Start()
     {

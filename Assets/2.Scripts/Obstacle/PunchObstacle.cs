@@ -93,15 +93,15 @@ public class PunchObstacle : MonoBehaviour
         Rigidbody rb = go.GetComponent<Rigidbody>();
         if (rb != null)
         {
-            //물리 처리
-            rb.AddForce(_direction.normalized * _pushPower, ForceMode.Impulse);
+            rb.velocity = Vector3.zero;
+            rb.velocity = _direction.normalized * _pushPower;
         }
 
         Player player = go.GetComponent<Player>();
         if (player != null)
         {
             //움직임 제한
-            ObstacleManager.Instance.StartLockMovement(player);
+            player.StartLockMovement(ObstacleManager.Instance.obstacleData.moveLockTime);
         }
     }
 
