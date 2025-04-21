@@ -1,33 +1,55 @@
 using UnityEngine;
 
+public enum GlassPlatformState
+{
+    None,
+    Break
+}
+
 public class GlassPlatform : MonoBehaviour
 {
-    //Á¤»óÀûÀÎ À¯¸® ¿ÀºêÁ§Æ®
+    //ì •ìƒì ì¸ ìœ ë¦¬ ì˜¤ë¸Œì íŠ¸
     [SerializeField] private GameObject _glassObject;
-    //±úÁø À¯¸® ¿ÀºêÁ§Æ®
+    //ê¹¨ì§„ ìœ ë¦¬ ì˜¤ë¸Œì íŠ¸
     [SerializeField] private GameObject _shatteredObject;
 
-    //±úÁö´Â ¸Ş¼­µå
+    public GlassPlatformState state = GlassPlatformState.None;
+
+    public void Init()
+    {
+        switch (state)
+        {
+            case GlassPlatformState.Break:
+                OnDestroy();
+                break;
+            default:
+                break;
+        }
+    }
+
+    //ê¹¨ì§€ëŠ” ë©”ì„œë“œ
     public void Break()
     {
-        //±úÁø À¯¸® È°¼ºÈ­
+        state = GlassPlatformState.Break;
+        //ê¹¨ì§„ ìœ ë¦¬ í™œì„±í™”
         _shatteredObject.SetActive(true);
 
-        //±úÁø À¯¸® Á¶°¢µé¿¡°Ô ½ÇÇà
+        //ê¹¨ì§„ ìœ ë¦¬ ì¡°ê°ë“¤ì—ê²Œ ì‹¤í–‰
         foreach (Rigidbody rb in _shatteredObject.GetComponentsInChildren<Rigidbody>())
         {
             rb.isKinematic = false;
             rb.AddExplosionForce(300f, transform.position, 2f);
         }
-        //¿ø·¡ À¯¸® Á¦°Å
-        Destroy(_glassObject.gameObject);
-        //5ÃÊµÚ¿¡ Á¦°Å
+        //ì›ë˜ ìœ ë¦¬ ë¹„í™œì„±í™”
+        _glassObject.SetActive(false);
+
+        //5ì´ˆë’¤ì— ë¹„í™œì„±í™”
         Invoke("OnDestroy", 5f);
     }
 
     private void OnDestroy()
     {
-        //°ÔÀÓ ¿ÀºêÁ§Æ® Á¦°Å
-        Destroy(gameObject);
+        //ê²Œì„ ì˜¤ë¸Œì íŠ¸ ë¹„í™œì„±í™”
+        gameObject.SetActive(false);
     }
 }

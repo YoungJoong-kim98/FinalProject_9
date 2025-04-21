@@ -1,14 +1,16 @@
+using System.Collections.Generic;
+
 [System.Serializable]
-public class SaveData
+public class PlayerSaveData
 {
     public float[] playerPosition;
+    public float[] playerVelocity;
     public float playTime;
+    //ìŠ¤í‚¬íšë“ ì—¬ë¶€
 
-    //½ºÅ³È¹µæ ¿©ºÎ
+    //ë‚˜ë ˆì´ì…˜ ì¸ë±ìŠ¤
 
-    //³ª·¹ÀÌ¼Ç ÀÎµ¦½º
-
-    //¾÷Àû Á¤º¸
+    //ì—…ì  ì •ë³´
     public AchievementData achievement;
 }
 
@@ -21,4 +23,62 @@ public class AchievementData
     public bool fallingCrash;
     public int grabCount;
     public bool completionTime;
+}
+
+[System.Serializable]
+public class ObstacleSaveEntry
+{
+    public string id;
+    public ObstacleSaveData data;
+
+    public ObstacleSaveEntry(string id, ObstacleSaveData data)
+    {
+        this.id = id;
+        this.data = data;
+    }
+}
+
+[System.Serializable]
+public class ObstacleSaveWrapper
+{
+    public List<ObstacleSaveEntry> obstacleList = new();
+
+    public void FromDictionary(Dictionary<string, ObstacleSaveData> dict)
+    {
+        obstacleList.Clear();
+        foreach (var kvp in dict)
+        {
+            obstacleList.Add(new ObstacleSaveEntry(kvp.Key, kvp.Value));
+        }
+    }
+
+    public Dictionary<string, ObstacleSaveData> ToDictionary()
+    {
+        var dict = new Dictionary<string, ObstacleSaveData>();
+        foreach (var entry in obstacleList)
+        {
+            dict[entry.id] = entry.data;
+        }
+        return dict;
+    }
+}
+
+[System.Serializable]
+public class ObstacleSaveData
+{
+    public ObstacleDataType type;
+
+    public bool isActive;
+    public float[] position;
+    public float remainTime;
+
+    public GlassPlatformState glassPlatformState;
+    //
+    public PlatformState platformState;
+    //
+    public PunchObstacleState punchObstacleState;
+    //
+    public int moveIndex;
+    //
+    public float[] rotation;
 }

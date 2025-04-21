@@ -1,54 +1,98 @@
 using System.Collections;
 using UnityEngine;
 
+public enum PlatformState
+{
+    None,
+    Hide,
+    Restore
+}
+
 public class Platform : MonoBehaviour
 {
-    //사라지기 까지의 시간
-    [SerializeField] private float _disappearTime = -1f;
-    //생성되기 까지의 시간
-    [SerializeField] private float _appearTime = -1f;
 
-    //플래그
+    [SerializeField] private float _disappearTime = -1f;
+    [SerializeField] private float _appearTime = -1f;
+    public float remainTime;
+
+    private MeshRenderer _meshRenderer;
+    private Collider _collider;
+
     private bool _isInteracting = false;
+
+    public PlatformState state = PlatformState.None;
 
     private void Start()
     {
-        //데이터 초기화
         var data = ObstacleManager.Instance.obstacleData;
         Utilitys.SetIfNegative(ref _disappearTime, data.disapearTime);
         Utilitys.SetIfNegative(ref _appearTime, data.apearTime);
+
+        _meshRenderer = GetComponent<MeshRenderer>();
+        _collider = GetComponent<Collider>();
+    }
+
+    public void Init()
+    {
+        switch (state)
+        {
+            case PlatformState.None:
+                break;
+
+            case PlatformState.Hide:
+                StartCoroutine(HideCoroutine(remainTime));
+                break;
+
+            case PlatformState.Restore:
+                StartCoroutine(RestoreCoroutine(remainTime));
+                break;
+
+            default:
+                break;
+        }
     }
 
     private void OnCollisionEnter(Collision collision)
     {
-        //플레이어와 충돌 중이고 실행 중이 아닐때
         if (collision.collider.CompareTag("Player") && !_isInteracting)
         {
-            //사라지고 생기는 로직 실행
             _isInteracting = true;
-            StartCoroutine(HideAndRestoreCoroutine());
+            StartCoroutine(HideCoroutine(_disappearTime));
         }
     }
 
-    //사라지고 생기는 로직
-    private IEnumerator HideAndRestoreCoroutine()
+    private IEnumerator HideCoroutine(float time)
     {
-        //플래그
-        _isInteracting = true;
+        yield return RunTimer(time, PlatformState.Hide);
 
-        //MeshRenderer와 Collider 컨트롤
-        MeshRenderer meshRenderer = gameObject.GetComponent<MeshRenderer>();
-        Collider collider = gameObject.GetComponent<Collider>();
+        _meshRenderer.enabled = false;
+        _collider.enabled = false;
 
-        yield return new WaitForSeconds(_disappearTime);
-        meshRenderer.enabled = false;
-        collider.enabled = false;
+        StartCoroutine(RestoreCoroutine(_appearTime));
+    }
 
-        yield return new WaitForSeconds(_appearTime);
-        meshRenderer.enabled = true;
-        collider.enabled = true;
+    private IEnumerator RestoreCoroutine(float time)
+    {
+        yield return RunTimer(time, PlatformState.Restore);
 
-        //플래그
-        _isInteracting = false;
+        _meshRenderer.enabled = true;
+        _collider.enabled = true;
+
+        state = PlatformState.None;
+    }
+
+    private IEnumerator RunTimer(float duration, PlatformState targetState)
+    {
+        state = targetState;
+        remainTime = duration;
+
+        while (remainTime > 0f)
+        {
+            remainTime -= Time.deltaTime;
+            yield return null;
+
+            if (state != targetState)
+                yield break;
+        }
     }
 }
