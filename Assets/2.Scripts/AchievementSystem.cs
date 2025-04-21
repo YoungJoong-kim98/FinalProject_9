@@ -10,6 +10,7 @@ public class AchievementSystem : MonoBehaviour
     public bool fallingCrash;
     public int grabCount;
     public bool completionTime;
+
     private void Start()
     {
         jumpCount = 0;
@@ -18,24 +19,44 @@ public class AchievementSystem : MonoBehaviour
         fallingCrash = false;
         grabCount = 0;
         completionTime = false;
+
     }
+    //private void Update() - inspector창내에서 직접 수정하여 확인하는 용도
+    //{
+    //    var customizingUI = UIManager.Instance.GetCurrentCustomizingUI();
+    //    if (customizingUI != null)
+    //    {
+    //        customizingUI.RefreshCharacterSlots(); // 슬롯 상태 강제 갱신
+    //    }
+    //}
     public void JumpCount()
     {
         jumpCount += 1;
         Debug.Log(jumpCount);
+        UpdateAchievements();
     }
 
     public  void JumpPlatformCount()
     {
         jumpPlatform += 1;
+        UpdateAchievements();
     }
 
     public void GrabCount()
     {
         grabCount += 1;
         Debug.Log(grabCount);
+        UpdateAchievements();
     }
 
+    private void UpdateAchievements()
+    {
+        var customizingUI = UIManager.Instance.GetCurrentCustomizingUI();
+        if (customizingUI != null)
+        {
+            customizingUI.RefreshCharacterSlots();
+        }
+    }
     public AchievementData ToData()
     {
         return new AchievementData

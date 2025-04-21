@@ -22,15 +22,32 @@ public class CharacterSlot
         else
         {
             // 나중에 연결될 실제 시스템으로 교체
-         //   isUnlocked = AchievementManager.Instance.HasAchievement(unlockConditionId);
+            //   isUnlocked = AchievementManager.Instance.HasAchievement(unlockConditionId);
         }
     }
     public void UpdateLockVisual()
     {
-        if (hiddenImage != null)
-            hiddenImage.SetActive(!isUnlocked); // 잠긴 상태일 때만 표시
+        if (isUnlocked)
+        {
+            if (hiddenImage != null)
+            {
+                GameObject.Destroy(hiddenImage);
+                hiddenImage = null;
+            }
 
-        if (unlockImage != null)
-            unlockImage.SetActive(isUnlocked); // 해금된 경우 표시
+            if (unlockImage != null)
+            {
+                GameObject.Destroy(unlockImage);
+                unlockImage = null;
+            }
+        }
+        else
+        {
+            if (hiddenImage != null)
+                hiddenImage.SetActive(true);
+
+            if (unlockImage != null)
+                unlockImage.SetActive(false);
+        }
     }
-    }
+}

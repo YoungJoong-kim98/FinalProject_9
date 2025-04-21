@@ -27,10 +27,13 @@ public class CustomizingUI : PopUpUI
     private int currentColorOffset = 0;         // 현재 선택된 색상 A(0), B(1), C(2), D(3)
     private GameObject selectedCharacterPrefab; // Apply에서 최종 저장할 프리팹
     public RuntimeAnimatorController fallingPlayerAnimatorController;// FallingPlayer 애니메이션 컨트롤러
+    public AchievementSystem achievementSystem;//업적
 
     void Start()
     {
+        achievementSystem = FindObjectOfType<AchievementSystem>();
         SetupCharacterSlots();
+        RefreshCharacterSlots();
 
         aButton.onClick.AddListener(() => ChangeColor(0));
         bButton.onClick.AddListener(() => ChangeColor(1));
@@ -161,17 +164,53 @@ public class CustomizingUI : PopUpUI
 
         this.gameObject.SetActive(false);
     }
-    void ShowUnlockInfo(CharacterSlot slot)
-    {
-        Debug.Log($"[잠금] 슬롯 {slot.characterBaseIndex}는 아직 해금되지 않았음");
-       
-    }
+    //void ShowUnlockInfo(CharacterSlot slot)
+    //{
+    //    Debug.Log($"[잠금] 슬롯 {slot.characterBaseIndex}는 아직 해금되지 않았음");
+
+    //}
     public void RefreshCharacterSlots()
     {
-        foreach (var slot in characterSlots)
+        for (int i = 0; i < characterSlots.Count; i++)
         {
-            slot.EvaluateUnlock();
-            slot.UpdateLockVisual();
+            var slot = characterSlots[i];
+            bool isUnlocked = false;
+
+            switch (i)
+            {
+                case 0:
+                case 1:
+                    isUnlocked = true;
+                    break;
+                case 2:
+                    isUnlocked = achievementSystem.jumpCount >= 100;
+                    break;
+                case 3:
+                    isUnlocked = achievementSystem.jumpPlatform >= 30;
+                    break;
+                case 4:
+                    isUnlocked = achievementSystem.researcherStage;
+                    break;
+                case 5:
+                    isUnlocked = achievementSystem.fallingCrash;
+                    break;
+                case 6:
+                    isUnlocked = achievementSystem.grabCount >= 100;
+                    break;
+                case 7:
+                    isUnlocked = achievementSystem.completionTime;
+                    break;
+            }
+
+            slot.isUnlocked = isUnlocked;
+
+            if (isUnlocked && slot.hiddenImage != null)
+            {
+                Destroy(slot.hiddenImage); // 잠금 이미지 제거
+                slot.hiddenImage = null;   // 참조 제거
+            }
+
+            slot.UpdateLockVisual(); // 비주얼 상태 업데이트
         }
     }
 }
