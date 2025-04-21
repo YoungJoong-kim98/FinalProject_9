@@ -7,45 +7,45 @@ using static UnityEngine.UI.Image;
 
 public class PlayerGrabState : PlayerAirState
 {
-    private bool hasJumped = false; // Á¡ÇÁ ¿©ºÎ
-    private float slowFallSpeed = -0.5f;    // Àâ±â Áß ´À¸° ³«ÇÏ ¼Óµµ
+    private bool hasJumped = false; // ì í”„ ì—¬ë¶€
+    private float slowFallSpeed = -0.3f;    // ì¡ê¸° ì¤‘ ëŠë¦° ë‚™í•˜ ì†ë„
     public PlayerGrabState(PlayerStateMachine stateMachine) : base(stateMachine) { }
 
-    private Coroutine unlockCoroutine; // ÀÌµ¿ »óÅÂ ¸¸µå´Â ÄÚ·çÆ¾
-    private Coroutine wallCooldownCoroutine; //º® Àâ±â °¡´É »óÅÂ ¸¸µå´Â ÄÚ·çÆ¾
+    private Coroutine unlockCoroutine; // ì´ë™ ìƒíƒœ ë§Œë“œëŠ” ì½”ë£¨í‹´
+    private Coroutine wallCooldownCoroutine; //ë²½ ì¡ê¸° ê°€ëŠ¥ ìƒíƒœ ë§Œë“œëŠ” ì½”ë£¨í‹´
 
-    private readonly WaitForSeconds move_unlockTime = new WaitForSeconds(1f);
+    private readonly WaitForSeconds move_unlockTime = new WaitForSeconds(0.5f);
     private readonly WaitForSeconds wall_unlockTime = new WaitForSeconds(1f);
-    private Coroutine grabTimeoutCoroutine; //ÀÏ½ÃÀûÀÎ Àâ±â ¿ë Å×½ºÆ®
+    private Coroutine grabTimeoutCoroutine; //ì¼ì‹œì ì¸ ì¡ê¸° ìš© í…ŒìŠ¤íŠ¸
     private readonly WaitForSeconds grabLimit = new WaitForSeconds(3f);
 
     public override void Enter()
     {
-        // º® Àâ±â ÀÌ¹Ì ÇßÀ¸¸é ¾È µé¾î°¡°Ô ÇÏ±â
+        // ë²½ ì¡ê¸° ì´ë¯¸ í–ˆìœ¼ë©´ ì•ˆ ë“¤ì–´ê°€ê²Œ í•˜ê¸°
         if (!stateMachine.CanGrabWall)
         {
             stateMachine.ChangeState(stateMachine.FallState);
             return;
         }
-        stateMachine.CanDoubleJump = false; // Á¡ÇÁÇÏ°í ³ª¼­ ¹Ù·Î ´õºíÁ¡ÇÁ ¸ø ÇÏ°Ô Â÷´Ü
+        stateMachine.CanDoubleJump = false; // ì í”„í•˜ê³  ë‚˜ì„œ ë°”ë¡œ ë”ë¸”ì í”„ ëª» í•˜ê²Œ ì°¨ë‹¨
         //stateMachine.CanGrabWall = false;
         //if(wallCooldownCoroutine != null)
         //{
         //    stateMachine.Player.StopCoroutine(wallCooldownCoroutine);    
         //}
-        //wallCooldownCoroutine = stateMachine.Player.StartCoroutine(EnableWallGrabAfterCooldown(2f)); //1ÃÊ ÈÄ ´Ù½Ã°¡´É
+        //wallCooldownCoroutine = stateMachine.Player.StartCoroutine(EnableWallGrabAfterCooldown(2f)); //1ì´ˆ í›„ ë‹¤ì‹œê°€ëŠ¥
         base.Enter();
 
-        GameManager.Instance.AchievementSystem.GrabCount(); // Àâ±â È½¼ö Áõ°¡
+        GameManager.Instance.AchievementSystem.GrabCount(); // ì¡ê¸° íšŸìˆ˜ ì¦ê°€
         StartAnimation(stateMachine.Player.AnimationData.GrabParameterHash);
 
-        // ¹°¸® ¼³Á¤
-        stateMachine.Player.Rigidbody.velocity = Vector3.zero;  // ¼Óµµ 0À¸·Î
-        stateMachine.Player.Rigidbody.useGravity = false;       // Áß·Â ºñÈ°¼ºÈ­
-        stateMachine.Player.Rigidbody.constraints = RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionZ; // x, z ÀÌµ¿ Â÷´Ü
+        // ë¬¼ë¦¬ ì„¤ì •
+        stateMachine.Player.Rigidbody.velocity = Vector3.zero;  // ì†ë„ 0ìœ¼ë¡œ
+        stateMachine.Player.Rigidbody.useGravity = false;       // ì¤‘ë ¥ ë¹„í™œì„±í™”
+        stateMachine.Player.Rigidbody.constraints = RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionZ; // x, z ì´ë™ ì°¨ë‹¨
 
-        hasJumped = false;  // Á¡ÇÁ ¿©ºÎ ÃÊ±âÈ­
-        //grabTimeoutCoroutine = stateMachine.Player.StartCoroutine(GrabTimeout()); // Å×½ºÆ®¿ë
+        hasJumped = false;  // ì í”„ ì—¬ë¶€ ì´ˆê¸°í™”
+        //grabTimeoutCoroutine = stateMachine.Player.StartCoroutine(GrabTimeout()); // í…ŒìŠ¤íŠ¸ìš©
     }
 
 
@@ -55,10 +55,10 @@ public class PlayerGrabState : PlayerAirState
 
         StopAnimation(stateMachine.Player.AnimationData.GrabParameterHash);
 
-        // Áß·Â ´Ù½Ã È°¼ºÈ­
+        // ì¤‘ë ¥ ë‹¤ì‹œ í™œì„±í™”
         stateMachine.Player.Rigidbody.useGravity = true;
 
-        // °íÁ¤ ÇØÁ¦
+        // ê³ ì • í•´ì œ
         stateMachine.Player.Rigidbody.constraints = RigidbodyConstraints.FreezeRotation;
         if (grabTimeoutCoroutine != null)
         {
@@ -67,42 +67,42 @@ public class PlayerGrabState : PlayerAirState
         }
     }
 
-    // Àâ±â À¯Áö/ÇØÁ¦
+    // ì¡ê¸° ìœ ì§€/í•´ì œ
     public override void Update()
     {
         base.Update();
-        //°è¼Ó ºÙ¾îÀÖ´ÂÁö È®ÀÎ
+        //ê³„ì† ë¶™ì–´ìˆëŠ”ì§€ í™•ì¸
         //if (!IsStillGrabbing())
         //{
         //    stateMachine.ChangeState(stateMachine.FallState);
         //    return;
         //}
 
-        // ¼öµ¿À¸·Î ¾ÆÁÖ ÃµÃµÈ÷ ³«ÇÏ
+        // ìˆ˜ë™ìœ¼ë¡œ ì•„ì£¼ ì²œì²œíˆ ë‚™í•˜
         Vector3 velocity = stateMachine.Player.Rigidbody.velocity;
 
-        // y¼Óµµ´Â ÀÏÁ¤ÇÑ °ªÀ¸·Î À¯Áö (°¨¼ÓÀÌ ¾Æ´Ñ "°íÁ¤ ¼Óµµ ³«ÇÏ")
+        // yì†ë„ëŠ” ì¼ì •í•œ ê°’ìœ¼ë¡œ ìœ ì§€ (ê°ì†ì´ ì•„ë‹Œ "ê³ ì • ì†ë„ ë‚™í•˜")
         velocity.y = slowFallSpeed;
         stateMachine.Player.Rigidbody.velocity = velocity;
-        //  ¸¶¿ì½º ÁÂÅ¬¸¯ ÇØÁ¦ ½Ã Àâ±â Á¾·á
+        //  ë§ˆìš°ìŠ¤ ì¢Œí´ë¦­ í•´ì œ ì‹œ ì¡ê¸° ì¢…ë£Œ
         if (!Mouse.current.leftButton.isPressed)
         {
             stateMachine.ChangeState(stateMachine.FallState);
             return;
         }
 
-        // Á¡ÇÁ ÀÔ·Â
+        // ì í”„ ì…ë ¥
         if (!hasJumped && Keyboard.current.spaceKey.wasPressedThisFrame)
         {
 
-            stateMachine.IsMovementLocked = true; // ÀÌµ¿ Àá±İ
-            stateMachine.CanGrabWall = false; //Àâ±â Àá±İ 
+            stateMachine.IsMovementLocked = true; // ì´ë™ ì ê¸ˆ
+            stateMachine.CanGrabWall = false; //ì¡ê¸° ì ê¸ˆ 
 
 
-            float jumpPower = stateMachine.Player.Data.AirData.JumpForce * 1.5f;
+            float jumpPower = stateMachine.Player.Data.AirData.JumpForce * 2.5f;
             float directionalForce = 20.0f;
 
-            // ¹æÇâÅ° ÀÔ·Â ¡æ Ä«¸Ş¶ó ±âÁØ ¹æÇâÀ¸·Î º¯È¯
+            // ë°©í–¥í‚¤ ì…ë ¥ â†’ ì¹´ë©”ë¼ ê¸°ì¤€ ë°©í–¥ìœ¼ë¡œ ë³€í™˜
             Vector2 input = stateMachine.MovementInput;
             Vector3 camForward = stateMachine.MainCameraTransform.forward;
             Vector3 camRight = stateMachine.MainCameraTransform.right;
@@ -118,14 +118,14 @@ public class PlayerGrabState : PlayerAirState
             Vector3 jumpDirection = inputDir.normalized * directionalForce + Vector3.up * jumpPower;
 
             Rigidbody rb = stateMachine.Player.Rigidbody;
-            rb.constraints = RigidbodyConstraints.FreezeRotation; //  XZ °íÁ¤ ÇØÁ¦!
+            rb.constraints = RigidbodyConstraints.FreezeRotation; //  XZ ê³ ì • í•´ì œ!
             rb.velocity = Vector3.zero;
             rb.drag = 1.5f;
             rb.AddForce(jumpDirection, ForceMode.Impulse);
 
             hasJumped = true;
 
-            if (unlockCoroutine != null) //ÄÚ·çÆ¾ Áßº¹ ¹æÁö ¿¹¿ÜÃ³¸®
+            if (unlockCoroutine != null) //ì½”ë£¨í‹´ ì¤‘ë³µ ë°©ì§€ ì˜ˆì™¸ì²˜ë¦¬
             {
                 stateMachine.Player.StopCoroutine(unlockCoroutine);
             }
@@ -133,8 +133,8 @@ public class PlayerGrabState : PlayerAirState
             {
                 stateMachine.Player.StopCoroutine(wallCooldownCoroutine);
             }
-            unlockCoroutine = stateMachine.Player.StartCoroutine(UnlockMovementAfterDelay()); // ÀÌµ¿ Àá±İ ÇØÁ¦ ÄÚ·çÆ¾
-            wallCooldownCoroutine = stateMachine.Player.StartCoroutine(EnableWallGrabAfterCooldown()); //Àâ±â Àá±İ ÇØÁ¦ ÄÚ·çÆ¾
+            unlockCoroutine = stateMachine.Player.StartCoroutine(UnlockMovementAfterDelay()); // ì´ë™ ì ê¸ˆ í•´ì œ ì½”ë£¨í‹´
+            wallCooldownCoroutine = stateMachine.Player.StartCoroutine(EnableWallGrabAfterCooldown()); //ì¡ê¸° ì ê¸ˆ í•´ì œ ì½”ë£¨í‹´
 
             stateMachine.ChangeState(stateMachine.FallState);
 
@@ -158,20 +158,20 @@ public class PlayerGrabState : PlayerAirState
     private bool IsStillGrabbing()
     {
         Transform t = stateMachine.Player.transform;
-        Vector3 origin = t.position + Vector3.up * 2.0f; // ¡ç À§Ä¡ ¸ÂÃã
-        float distance = 1.5f;                            // ¡ç °Å¸® ¸ÂÃã
-        float radius = 0.2f;                              // ¡ç °¨Áö ¹İÁö¸§Àº ÁÙÀÌ´Â °É ÃßÃµ
+        Vector3 origin = t.position + Vector3.up * 2.0f; // â† ìœ„ì¹˜ ë§ì¶¤
+        float distance = 1.5f;                            // â† ê±°ë¦¬ ë§ì¶¤
+        float radius = 0.2f;                              // â† ê°ì§€ ë°˜ì§€ë¦„ì€ ì¤„ì´ëŠ” ê±¸ ì¶”ì²œ
 
         Vector3 diagonalDir = (t.forward + Vector3.up).normalized;
 
-        // º® ¶Ç´Â ·ÎÇÁ¸¦ À¯Áö Á¶°ÇÀ¸·Î ÆÇ´Ü
+        // ë²½ ë˜ëŠ” ë¡œí”„ë¥¼ ìœ ì§€ ì¡°ê±´ìœ¼ë¡œ íŒë‹¨
         bool nearRope = Physics.SphereCast(origin, radius, diagonalDir, out _, distance, LayerMask.GetMask("Rope"));
-        //bool nearRope_2 = Physics.Raycast(origin, diagonalDir, distance, LayerMask.GetMask("Rope")); // ·¹ÀÌÄ³½ºÆ®¿ë
+        //bool nearRope_2 = Physics.Raycast(origin, diagonalDir, distance, LayerMask.GetMask("Rope")); // ë ˆì´ìºìŠ¤íŠ¸ìš©
         bool nearWall = Physics.Raycast(origin, t.forward, distance, LayerMask.GetMask("Ground"));
 
-        // ½Ã°¢È­ (ÀÏÄ¡½ÃÅ´)
-        Debug.DrawRay(origin, diagonalDir * distance, Color.cyan); // Rope °¨Áö
-        Debug.DrawRay(origin, t.forward * distance, Color.cyan);   // Wall °¨Áö
+        // ì‹œê°í™” (ì¼ì¹˜ì‹œí‚´)
+        Debug.DrawRay(origin, diagonalDir * distance, Color.cyan); // Rope ê°ì§€
+        Debug.DrawRay(origin, t.forward * distance, Color.cyan);   // Wall ê°ì§€
 
         return nearRope;
     }
@@ -179,7 +179,7 @@ public class PlayerGrabState : PlayerAirState
     {
         yield return grabLimit;
 
-        // ½Ã°£ÀÌ Áö³ª¸é »óÅÂ ÀüÈ¯
+        // ì‹œê°„ì´ ì§€ë‚˜ë©´ ìƒíƒœ ì „í™˜
         if (stateMachine.CurrentState is PlayerGrabState)
         {
             stateMachine.ChangeState(stateMachine.FallState);
