@@ -59,6 +59,7 @@ public class ObstacleManager : MonoBehaviour
         }
     }
 
+    /*
     //플레이어의 움직임 제한
     public void StartLockMovement(Player player)
     {
@@ -80,4 +81,5 @@ public class ObstacleManager : MonoBehaviour
         player.stateMachine.IsMovementLocked = false;
         _moveCoroutine = null;
     }
+    */
 }
