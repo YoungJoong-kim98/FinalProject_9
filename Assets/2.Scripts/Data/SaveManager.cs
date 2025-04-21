@@ -22,30 +22,34 @@ public class SaveManager : MonoBehaviour
         }
     }
 
-    public void SaveGame(Transform playerTransform, Rigidbody rigidbody ,AchievementSystem achievementSystem, float playTime)
+    public void SaveGame(Player player ,AchievementSystem achievementSystem, float playTime)
     {
         //Debug.Log(Application.persistentDataPath);
-        SavePlayerData(playerTransform, rigidbody, achievementSystem, playTime);
+        SavePlayerData(player, achievementSystem, playTime);
         SaveObstacleStates();
     }
 
-    public void SavePlayerData(Transform playerTransform, Rigidbody rigidbody, AchievementSystem achievementSystem, float playTime)
+    public void SavePlayerData(Player player, AchievementSystem achievementSystem, float playTime)
     {
         PlayerSaveData PlayerData = new PlayerSaveData()
         {
             playerPosition = new float[3]
             {
-                playerTransform.position.x,
-                playerTransform.position.y,
-                playerTransform.position.z,
+                player.transform.position.x,
+                player.transform.position.y,
+                player.transform.position.z,
             },
             playerVelocity = new float[3]
             {
-                rigidbody.velocity.x,
-                rigidbody.velocity.y,
-                rigidbody.velocity.z,
+                player.Rigidbody.velocity.x,
+                player.Rigidbody.velocity.y,
+                player.Rigidbody.velocity.z,
             },
             playTime = playTime,
+            movelockRemainTime = player.movelockRemainTime,
+            run = GameManager.Instance.SkillManager.run,
+            doubleJump = GameManager.Instance.SkillManager.doubleJump,
+            grab = GameManager.Instance.SkillManager.grab,
             achievement = achievementSystem.ToData()
         };
 
@@ -56,15 +60,6 @@ public class SaveManager : MonoBehaviour
 
     public void SaveObstacleStates()
     {
-        //var dataWrapper = new ObstacleSaveWrapper();
-        //foreach (var applier in FindObjectsOfType<ObstacleDataApplier>())
-        //{
-        //    dataWrapper.obstacles[applier.obstacleId] = applier.CreateSaveData();
-        //}
-
-        //string json = JsonUtility.ToJson(dataWrapper.obstacles, true);
-        //Debug.Log(json);
-        //File.WriteAllText(_saveObstaclePath, json);
         var dict = new Dictionary<string, ObstacleSaveData>();
 
         foreach (var applier in FindObjectsOfType<ObstacleDataApplier>())
@@ -80,13 +75,13 @@ public class SaveManager : MonoBehaviour
         File.WriteAllText(_saveObstaclePath, json);
     }
 
-    public void LoadGame(Transform playerTransform, Rigidbody rigidbody, AchievementSystem achievementSystem, ref float playTime)
+    public void LoadGame(Player player, AchievementSystem achievementSystem, ref float playTime)
     {
-        LoadPlayerData(playerTransform,rigidbody, achievementSystem,ref playTime);
+        LoadPlayerData(player, achievementSystem,ref playTime);
         LoadAllObstacleState();
     }
 
-    public void LoadPlayerData(Transform playerTransform, Rigidbody rigidbody, AchievementSystem achievementSystem, ref float playTime)
+    public void LoadPlayerData(Player player, AchievementSystem achievementSystem, ref float playTime)
     {
         if (File.Exists(_savePlayerPath))
         {
@@ -111,10 +106,21 @@ public class SaveManager : MonoBehaviour
                 data.playerVelocity[2]
             );
 
-            playerTransform.position = pos;
-            rigidbody.velocity = vel;
+            player.transform.position = pos;
+            player.Rigidbody.velocity = vel;
+            
             achievementSystem.LoadFromData(data.achievement);
             playTime = data.playTime;
+
+            var skillManager = GameManager.Instance.SkillManager;
+            skillManager.run = data.run;
+            skillManager.doubleJump = data.doubleJump;
+            skillManager.grab = data.grab;
+
+            if (data.movelockRemainTime > 0)
+            {
+                player.StartLockMovement(data.movelockRemainTime);
+            }
             Debug.Log("Game Loaded");
         }
         else

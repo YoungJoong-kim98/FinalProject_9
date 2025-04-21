@@ -24,7 +24,7 @@ public class SaveManagerEditor : Editor
                 player.TryGetComponent(out AchievementSystem achievement))
             {
                 float playTime = Time.time; // 필요에 따라 수정
-                manager.SaveGame(player.transform, rb, achievement, playTime);
+                manager.SaveGame(player.GetComponent<Player>(), achievement, playTime);
             }
             else
             {
@@ -41,7 +41,7 @@ public class SaveManagerEditor : Editor
                 player.TryGetComponent(out AchievementSystem achievement))
             {
                 float playTime = 0f;
-                manager.LoadGame(player.transform, rb, achievement, ref playTime);
+                manager.LoadGame(player.GetComponent<Player>(), achievement, ref playTime);
             }
             else
             {
