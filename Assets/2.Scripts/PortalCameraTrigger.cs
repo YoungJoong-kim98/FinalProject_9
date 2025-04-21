@@ -11,13 +11,13 @@ public class PortalCameraTrigger : MonoBehaviour
     private bool triggered = false;
     
     private GameObject _mainCamObj;
-    private CameraController _cameraController;
+    // private CameraController _cameraController;
     private CinemachineBrain _brain;
 
     private void Start()
     {
         _mainCamObj = Camera.main.gameObject;
-        _cameraController = _mainCamObj.GetComponent<CameraController>();
+        // _cameraController = _mainCamObj.GetComponent<CameraController>();
         _brain = _mainCamObj.GetComponent<CinemachineBrain>();
     }
     

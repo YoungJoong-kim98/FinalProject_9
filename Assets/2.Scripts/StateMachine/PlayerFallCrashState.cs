@@ -18,12 +18,12 @@ public class PlayerFallCrashState : PlayerBaseState
         stateMachine.IsMovementLocked = true; // 이동 입력 잠금
         
         // 바닥에 붙이기
-        Transform t = stateMachine.Player.transform;
-        if (Physics.Raycast(t.position + Vector3.up * 0.1f, Vector3.down, out RaycastHit hit, 2f, LayerMask.GetMask("Ground")))
-        {
-            t.position = hit.point + Vector3.up * 0.1f;
-            Debug.Log($"FallCrash - 바닥 진입: {hit.point}");
-        }
+        // Transform t = stateMachine.Player.transform;
+        // if (Physics.Raycast(t.position + Vector3.up * 0.1f, Vector3.down, out RaycastHit hit, 2f, LayerMask.GetMask("Ground")))
+        // {
+        //     t.position = hit.point + Vector3.up * 0.1f;
+        //     Debug.Log($"FallCrash - 바닥 진입: {hit.point}");
+        // }
         
         // 속도 및 중력 제어
         Rigidbody rb = stateMachine.Player.Rigidbody;
