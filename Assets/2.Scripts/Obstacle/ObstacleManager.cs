@@ -17,7 +17,7 @@ public class ObstacleManager : MonoBehaviour
     public List<MovePlatform> movePlatforms = new List<MovePlatform>();
 
     //플레이어의 움직임 플래그 코루틴
-    private Coroutine _moveCoroutine;
+    //private Coroutine _moveCoroutine;
 
     private void Awake()
     {
@@ -31,7 +31,7 @@ public class ObstacleManager : MonoBehaviour
             return;
         }
 
-        _moveCoroutine = null;
+        //_moveCoroutine = null;
 
         //obstacleData 초기화
         obstacleData = GetComponent<ObstacleData>();
