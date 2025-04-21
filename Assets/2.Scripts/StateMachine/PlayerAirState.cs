@@ -110,7 +110,7 @@ protected bool TryGrab()
         targetTag = null;
 
         Transform t = stateMachine.Player.transform;
-        Vector3 baseOrigin = t.position + Vector3.up * 2.0f;
+        Vector3 baseOrigin = t.position + Vector3.up * 1.7f;
         float distance = 1.5f;
         float radius = 0.1f;
         float offset = 0.3f;
@@ -160,7 +160,7 @@ protected bool TryGrab()
         Debug.DrawRay(origin - t.forward * offset, Vector3.down * rayLength, Color.red);
 
         // 로프 및 벽 감지용 Ray 시각화 (좌,중앙,우 총 3개)
-        Vector3 baseOrigin = t.position + Vector3.up * 2.0f;
+        Vector3 baseOrigin = t.position + Vector3.up * 1.7f;
         float castDistance = 1.5f;
         Vector3 diagonalDir = (t.forward + Vector3.up).normalized;
 
