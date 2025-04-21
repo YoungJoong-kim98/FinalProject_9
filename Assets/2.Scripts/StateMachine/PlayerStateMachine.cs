@@ -26,9 +26,10 @@ public class PlayerStateMachine : StateMachine
     public PlayerStandUpState StandUpState { get; private set; }     // 일어나는 상태
     
     //public PlayerRopeGrabState RopeGrabState { get; private set; } // 로프 잡기 상태
-    public bool CanGrabWall { get; set; } = true; // 잡기 가능 여부
+    public bool CanGrabWall { get; set; } = true; // 벽 잡기 가능 여부
     public bool IsMovementLocked { get; set; } = false; // 이동 잠금
     public bool CanDoubleJump { get; set; } = true; // 더블 점프 가능 여부
+    public string LastGrabTag { get; set; } // 마지막 잡은 종류
     public PlayerStateMachine(Player player)
     {
         this.Player = player;

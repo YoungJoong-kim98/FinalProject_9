@@ -52,26 +52,24 @@ public class PlayerFallState : PlayerAirState
         bool isGrounded = IsGrounded(); // 바닥 감지
         if (isGrounded && !_wasGrounded) // 첫 착지 프레임만 처리
         {
-            //Debug.Log($"착지 - 저장 속도: {savedVelocity}");
+            Debug.Log($"착지 - 저장 속도: {savedVelocity}");
+            _wasGrounded = isGrounded; // 다음 프레임 대비
             
-            if (savedVelocity <= -_maxFallSpeed * 0.98f) // 미세 속도 오차 조절 (-29.4)
+            if (savedVelocity <= -_maxFallSpeed) // 최고 속도에 도달하면 FallCrash
             {
                 Debug.Log("철푸덕");
                 stateMachine.ChangeState(stateMachine.FallCrashState);
                 return;
             }
-            
-            Debug.Log("정상 착지");
-            HandleGroundedState();
-            return;
+            else
+            {
+                Debug.Log("정상 착지");
+                HandleGroundedState();
+                return;
+            }
         }
-        _wasGrounded = isGrounded; // 다음 프레임 대비
-        
-
     }
-
-
-
+    
     public override void PhysicsUpdate()
     {
         base.PhysicsUpdate();   // AirState.PhysicsUpdate 호출
@@ -81,18 +79,18 @@ public class PlayerFallState : PlayerAirState
     private bool IsGrounded()
     {
         Transform t = stateMachine.Player.transform;
-        Vector3 origin = t.position + Vector3.up * 0.1f;
+        Vector3 origin = t.position + Vector3.up * 0.1f; // 플레이어 중심보다 살짝 위에서 쏨
         float rayLength = 1.0f;
-        LayerMask groundMask = LayerMask.GetMask("Ground");
+        LayerMask groundMask = LayerMask.GetMask("Ground"); // Ground만 감지
         
-        // 중앙 레이
+        // 중앙 아래로 레이 쏘기
         if (Physics.Raycast(origin, Vector3.down, rayLength, groundMask))
         {
-            //Debug.Log($"중앙 접지 감지, 속도: {stateMachine.Player.Rigidbody.velocity.y}");
+            Debug.Log($"중앙 접지 감지, 속도: {stateMachine.Player.Rigidbody.velocity.y}");
             return true;
         }
 
-        // 좌우 앞뒤 방향을 약간 퍼뜨려서 쏘기
+        // 좌우 앞뒤 방향을 약간 퍼뜨린 위치
         float offset = 0.3f;
         Vector3[] offsets = new Vector3[]
         {
@@ -102,12 +100,13 @@ public class PlayerFallState : PlayerAirState
             -t.forward * offset   // 뒤쪽
         };
 
+        // 네 방향 아래로 레이 쏘기
         foreach (var dir in offsets)
         {
-            Vector3 offsetOrigin = origin + dir;
+            Vector3 offsetOrigin = origin + dir;    // 시작 위치 오프셋 적용
             if (Physics.Raycast(offsetOrigin, Vector3.down, rayLength, groundMask))
             {
-                Debug.Log($"오프셋 접지 감지: {dir}, Velocity: {stateMachine.Player.Rigidbody.velocity.y}");
+                Debug.Log($"오프셋 접지 감지: {dir}, 속도: {stateMachine.Player.Rigidbody.velocity.y}");
                 return true;
             }
         }
@@ -149,12 +148,14 @@ public class PlayerFallState : PlayerAirState
     // 착지 후 상태 전환
     private void HandleGroundedState()
     {
-        float preservedSpeed = stateMachine.CurrentMoveSpeed;   // 이전 속도 유지
+        // float preservedSpeed = stateMachine.CurrentMoveSpeed;   // 이전 속도 유지
         
         if (stateMachine.Player.Input.playerActions.Run.IsPressed() && GameManager.Instance.SkillManager.run)    // Shift 누르고 있으면
         {
-            stateMachine.CurrentMoveSpeed = preservedSpeed;
+            // stateMachine.CurrentMoveSpeed = preservedSpeed;
+            
             stateMachine.ChangeState(stateMachine.RunState);
+            
             //Debug.Log($"Fall to Run - 속도: {stateMachine.CurrentMoveSpeed}");
         }
         else if (stateMachine.MovementInput != Vector2.zero)    // 이동 입력 있으면

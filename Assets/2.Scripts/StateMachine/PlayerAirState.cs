@@ -20,14 +20,14 @@ public class PlayerAirState : PlayerBaseState
         base.Exit();
         StopAnimation(stateMachine.Player.AnimationData.AirParameterHash);
     }
-    
+
     public override void Update()
     {
         base.Update();
         DebugDrawGrabRay();
 
     }
-    
+
     public override void PhysicsUpdate()
     {
         base.PhysicsUpdate();
@@ -38,7 +38,7 @@ public class PlayerAirState : PlayerBaseState
         }
         Move(GetMovementDirection()); // 공중 제어
     }
-    
+
     // 공중에서 속도를 유지 or 추가해 주는 메서드
     protected override void Move(Vector3 direction)
     {
@@ -76,7 +76,7 @@ public class PlayerAirState : PlayerBaseState
     protected override void OnJumpStarted(InputAction.CallbackContext context)
     {
         base.OnJumpStarted(context);
-        if(GameManager.Instance.SkillManager.doubleJump && stateMachine.CanDoubleJump)
+        if (GameManager.Instance.SkillManager.doubleJump && stateMachine.CanDoubleJump)
         {
             stateMachine.CanDoubleJump = false;
             stateMachine.ChangeState(stateMachine.JumpState);
@@ -85,39 +85,41 @@ public class PlayerAirState : PlayerBaseState
     protected override void OnGrabStarted(InputAction.CallbackContext context)
     {
         base.OnGrabStarted(context);
-        if(TryGrab())
+        if (TryGrab())
         {
             stateMachine.ChangeState(stateMachine.GrabState);
         }
 
     }
-protected bool TryGrab()
-{
-    if (!GameManager.Instance.SkillManager.grab)
-        return false;
-
-    if (TryDetectGrabTarget(out string tag) && (tag == "Rope" || tag == "Wall"))
+    protected bool TryGrab()
     {
-        stateMachine.ChangeState(stateMachine.GrabState);
-        return true;
-    }
+        if (!GameManager.Instance.SkillManager.grab)
+            return false;
 
-    return false;
-}
+        if (TryDetectGrabTarget(out string tag) && (tag == "Rope" || tag == "Wall"))
+        {
+            stateMachine.LastGrabTag = tag;  // 마지막 잡은 태그 기억하기
+            Debug.Log(tag);
+            stateMachine.ChangeState(stateMachine.GrabState);
+            return true;
+        }
+
+        return false;
+    }
 
     protected bool TryDetectGrabTarget(out string targetTag)
     {
         targetTag = null;
 
         Transform t = stateMachine.Player.transform;
-        Vector3 baseOrigin = t.position + Vector3.up * 1.5f;
+        Vector3 baseOrigin = t.position + Vector3.up * 1.5f - t.forward * 0.4f;
         float distance = 1.5f;
-        float radius = 0.1f;
+        float radius = 0.3f;  // ← 기존보다 약간 넓게
         float offset = 0.3f;
 
         Vector3 diagonalDir = (t.forward + Vector3.up).normalized;
+        Vector3 forwardDir = t.forward;
 
-        // 오프셋 포함해서 총 3방향
         Vector3[] origins = new Vector3[]
         {
         baseOrigin,
@@ -127,6 +129,7 @@ protected bool TryGrab()
 
         foreach (var origin in origins)
         {
+            // Rope 감지
             if (Physics.SphereCast(origin, radius, diagonalDir, out _, distance, LayerMask.GetMask("Rope")))
             {
                 Debug.DrawRay(origin, diagonalDir * distance, Color.yellow);
@@ -134,9 +137,10 @@ protected bool TryGrab()
                 return true;
             }
 
-            if (Physics.Raycast(origin, t.forward, distance, LayerMask.GetMask("Ground")))
+            // Wall 감지
+            if (Physics.SphereCast(origin, radius, forwardDir, out _, distance, LayerMask.GetMask("Ground")))
             {
-                Debug.DrawRay(origin, t.forward * distance, Color.yellow);
+                Debug.DrawRay(origin, forwardDir * distance, Color.cyan);
                 targetTag = "Wall";
                 return true;
             }
@@ -145,24 +149,26 @@ protected bool TryGrab()
         return false;
     }
 
+
     private void DebugDrawGrabRay()
     {
         Transform t = stateMachine.Player.transform;
-        Vector3 origin = t.position + Vector3.up * 0.1f;
-        float rayLength = 1.5f;
         float offset = 0.3f;
-
-        // 바닥 체크 (중앙 + 주변 4방향)
-        Debug.DrawRay(origin, Vector3.down * rayLength, Color.yellow);
-        Debug.DrawRay(origin + t.right * offset, Vector3.down * rayLength, Color.red);
-        Debug.DrawRay(origin - t.right * offset, Vector3.down * rayLength, Color.red);
-        Debug.DrawRay(origin + t.forward * offset, Vector3.down * rayLength, Color.red);
-        Debug.DrawRay(origin - t.forward * offset, Vector3.down * rayLength, Color.red);
-
-        // 로프 및 벽 감지용 Ray 시각화 (좌,중앙,우 총 3개)
-        Vector3 baseOrigin = t.position + Vector3.up * 1.5f;
+        float rayLength = 1.5f;
         float castDistance = 1.5f;
         Vector3 diagonalDir = (t.forward + Vector3.up).normalized;
+        Vector3 forwardDir = t.forward;
+
+        // 바닥 감지 시각화
+        Vector3 groundOrigin = t.position + Vector3.up * 0.1f;
+        Debug.DrawRay(groundOrigin, Vector3.down * rayLength, Color.yellow);
+        Debug.DrawRay(groundOrigin + t.right * offset, Vector3.down * rayLength, Color.red);
+        Debug.DrawRay(groundOrigin - t.right * offset, Vector3.down * rayLength, Color.red);
+        Debug.DrawRay(groundOrigin + t.forward * offset, Vector3.down * rayLength, Color.red);
+        Debug.DrawRay(groundOrigin - t.forward * offset, Vector3.down * rayLength, Color.red);
+
+        // 벽/로프 감지 시각화 (origin 통일)
+        Vector3 baseOrigin = t.position + Vector3.up * 1.5f - t.forward * 0.4f;
 
         Vector3[] origins = new Vector3[]
         {
@@ -173,9 +179,11 @@ protected bool TryGrab()
 
         foreach (var o in origins)
         {
-            Debug.DrawRay(o, diagonalDir * castDistance, Color.blue); // Rope
-            Debug.DrawRay(o, t.forward * castDistance, Color.cyan);   // Wall
+            Debug.DrawRay(o, diagonalDir * castDistance, Color.yellow); // Rope
+            Debug.DrawRay(o, forwardDir * castDistance, Color.cyan);    // Wall
         }
     }
+
+
 
 }
