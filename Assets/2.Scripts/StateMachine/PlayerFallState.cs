@@ -52,9 +52,9 @@ public class PlayerFallState : PlayerAirState
         if (isGrounded && !_wasGrounded) // 첫 착지 프레임만 처리
         {
             Debug.Log($"착지 - 저장 속도: {savedVelocity}");
-            _wasGrounded = isGrounded; // 다음 프레임 대비
+            _wasGrounded = true; // 다음 프레임 대비
             
-            if (savedVelocity <= -_maxFallSpeed) // 최고 속도에 도달하면 FallCrash
+            if (savedVelocity <= -_maxFallSpeed) // 최고 속도에 도달하면 FallCrash   
             {
                 Debug.Log("철푸덕");
                 stateMachine.ChangeState(stateMachine.FallCrashState);
