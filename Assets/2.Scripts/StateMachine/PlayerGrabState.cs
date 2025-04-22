@@ -13,11 +13,12 @@ public class PlayerGrabState : PlayerAirState
 
     private Coroutine unlockCoroutine; // 이동 상태 만드는 코루틴
     private Coroutine wallCooldownCoroutine; //벽 잡기 가능 상태 만드는 코루틴
+    //private Coroutine delayGrabCheckCoroutine; //잡기 딜레이
+
 
     private readonly WaitForSeconds move_unlockTime = new WaitForSeconds(0.5f);
     private readonly WaitForSeconds wall_unlockTime = new WaitForSeconds(3f);
-    private Coroutine grabTimeoutCoroutine; //일시적인 잡기 용 테스트
-    private readonly WaitForSeconds grabLimit = new WaitForSeconds(3f);
+    //private bool canCheckGrab = false;
 
     public override void Enter()
     {
@@ -28,12 +29,7 @@ public class PlayerGrabState : PlayerAirState
             return;
         }
         stateMachine.CanDoubleJump = false; // 점프하고 나서 바로 더블점프 못 하게 차단
-        //stateMachine.CanGrabWall = false;
-        //if(wallCooldownCoroutine != null)
-        //{
-        //    stateMachine.Player.StopCoroutine(wallCooldownCoroutine);    
-        //}
-        //wallCooldownCoroutine = stateMachine.Player.StartCoroutine(EnableWallGrabAfterCooldown(2f)); //1초 후 다시가능
+
         base.Enter();
 
         GameManager.Instance.AchievementSystem.GrabCount(); // 잡기 횟수 증가
@@ -45,7 +41,12 @@ public class PlayerGrabState : PlayerAirState
         stateMachine.Player.Rigidbody.constraints = RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionZ; // x, z 이동 차단
 
         hasJumped = false;  // 점프 여부 초기화
-        //grabTimeoutCoroutine = stateMachine.Player.StartCoroutine(GrabTimeout()); // 테스트용
+
+        //if (delayGrabCheckCoroutine != null)
+        //{
+        //    stateMachine.Player.StopCoroutine(delayGrabCheckCoroutine);
+        //}
+        //delayGrabCheckCoroutine = stateMachine.Player.StartCoroutine(DelayGrabCheck(0.1f));
     }
 
 
@@ -60,11 +61,14 @@ public class PlayerGrabState : PlayerAirState
 
         // 고정 해제
         stateMachine.Player.Rigidbody.constraints = RigidbodyConstraints.FreezeRotation;
-        //if (grabTimeoutCoroutine != null)
+
+        //if (delayGrabCheckCoroutine != null)
         //{
-        //    stateMachine.Player.StopCoroutine(grabTimeoutCoroutine);
-        //    grabTimeoutCoroutine = null;
+        //    stateMachine.Player.StopCoroutine(delayGrabCheckCoroutine);
+        //    delayGrabCheckCoroutine = null;
         //}
+
+
     }
 
     // 잡기 유지/해제
@@ -72,11 +76,11 @@ public class PlayerGrabState : PlayerAirState
     {
         base.Update();
         //계속 붙어있는지 확인
-        //if (!IsStillGrabbing())
-        //{
-        //    stateMachine.ChangeState(stateMachine.FallState);
-        //    return;
-        //}
+        if (!IsStillGrabbing())
+        {
+            stateMachine.ChangeState(stateMachine.FallState);
+            return;
+        }
 
         // 수동으로 아주 천천히 낙하
         Vector3 velocity = stateMachine.Player.Rigidbody.velocity;
@@ -98,7 +102,7 @@ public class PlayerGrabState : PlayerAirState
             stateMachine.IsMovementLocked = true; // 이동 잠금
 
             float jumpPower = stateMachine.Player.Data.AirData.JumpForce * 2.5f;
-            float directionalForce = 20.0f;
+            float directionalForce = 25.0f;
 
             // 방향키 입력 → 카메라 기준 방향으로 변환
             Vector2 input = stateMachine.MovementInput;
@@ -143,15 +147,20 @@ public class PlayerGrabState : PlayerAirState
         }
 
     }
-
-    private IEnumerator UnlockMovementAfterDelay()
+    //private IEnumerator DelayGrabCheck(float delay)
+    //{
+    //    canCheckGrab = false;
+    //    yield return new WaitForSeconds(delay);
+    //    canCheckGrab = true;
+    //}
+    private IEnumerator UnlockMovementAfterDelay() // 이동 잠금 해제 코루틴
     {
         yield return move_unlockTime;
         stateMachine.IsMovementLocked = false;
         stateMachine.Player.Rigidbody.drag = 0f;
     }
 
-    private IEnumerator EnableWallGrabAfterCooldown()
+    private IEnumerator EnableWallGrabAfterCooldown() // 잡기 잠금 해체 고루틴
     {
         yield return wall_unlockTime;
         stateMachine.CanGrabWall = true;
@@ -160,33 +169,37 @@ public class PlayerGrabState : PlayerAirState
     private bool IsStillGrabbing()
     {
         Transform t = stateMachine.Player.transform;
-        Vector3 origin = t.position + Vector3.up * 2.0f; // ← 위치 맞춤
-        float distance = 1.5f;                            // ← 거리 맞춤
-        float radius = 0.2f;                              // ← 감지 반지름은 줄이는 걸 추천
+        Vector3 baseOrigin = t.position + Vector3.up * 1.5f - t.forward * 0.4f;
+        float distance = 1.5f;
+        float radius = 0.3f;
+        float offset = 0.3f;
 
         Vector3 diagonalDir = (t.forward + Vector3.up).normalized;
+        Vector3 forwardDir = t.forward;
 
-        // 벽 또는 로프를 유지 조건으로 판단
-        bool nearRope = Physics.SphereCast(origin, radius, diagonalDir, out _, distance, LayerMask.GetMask("Rope"));
-        //bool nearRope_2 = Physics.Raycast(origin, diagonalDir, distance, LayerMask.GetMask("Rope")); // 레이캐스트용
-        bool nearWall = Physics.Raycast(origin, t.forward, distance, LayerMask.GetMask("Ground"));
-
-        // 시각화 (일치시킴)
-        Debug.DrawRay(origin, diagonalDir * distance, Color.cyan); // Rope 감지
-        Debug.DrawRay(origin, t.forward * distance, Color.cyan);   // Wall 감지
-
-        return nearRope;
-    }
-    private IEnumerator GrabTimeout()
-    {
-        yield return grabLimit;
-
-        // 시간이 지나면 상태 전환
-        if (stateMachine.CurrentState is PlayerGrabState)
+        Vector3[] origins = new Vector3[]
         {
-            stateMachine.ChangeState(stateMachine.FallState);
+            baseOrigin,
+            baseOrigin + t.right * offset,
+            baseOrigin - t.right * offset
+        };
+
+        foreach (var origin in origins)
+        {
+            bool nearRope = Physics.SphereCast(origin, radius, diagonalDir, out _, distance, LayerMask.GetMask("Rope"));
+            bool nearWall = Physics.SphereCast(origin, radius, forwardDir, out _, distance, LayerMask.GetMask("Ground"));
+
+            Debug.DrawRay(origin, diagonalDir * distance, Color.magenta);
+            Debug.DrawRay(origin, forwardDir * distance, Color.green);
+
+            if (stateMachine.LastGrabTag == "Rope" && nearRope)
+                return true;
+            if (stateMachine.LastGrabTag == "Wall" && nearWall)
+                return true;
         }
 
+        return false;
     }
+
 
 }
