@@ -24,7 +24,7 @@ public class PlayerAirState : PlayerBaseState
     public override void Update()
     {
         base.Update();
-        DebugDrawGrabRay();
+        //DebugDrawGrabRay();
 
     }
 
@@ -135,7 +135,7 @@ public class PlayerAirState : PlayerBaseState
                 Debug.DrawRay(origin, diagonalDir * distance, Color.yellow);
                 targetTag = "Rope";
 
-                Vector3 newPosition = hit.point + Vector3.down * 0.6f + hit.normal * 0.3f;
+                Vector3 newPosition = hit.point + Vector3.down * 2.0f + hit.normal * 0.3f;
 
                 stateMachine.Player.transform.position = newPosition;
                 return true;
