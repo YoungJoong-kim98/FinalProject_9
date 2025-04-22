@@ -192,10 +192,14 @@ public class PlayerAirState : PlayerBaseState
         foreach (var origin in origins)
         {
             // Rope 감지
-            if (Physics.SphereCast(origin, radius, diagonalDir, out _, distance, LayerMask.GetMask("Rope")))
+            if (Physics.SphereCast(origin, radius, diagonalDir, out RaycastHit hit, distance, LayerMask.GetMask("Rope")))
             {
                 Debug.DrawRay(origin, diagonalDir * distance, Color.yellow);
                 targetTag = "Rope";
+
+                Vector3 newPosition = hit.point + Vector3.down * 0.6f + hit.normal * 0.3f;
+
+                stateMachine.Player.transform.position = newPosition;
                 return true;
             }
 
