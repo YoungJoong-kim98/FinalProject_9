@@ -14,12 +14,12 @@ public abstract class StateMachine
 {
     protected IState currentState;  // State 정보가 들어옴
     public IState CurrentState => currentState; // 외부에서 읽기 전용 접근 가능하게
-
-    public void ChangeState(IState newState)
+    
+    public void ChangeState(IState newState, bool force = false)
     {
-        if (CurrentState == newState) return;
+        if (!force && CurrentState == newState) return;
         Debug.Log($"[ChangeState] {CurrentState} → {newState}");
-        
+
         currentState?.Exit();
         currentState = newState;
         currentState?.Enter();
