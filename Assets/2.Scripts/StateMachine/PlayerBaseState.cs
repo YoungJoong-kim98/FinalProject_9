@@ -165,7 +165,7 @@ public class PlayerBaseState : IState
     }
     
     // 바닥 감지
-    protected bool IsGrounded(float rayLength = 1.0f)
+    protected bool IsGrounded(float rayLength = 1.0f, bool useOffset = true)
     {
         Transform t = stateMachine.Player.transform;
         Vector3 origin = t.position + Vector3.up * 0.1f;
@@ -177,6 +177,8 @@ public class PlayerBaseState : IState
         {
             return true;
         }
+
+        if (!useOffset) return false;
 
         // 오프셋 레이
         float offset = 0.3f;
