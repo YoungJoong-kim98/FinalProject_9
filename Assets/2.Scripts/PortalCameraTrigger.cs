@@ -11,13 +11,13 @@ public class PortalCameraTrigger : MonoBehaviour
     private bool triggered = false;
     
     private GameObject _mainCamObj;
-    private CameraController _cameraController;
+    // private CameraController _cameraController;
     private CinemachineBrain _brain;
 
     private void Start()
     {
         _mainCamObj = Camera.main.gameObject;
-        _cameraController = _mainCamObj.GetComponent<CameraController>();
+        // _cameraController = _mainCamObj.GetComponent<CameraController>();
         _brain = _mainCamObj.GetComponent<CinemachineBrain>();
     }
     
@@ -56,7 +56,7 @@ public class PortalCameraTrigger : MonoBehaviour
         // 포탈 시네마틱 카메라 활성화
         moveCam.Priority = 5;
         blendCam.Priority = 20;
-
+    
         // 시네마틱 유지 시간
         yield return new WaitForSeconds(blendHoldTime);
     
@@ -71,24 +71,24 @@ public class PortalCameraTrigger : MonoBehaviour
     
     // private IEnumerator PlayPortalCinematic()
     // {
-    //     // var player = GameObject.FindGameObjectWithTag("Player");
-    //     // var playerStateMachine = player?.GetComponent<Player>()?.stateMachine;
-    //     // var rb = player?.GetComponent<Rigidbody>();
-    //     //
-    //     // // 입력 움직임 막기
-    //     // if (playerStateMachine != null)
-    //     // {
-    //     //     playerStateMachine.IsMovementLocked = true;
-    //     //     playerStateMachine.MovementInput = Vector2.zero;
-    //     // }
-    //     //
-    //     // // 물리 움직임 막기
-    //     // if (rb != null)
-    //     // {
-    //     //     rb.velocity = Vector3.zero;
-    //     //     rb.angularVelocity = Vector3.zero;
-    //     //     rb.isKinematic = true;
-    //     // }
+    //     var player = GameObject.FindGameObjectWithTag("Player");
+    //     var playerStateMachine = player?.GetComponent<Player>()?.stateMachine;
+    //     var rb = player?.GetComponent<Rigidbody>();
+    //     
+    //     // 입력 움직임 막기
+    //     if (playerStateMachine != null)
+    //     {
+    //         playerStateMachine.IsMovementLocked = true;
+    //         playerStateMachine.MovementInput = Vector2.zero;
+    //     }
+    //     
+    //     // 물리 움직임 막기
+    //     if (rb != null)
+    //     {
+    //         rb.velocity = Vector3.zero;
+    //         rb.angularVelocity = Vector3.zero;
+    //         rb.isKinematic = true;
+    //     }
     //     
     //     // 메인 카메라 스크립트 끄고 시네머신 켜기
     //     if (_cameraController != null) _cameraController.enabled = false;
@@ -120,9 +120,9 @@ public class PortalCameraTrigger : MonoBehaviour
     //     if (_brain != null) _brain.enabled = false;
     //     if (_cameraController != null) _cameraController.enabled = true;
     //     
-    //     // // 입력 및 물리 복구
-    //     // if (rb != null) rb.isKinematic = false;
-    //     // if (playerStateMachine != null) playerStateMachine.IsMovementLocked = false;
+    //     // 입력 및 물리 복구
+    //     if (rb != null) rb.isKinematic = false;
+    //     if (playerStateMachine != null) playerStateMachine.IsMovementLocked = false;
     // }
     
     // private IEnumerator PlayPortalCinematic()

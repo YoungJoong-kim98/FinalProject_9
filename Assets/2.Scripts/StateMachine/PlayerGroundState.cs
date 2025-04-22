@@ -38,19 +38,22 @@ public class PlayerGroundState : PlayerBaseState
     public override void PhysicsUpdate()
     {
         base.PhysicsUpdate();
-        if (!IsGrounded() && stateMachine.Player.Rigidbody.velocity.y < -0.1f)
+        
+        // 이동 중 아래로 떨어지고 있는 경우에만 Fall로 전환
+        if (!IsGrounded(0.2f, useOffset: false) && stateMachine.Player.Rigidbody.velocity.y < -0.1f)
         {
+            Debug.Log("GroundState에서 Fall로 전환");
             stateMachine.ChangeState(stateMachine.FallState);
             return;
         }
     }
     
-    private bool IsGrounded() //땅 체크
-    {
-        Transform t = stateMachine.Player.transform;
-        Debug.DrawRay(t.position + Vector3.up * 0.1f, Vector3.down * 0.2f, Color.red);
-        return Physics.Raycast(t.position + Vector3.up * 0.1f, Vector3.down, 0.2f, LayerMask.GetMask("Ground"));
-    }
+    // private bool IsGrounded() //땅 체크
+    // {
+    //     Transform t = stateMachine.Player.transform;
+    //     Debug.DrawRay(t.position + Vector3.up * 0.1f, Vector3.down * 0.2f, Color.red);
+    //     return Physics.Raycast(t.position + Vector3.up * 0.1f, Vector3.down, 0.2f, LayerMask.GetMask("Ground"));
+    // }
 
     protected override void OnMovementCanceled(InputAction.CallbackContext context)
     {
@@ -79,7 +82,7 @@ public class PlayerGroundState : PlayerBaseState
     protected override void OnJumpStarted(InputAction.CallbackContext context)
     {
         base.OnJumpStarted(context);
-        GameManager.Instance.AchievementSystem.JumpCount(); //점프 횟수 카운트
+        GameManager.Instance.AchievementSystem.JumpCount(); // 점프 횟수 카운트
         stateMachine.ChangeState(stateMachine.JumpState);
     }
 }
