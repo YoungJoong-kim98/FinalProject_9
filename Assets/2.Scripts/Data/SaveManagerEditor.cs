@@ -18,13 +18,12 @@ public class SaveManagerEditor : Editor
         if (GUILayout.Button("게임 저장"))
         {
             var player = GameObject.FindGameObjectWithTag("Player");
-
+            var achievement = GameManager.Instance.AchievementSystem;
             if (player != null &&
-                player.TryGetComponent(out Rigidbody rb) &&
-                player.TryGetComponent(out AchievementSystem achievement))
+                player.TryGetComponent(out Rigidbody rb))
             {
                 float playTime = Time.time; // 필요에 따라 수정
-                manager.SaveGame(player.transform, rb, achievement, playTime);
+                manager.SaveGame(player.GetComponent<Player>(), achievement, playTime);
             }
             else
             {
@@ -35,13 +34,12 @@ public class SaveManagerEditor : Editor
         if (GUILayout.Button("게임 불러오기"))
         {
             var player = GameObject.FindGameObjectWithTag("Player");
-            
+            var achievement = GameManager.Instance.AchievementSystem;
             if (player != null &&
-                player.TryGetComponent(out Rigidbody rb) &&
-                player.TryGetComponent(out AchievementSystem achievement))
+                player.TryGetComponent(out Rigidbody rb))
             {
                 float playTime = 0f;
-                manager.LoadGame(player.transform, rb, achievement, ref playTime);
+                manager.LoadGame(player.GetComponent<Player>(), achievement, ref playTime);
             }
             else
             {

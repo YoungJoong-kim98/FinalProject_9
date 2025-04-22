@@ -27,7 +27,7 @@ public class PlayerFallCrashState : PlayerBaseState
         
         // 속도 및 중력 제어
         Rigidbody rb = stateMachine.Player.Rigidbody;
-        rb.velocity = Vector3.zero;
+        rb.velocity = Vector3.zero; 
         rb.useGravity = false; // 중력 끄기
         stateMachine.MovementInput = Vector2.zero;
     

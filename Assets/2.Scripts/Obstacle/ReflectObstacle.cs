@@ -33,7 +33,7 @@ public class ReflectObstacle : MonoBehaviour
 
         if (target.TryGetComponent(out Player player))
         {
-            ObstacleManager.Instance.StartLockMovement(player);
+            player.StartLockMovement(ObstacleManager.Instance.obstacleData.moveLockTime);
         }
 
         if (target.TryGetComponent(out Rigidbody rb))

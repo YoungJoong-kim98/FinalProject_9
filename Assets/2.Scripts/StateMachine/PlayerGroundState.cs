@@ -29,7 +29,7 @@ public class PlayerGroundState : PlayerBaseState
         
         // 장애물과 충돌 시 움직임 거의 0일 때 Idle로 전환
         if (stateMachine.MovementInput == Vector2.zero && 
-            stateMachine.Player.Rigidbody.velocity.magnitude < 0.1f)
+            stateMachine.Player.Rigidbody.velocity.magnitude < 0.1f && stateMachine.CurrentState != stateMachine.IdleState)
         {
             stateMachine.ChangeState(stateMachine.IdleState);
         }
@@ -40,7 +40,7 @@ public class PlayerGroundState : PlayerBaseState
         base.PhysicsUpdate();
         
         // 이동 중 아래로 떨어지고 있는 경우에만 Fall로 전환
-        if (!IsGrounded(0.2f, useOffset: false) && stateMachine.Player.Rigidbody.velocity.y < -0.1f)
+        if (!IsGrounded(0.2f, useOffset: false) && stateMachine.Player.Rigidbody.velocity.y < -1f)
         {
             Debug.Log("GroundState에서 Fall로 전환");
             stateMachine.ChangeState(stateMachine.FallState);
