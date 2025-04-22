@@ -163,5 +163,41 @@ public class PlayerBaseState : IState
             stateMachine.Player.Rigidbody.MoveRotation(smoothedRotation);
         }
     }
+    
+    // 바닥 감지
+    protected bool IsGrounded(float rayLength = 1.0f)
+    {
+        Transform t = stateMachine.Player.transform;
+        Vector3 origin = t.position + Vector3.up * 0.1f;
+        LayerMask groundMask = LayerMask.GetMask("Ground");
 
+        // 중앙 레이
+        Debug.DrawRay(origin, Vector3.down * rayLength, Color.yellow);
+        if (Physics.Raycast(origin, Vector3.down, rayLength, groundMask))
+        {
+            return true;
+        }
+
+        // 오프셋 레이
+        float offset = 0.3f;
+        Vector3[] offsets = new Vector3[]
+        {
+            t.right * offset,   // 오른쪽
+            -t.right * offset,  // 왼쪽
+            t.forward * offset, // 앞쪽
+            -t.forward * offset // 뒤쪽
+        };
+
+        foreach (var dir in offsets)
+        {
+            Vector3 offsetOrigin = origin + dir;
+            Debug.DrawRay(offsetOrigin, Vector3.down * rayLength, Color.red);
+            if (Physics.Raycast(offsetOrigin, Vector3.down, rayLength, groundMask))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }

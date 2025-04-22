@@ -79,7 +79,7 @@ public class PlayerAirState : PlayerBaseState
         if (GameManager.Instance.SkillManager.doubleJump && stateMachine.CanDoubleJump)
         {
             stateMachine.CanDoubleJump = false;
-            stateMachine.ChangeState(stateMachine.JumpState);
+            stateMachine.ChangeState(stateMachine.JumpState, force: true);
         }
     }
     protected override void OnGrabStarted(InputAction.CallbackContext context)
