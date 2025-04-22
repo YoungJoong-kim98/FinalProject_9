@@ -48,7 +48,7 @@ public class PlayerFallState : PlayerAirState
         // Debug.Log($"Fall - y 속도: {velocity.y}");
 
         // 착지 확인
-        bool isGrounded = IsGrounded(); // 바닥 감지
+        bool isGrounded = IsGrounded(1.0f, useOffset: true); // 바닥 감지
         if (isGrounded && !_wasGrounded) // 첫 착지 프레임만 처리
         {
             Debug.Log($"착지 - 저장 속도: {savedVelocity}");
