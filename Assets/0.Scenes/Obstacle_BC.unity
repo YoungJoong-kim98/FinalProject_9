@@ -295,11 +295,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _moveSpeed: -1
   _movePositions:
-  - {x: 5, y: 1.48, z: 0}
-  - {x: 10, y: 1.48, z: 0}
-  - {x: 10, y: 1.48, z: 5}
-  - {x: 5, y: 1.48, z: 5}
+  - {x: 0, y: 0, z: 0}
+  - {x: 5, y: 0, z: 0}
+  - {x: 0, y: 0, z: 5}
+  - {x: -5, y: 0, z: 0}
   currentIndex: 0
+  targetPosition: {x: 0, y: 0, z: 0}
+  startPosition: {x: 0, y: 0, z: 0}
 --- !u!65 &184602635
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -380,7 +382,7 @@ Transform:
   m_GameObject: {fileID: 184602633}
   serializedVersion: 2
   m_LocalRotation: {x: -0.006429892, y: 0.005683589, z: -0.0015897596, w: 0.9999619}
-  m_LocalPosition: {x: 5, y: 1.48, z: 0}
+  m_LocalPosition: {x: 5.3, y: 2.7, z: -0}
   m_LocalScale: {x: 1, y: 0.13894, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -657,7 +659,7 @@ Transform:
   m_GameObject: {fileID: 264438323}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 5.13, y: 2.06, z: 0.08}
+  m_LocalPosition: {x: 5.17, y: 3.2, z: 0.08}
   m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2271,6 +2273,53 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 451412496}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1266612768
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1266612770}
+  - component: {fileID: 1266612769}
+  m_Layer: 0
+  m_Name: GameManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1266612769
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1266612768}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f63075c2e5469c54089ee7576186842c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  achievementSystem: {fileID: 0}
+  skillManager: {fileID: 0}
+  skillUnlockUI: {fileID: 0}
+--- !u!4 &1266612770
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1266612768}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1294979347
 GameObject:
   m_ObjectHideFlags: 0
@@ -2993,9 +3042,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _moveSpeed: -1
   _movePositions:
-  - {x: 10, y: 0.25, z: 10}
-  - {x: 10, y: 10, z: 10}
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 10, z: 0}
   currentIndex: 0
+  targetPosition: {x: 0, y: 0, z: 0}
+  startPosition: {x: 0, y: 0, z: 0}
 --- !u!65 &1849870906
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -3346,3 +3397,4 @@ SceneRoots:
   - {fileID: 1552665199}
   - {fileID: 713846581}
   - {fileID: 1508827691}
+  - {fileID: 1266612770}

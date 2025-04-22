@@ -162,7 +162,8 @@ public class SaveManager : MonoBehaviour
                     {
                         movePlatform.transform.position = new Vector3(data.position[0], data.position[1], data.position[2]);
                         movePlatform.currentIndex = data.moveIndex;
-                        Debug.Log($"moveIndex : {data.moveIndex}");
+                        movePlatform.targetPosition = new Vector3(data.nextPosition[0], data.nextPosition[1], data.nextPosition[2]);
+                        //Debug.Log($"moveIndex : {data.moveIndex}");
                     }
                     break;
 

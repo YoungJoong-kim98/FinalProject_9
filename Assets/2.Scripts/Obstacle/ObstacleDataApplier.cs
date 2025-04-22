@@ -37,6 +37,10 @@ public class ObstacleDataApplier : MonoBehaviour
                     var pos = transform.position;
                     saveData.position = new float[] { pos.x, pos.y, pos.z };
                     saveData.moveIndex = movePlatform.currentIndex;
+                    saveData.nextPosition = new float[] {
+                        movePlatform.targetPosition.x,
+                        movePlatform.targetPosition.y,
+                        movePlatform.targetPosition.z };
                 }
                 break;
 
