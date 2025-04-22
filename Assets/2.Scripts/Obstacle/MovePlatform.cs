@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -9,7 +10,9 @@ public class MovePlatform : MonoBehaviour
     [SerializeField] private List<Vector3> _movePositions;
 
     //현재 위치의 인덱스
-    public int currentIndex = 0; 
+    public int currentIndex = 0;
+    public Vector3 targetPosition;
+    public Vector3 startPosition;
 
     //플레이어 rigidbody
     private Rigidbody _playerRigidbody;
@@ -23,6 +26,12 @@ public class MovePlatform : MonoBehaviour
         //데이터 초기화
         var data = ObstacleManager.Instance.obstacleData;
         Utilitys.SetIfNegative(ref _moveSpeed, data.moveSpeed);
+
+        startPosition = transform.position;
+        if (_movePositions.Count > 0)
+        {
+            targetPosition = startPosition + _movePositions[0];
+        }
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -56,12 +65,10 @@ public class MovePlatform : MonoBehaviour
         if (_movePositions == null || _movePositions.Count == 0)
             return;
 
-        //다음 위치
-        Vector3 target = _movePositions[currentIndex];
         //현재 위치
         Vector3 oldPosition = transform.position;
         //이동
-        transform.position = Vector3.MoveTowards(oldPosition, target, _moveSpeed * Time.deltaTime);
+        transform.position = Vector3.MoveTowards(oldPosition, targetPosition, _moveSpeed * Time.deltaTime);
 
         //플레이어의 위치 처리
         if(_playerRigidbody != null)
@@ -71,32 +78,48 @@ public class MovePlatform : MonoBehaviour
         }
 
         //목표 위치에 도달
-        if (Vector3.Distance(transform.position, target) < 0.01f)
+        if (Vector3.Distance(transform.position, targetPosition) < 0.01f)
         {
             currentIndex = (currentIndex + 1) % _movePositions.Count;
+            if (currentIndex == 0)
+            {
+                targetPosition = startPosition;
+            }
+            else
+            {
+                targetPosition = transform.position + _movePositions[currentIndex];
+            }
         }
     }
 
     private void OnDrawGizmos()
     {
-        //움직이는 위치가 없을 때 종료
         if (_movePositions == null || _movePositions.Count == 0)
             return;
 
-        //움직이는 위치에 구 드로우
+        Vector3 startPos = Application.isPlaying ? startPosition : transform.position;
+        Vector3 currentPos = startPos;
+
         Gizmos.color = Color.cyan;
-        foreach (Vector3 pos in _movePositions)
+
+        // 각 이동 위치에 Sphere 그리기 (상대좌표 누적 방식)
+        foreach (Vector3 offset in _movePositions)
         {
-            Gizmos.DrawSphere(pos, 0.2f);
+            currentPos += offset;
+            Gizmos.DrawSphere(currentPos, 0.2f);
         }
 
-        //움직이는 동선에 선 드로우
+        // 선 그리기 (동선 연결)
         Gizmos.color = Color.yellow;
-        for (int i = 0; i < _movePositions.Count - 1; i++)
+        currentPos = startPos;
+        for (int i = 0; i < _movePositions.Count; i++)
         {
-            Gizmos.DrawLine(_movePositions[i], _movePositions[i + 1]);
+            Vector3 nextPos = currentPos + _movePositions[i];
+            Gizmos.DrawLine(currentPos, nextPos);
+            currentPos = nextPos;
         }
 
-        Gizmos.DrawLine(_movePositions[_movePositions.Count - 1], _movePositions[0]);
+        // 루프 연결선 (마지막 위치 → 시작 위치)
+        Gizmos.DrawLine(currentPos, startPos);
     }
 }
