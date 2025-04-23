@@ -6,7 +6,11 @@ public class PlayerSaveData
     public float[] playerPosition;
     public float[] playerVelocity;
     public float playTime;
+    public float movelockRemainTime;
     //스킬획득 여부
+    public bool run;
+    public bool doubleJump;
+    public bool grab;
 
     //나레이션 인덱스
 
@@ -79,6 +83,7 @@ public class ObstacleSaveData
     public PunchObstacleState punchObstacleState;
     //
     public int moveIndex;
+    public float[] nextPosition;
     //
     public float[] rotation;
 }

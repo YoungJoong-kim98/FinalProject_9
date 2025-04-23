@@ -15,24 +15,38 @@ public class PlayerFallCrashState : PlayerBaseState
     {
         base.Enter();
         _crashTimer = 0f;   // 타이머 초기화
-        stateMachine.IsMovementLocked = true; // 이동 입력 잠금
+        stateMachine.IsMovementLocked = true; // 이동 차단
         
-        // 바닥에 붙이기
-        // Transform t = stateMachine.Player.transform;
-        // if (Physics.Raycast(t.position + Vector3.up * 0.1f, Vector3.down, out RaycastHit hit, 2f, LayerMask.GetMask("Ground")))
-        // {
-        //     t.position = hit.point + Vector3.up * 0.1f;
-        //     Debug.Log($"FallCrash - 바닥 진입: {hit.point}");
-        // }
+        // 2프레임 기다리고 땅에 붙이기
+        stateMachine.Player.StartCoroutine(AlignToGroundAfterFrames(2));
         
         // 속도 및 중력 제어
         Rigidbody rb = stateMachine.Player.Rigidbody;
-        rb.velocity = Vector3.zero;
+        rb.velocity = Vector3.zero; 
         rb.useGravity = false; // 중력 끄기
-        stateMachine.MovementInput = Vector2.zero;
+        stateMachine.MovementInput = Vector2.zero;  // 이동 입력 초기화
     
         StartAnimation(stateMachine.Player.AnimationData.FallCrashParameterHash);
         Debug.Log("FallCrash 상태 진입");
+    }
+
+    private IEnumerator AlignToGroundAfterFrames(int frameCount)
+    {
+        for (int i = 0; i < frameCount; i++)
+            yield return null;
+
+        AlignToGround();
+    }
+    
+    // 바닥에 붙여주기
+    private void AlignToGround()
+    {
+        Transform t = stateMachine.Player.transform;
+        if (Physics.Raycast(t.position + Vector3.up * 0.1f, Vector3.down, out RaycastHit hit, 2f, LayerMask.GetMask("Ground")))
+        {
+            t.position = hit.point + Vector3.up * 0.1f;
+            Debug.Log($"FallCrash - 바닥 위치 보정: {hit.point}");
+        }
     }
     
     public override void Update()
@@ -49,10 +63,8 @@ public class PlayerFallCrashState : PlayerBaseState
     public override void PhysicsUpdate()
     {
         base.PhysicsUpdate();
-        // 모든 속도 차단
         Rigidbody rb = stateMachine.Player.Rigidbody;
-        rb.velocity = Vector3.zero;
-        // Debug.Log($"FallCrash - Velocity: {rb.velocity}");
+        rb.velocity = Vector3.zero; // 속도 차단
     }
     
     public override void Exit()
