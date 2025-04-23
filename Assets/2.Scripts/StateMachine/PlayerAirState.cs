@@ -249,4 +249,24 @@ public class PlayerAirState : PlayerBaseState
             Debug.DrawRay(o, forwardDir * castDistance, Color.cyan);    // Wall
         }
     }
+    
+    // 착지 후 상태 전환
+    protected void HandleGroundedState()
+    {
+        if (stateMachine.Player.Input.playerActions.Run.IsPressed() && GameManager.Instance.SkillManager.run)    // Shift 누르고 있으면
+        {
+            stateMachine.ChangeState(stateMachine.RunState);
+            
+        }
+        else if (stateMachine.MovementInput != Vector2.zero)    // 이동 입력 있으면
+        {
+            stateMachine.CurrentMoveSpeed = stateMachine.MovementSpeed;
+            stateMachine.ChangeState(stateMachine.WalkState);
+        }
+        else   // 입력 없으면
+        {
+            stateMachine.CurrentMoveSpeed = stateMachine.MovementSpeed;
+            stateMachine.ChangeState(stateMachine.IdleState);
+        }
+    }
 }

@@ -25,9 +25,9 @@ public class PlayerJumpState : PlayerAirState
         
         // 점프 속도 = 현재 수평 속도 + 수직 점프 힘 + 방향별 가속도
         Vector3 jumpVelocity = horizontalVelocity + (Vector3.up * jumpForce);
-        if (currentMoveSpeed > stateMachine.MovementSpeed) // 달리기 중일 때만 추가 가속 (현재 속도 > 2f)
+        if (currentMoveSpeed > stateMachine.MovementSpeed) // 달리기 중일 때만 추가 가속
         {
-            jumpVelocity += moveDir * (currentMoveSpeed - stateMachine.MovementSpeed) * 0.5f; // 가속도 차이 반영 ((5f - 2f = 3f) * 0.5f)
+            jumpVelocity += moveDir * (currentMoveSpeed - stateMachine.MovementSpeed) * 0.5f; // 가속도 차이 반영
         }
 
         rb.velocity = jumpVelocity; // 속도 적용
@@ -48,10 +48,21 @@ public class PlayerJumpState : PlayerAirState
     {
         base.PhysicsUpdate();   // AirState.PhysicsUpdate 호출
         
+        Rigidbody rb = stateMachine.Player.Rigidbody;
+        
         // 낙하 상태로 전환
-        if (stateMachine.Player.Rigidbody.velocity.y <= 0)
+        if (rb.velocity.y < 0)
         {
             stateMachine.ChangeState(stateMachine.FallState);
+            return;
+        }
+        
+        // 조기 착지 감지 (계단)
+        if (IsGrounded(1.5f) && rb.velocity.y <= 3.0f)
+        {
+            Debug.Log($"JumpState - 계단 감지: y 속도 {rb.velocity.y}");
+            HandleGroundedState();
+            return;
         }
     }
     //protected override void OnGrabStarted(InputAction.CallbackContext context)

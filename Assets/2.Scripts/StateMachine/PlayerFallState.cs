@@ -51,7 +51,7 @@ public class PlayerFallState : PlayerAirState
         bool isGrounded = IsGrounded(1.0f, useOffset: true); // 바닥 감지
         if (isGrounded && !_wasGrounded) // 첫 착지 프레임만 처리
         {
-            Debug.Log($"착지 - 저장 속도: {savedVelocity}");
+            // Debug.Log($"착지 - 저장 속도: {savedVelocity}");
             _wasGrounded = true; // 다음 프레임 대비
             
             if (savedVelocity <= -_maxFallSpeed) // 최고 속도에 도달하면 FallCrash   
@@ -142,25 +142,5 @@ public class PlayerFallState : PlayerAirState
 
         Debug.DrawRay(origin2, diagonalDir * castDistance, Color.blue); // 로프 감지용 Ray
         Debug.DrawRay(origin2, t.forward * castDistance, Color.blue);   // 벽 감지용 Ray
-    }
-        
-    // 착지 후 상태 전환
-    private void HandleGroundedState()
-    {
-        if (stateMachine.Player.Input.playerActions.Run.IsPressed() && GameManager.Instance.SkillManager.run)    // Shift 누르고 있으면
-        {
-            stateMachine.ChangeState(stateMachine.RunState);
-            
-        }
-        else if (stateMachine.MovementInput != Vector2.zero)    // 이동 입력 있으면
-        {
-            stateMachine.CurrentMoveSpeed = stateMachine.MovementSpeed;
-            stateMachine.ChangeState(stateMachine.WalkState);
-        }
-        else   // 입력 없으면
-        {
-            stateMachine.CurrentMoveSpeed = stateMachine.MovementSpeed;
-            stateMachine.ChangeState(stateMachine.IdleState);
-        }
     }
 }
