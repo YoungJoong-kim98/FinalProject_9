@@ -17,8 +17,8 @@ public class PlayerFallCrashState : PlayerBaseState
         _crashTimer = 0f;   // 타이머 초기화
         stateMachine.IsMovementLocked = true; // 이동 차단
         
-        // 2프레임 기다리고 땅에 붙이기
-        stateMachine.Player.StartCoroutine(AlignToGroundAfterFrames(2));
+        // 3프레임 기다리고 땅에 붙이기
+        stateMachine.Player.StartCoroutine(AlignToGroundAfterFrames(3));
         
         // 속도 및 중력 제어
         Rigidbody rb = stateMachine.Player.Rigidbody;
@@ -45,7 +45,7 @@ public class PlayerFallCrashState : PlayerBaseState
         if (Physics.Raycast(t.position + Vector3.up * 0.1f, Vector3.down, out RaycastHit hit, 2f, LayerMask.GetMask("Ground")))
         {
             t.position = hit.point + Vector3.up * 0.1f;
-            Debug.Log($"FallCrash - 바닥 위치 보정: {hit.point}");
+            Debug.Log($"FallCrash - 바닥 위치 보정: {hit.point}, 직전 높이: {hit.distance}");
         }
     }
     
