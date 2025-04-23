@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MovePlatform : MonoBehaviour
+public class MovePlatform : MonoBehaviour, ISaveObstacle
 {
     //움직이는 속도
     [SerializeField] private float _moveSpeed = -1;
@@ -16,12 +16,23 @@ public class MovePlatform : MonoBehaviour
 
     //플레이어 rigidbody
     private Rigidbody _playerRigidbody;
-    
+
+    [SerializeField] private string _id;
+    [SerializeField] private ObstacleDataType _type = ObstacleDataType.MovePlatform;
+
+    public string Id
+    {
+        get => _id;
+        set => _id = value;
+    }
+
+    public ObstacleDataType Type => _type;
 
     private void Start()
     {
         //ObstacleManager의 movePlatforms에 추가
         ObstacleManager.Instance.movePlatforms.Add(this);
+        AddList();
 
         //데이터 초기화
         var data = ObstacleManager.Instance.obstacleData;
@@ -121,5 +132,35 @@ public class MovePlatform : MonoBehaviour
 
         // 루프 연결선 (마지막 위치 → 시작 위치)
         Gizmos.DrawLine(currentPos, startPos);
+    }
+
+    public void AddList()
+    {
+        ObstacleManager.Instance.saveObstacles.Add(this);
+    }
+
+    public void SetId(string newId)
+    {
+        Id = newId;
+    }
+
+    public ObstacleSaveData ToData()
+    {
+        ObstacleSaveData saveData = new ObstacleSaveData();
+        var pos = transform.position;
+        saveData.position = new float[] { pos.x, pos.y, pos.z };
+        saveData.moveIndex = currentIndex;
+        saveData.nextPosition = new float[] {
+                        targetPosition.x,
+                        targetPosition.y,
+                        targetPosition.z };
+        return saveData;
+    }
+
+    public void LoadtoData(ObstacleSaveData data)
+    {
+        transform.position = new Vector3(data.position[0], data.position[1], data.position[2]);
+        currentIndex = data.moveIndex;
+        targetPosition = new Vector3(data.nextPosition[0], data.nextPosition[1], data.nextPosition[2]);
     }
 }

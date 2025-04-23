@@ -40,20 +40,27 @@ public class PlayerGroundState : PlayerBaseState
         base.PhysicsUpdate();
         
         // 이동 중 아래로 떨어지고 있는 경우에만 Fall로 전환
-        if (!IsGrounded(0.2f, useOffset: false) && stateMachine.Player.Rigidbody.velocity.y < -1f)
+        if (!IsGrounded(0.2f, useOffset: false) && stateMachine.Player.Rigidbody.velocity.y < -2.5f)
         {
             Debug.Log("GroundState에서 Fall로 전환");
             stateMachine.ChangeState(stateMachine.FallState);
             return;
         }
+        
+        Rigidbody rb = stateMachine.Player.Rigidbody;
+            
+        // 계단 오를 때 뜨는 것 방지
+        if (IsGrounded() && rb.velocity.y > 1f && stateMachine.MovementInput != Vector2.zero)
+        {
+            Vector3 velocity = rb.velocity;
+            // velocity.y = 0f;
+            // rb.velocity = velocity;
+            Vector3 targetVelocity = new Vector3(velocity.x, 0f, velocity.z);
+            rb.velocity = Vector3.Lerp(velocity, targetVelocity, Time.deltaTime * 10f); // 목표 속도로 보간
+
+            // Debug.Log("계단에서 y속도 제거");
+        }
     }
-    
-    // private bool IsGrounded() //땅 체크
-    // {
-    //     Transform t = stateMachine.Player.transform;
-    //     Debug.DrawRay(t.position + Vector3.up * 0.1f, Vector3.down * 0.2f, Color.red);
-    //     return Physics.Raycast(t.position + Vector3.up * 0.1f, Vector3.down, 0.2f, LayerMask.GetMask("Ground"));
-    // }
 
     protected override void OnMovementCanceled(InputAction.CallbackContext context)
     {

@@ -18,7 +18,7 @@ public abstract class StateMachine
     public void ChangeState(IState newState, bool force = false)
     {
         if (!force && CurrentState == newState) return;
-        Debug.Log($"[ChangeState] {CurrentState} → {newState}");
+        // Debug.Log($"[ChangeState] {CurrentState} → {newState}");
 
         currentState?.Exit();
         currentState = newState;

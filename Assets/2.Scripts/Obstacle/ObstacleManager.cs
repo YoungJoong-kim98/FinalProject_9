@@ -1,6 +1,24 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+
+public enum ObstacleDataType
+{
+    GlassPlatform,
+    MovePlatform,
+    Platform,
+    PunchObstacle,
+    RotateObstacle,
+}
+
+public interface ISaveObstacle
+{
+    public string Id {  get; set; }
+    public ObstacleDataType Type { get;}
+    public void SetId(string newId);
+    public ObstacleSaveData ToData();
+    public void LoadtoData(ObstacleSaveData data);
+    public void AddList();
+}
 
 public class ObstacleManager : MonoBehaviour
 {
@@ -16,8 +34,7 @@ public class ObstacleManager : MonoBehaviour
     //움직이는 발판 리스트
     public List<MovePlatform> movePlatforms = new List<MovePlatform>();
 
-    //플레이어의 움직임 플래그 코루틴
-    //private Coroutine _moveCoroutine;
+    public List<ISaveObstacle> saveObstacles = new List<ISaveObstacle>();
 
     private void Awake()
     {

@@ -8,9 +8,8 @@ public enum PlatformState
     Restore
 }
 
-public class Platform : MonoBehaviour
+public class Platform : MonoBehaviour, ISaveObstacle
 {
-
     [SerializeField] private float _disappearTime = -1f;
     [SerializeField] private float _appearTime = -1f;
     public float remainTime;
@@ -22,6 +21,17 @@ public class Platform : MonoBehaviour
 
     public PlatformState state = PlatformState.None;
 
+    [SerializeField] private string _id;
+    [SerializeField] private ObstacleDataType _type = ObstacleDataType.Platform;
+
+    public string Id
+    {
+        get => _id;
+        set => _id = value;
+    }
+
+    public ObstacleDataType Type => _type;
+
     private void Start()
     {
         var data = ObstacleManager.Instance.obstacleData;
@@ -30,6 +40,8 @@ public class Platform : MonoBehaviour
 
         _meshRenderer = GetComponent<MeshRenderer>();
         _collider = GetComponent<Collider>();
+
+        AddList();
     }
 
     public void Init()
@@ -94,5 +106,28 @@ public class Platform : MonoBehaviour
             if (state != targetState)
                 yield break;
         }
+    }
+    public void AddList()
+    {
+        ObstacleManager.Instance.saveObstacles.Add(this);
+    }
+
+    public void SetId(string newId)
+    {
+        Id = newId;
+    }
+
+    public ObstacleSaveData ToData()
+    {
+        ObstacleSaveData saveData = new ObstacleSaveData();
+        saveData.remainTime = remainTime;
+        saveData.platformState = state;
+        return saveData;
+    }
+
+    public void LoadtoData(ObstacleSaveData data)
+    {
+        remainTime = data.remainTime;
+        state = data.platformState;
     }
 }
