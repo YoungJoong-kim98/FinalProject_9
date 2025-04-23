@@ -7,8 +7,8 @@ using UnityEngine.UI;
 public class CharacterSlot
 {
     public Button slotButton;
-    public GameObject unlockImage;
     public GameObject hiddenImage;
+    public GameObject unlockImage;
     public int characterBaseIndex;
     public string unlockConditionId; // 앞으로 업적 시스템과 연결할 ID
     [HideInInspector] public bool isUnlocked;
@@ -22,14 +22,32 @@ public class CharacterSlot
         else
         {
             // 나중에 연결될 실제 시스템으로 교체
-         //   isUnlocked = AchievementManager.Instance.HasAchievement(unlockConditionId);
+            //   isUnlocked = AchievementManager.Instance.HasAchievement(unlockConditionId);
         }
     }
     public void UpdateLockVisual()
     {
-        if (unlockImage != null)
-            unlockImage.SetActive(!isUnlocked);
-        if (hiddenImage != null)
-            hiddenImage.SetActive(false);
+        if (isUnlocked)
+        {
+            if (hiddenImage != null)
+            {
+                GameObject.Destroy(hiddenImage);
+                hiddenImage = null;
+            }
+
+            if (unlockImage != null)
+            {
+                GameObject.Destroy(unlockImage);
+                unlockImage = null;
+            }
+        }
+        else
+        {
+            if (hiddenImage != null)
+                hiddenImage.SetActive(true);
+
+            if (unlockImage != null)
+                unlockImage.SetActive(false);
+        }
     }
 }

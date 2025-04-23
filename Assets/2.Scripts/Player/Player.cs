@@ -39,7 +39,7 @@ public class Player : MonoBehaviour
     void Start()
     {
         transform.position = new Vector3(177f, 1f, -95f); // 시작 위치
-        Cursor.lockState = CursorLockMode.Locked;   // 마우스 잠금
+        //Cursor.lockState = CursorLockMode.Locked;   // 마우스 잠금
         stateMachine.ChangeState(stateMachine.IdleState);   // 초기 상태를 Idle로 설정
     }
     
