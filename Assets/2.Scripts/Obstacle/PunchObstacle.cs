@@ -8,7 +8,7 @@ public enum PunchObstacleState
     Back
 }
 
-public class PunchObstacle : MonoBehaviour
+public class PunchObstacle : MonoBehaviour, ISaveObstacle
 {
     //미는 힘
     [SerializeField] private float _pushPower = -1f;
@@ -37,6 +37,17 @@ public class PunchObstacle : MonoBehaviour
 
     public PunchObstacleState state = PunchObstacleState.None;
 
+    [SerializeField] private string _id;
+    [SerializeField] private ObstacleDataType _type = ObstacleDataType.PunchObstacle;
+
+    public string Id
+    {
+        get => _id;
+        set => _id = value;
+    }
+
+    public ObstacleDataType Type => _type;
+
     private void Start()
     {
         //데이터 초기화
@@ -49,6 +60,8 @@ public class PunchObstacle : MonoBehaviour
         //위치 초기화
         _startPos = transform.position;
         _targetPos = transform.position + _direction.normalized * _moveDistance;
+
+        AddList();
 
         //정기적인지 여부
         if (_isReglar)
@@ -164,5 +177,30 @@ public class PunchObstacle : MonoBehaviour
 
         //방향으로 선 드로우
         Gizmos.DrawLine(transform.position, transform.position + _direction * 2f);
+    }
+    public void AddList()
+    {
+        ObstacleManager.Instance.saveObstacles.Add(this);
+    }
+
+    public void SetId(string newId)
+    {
+        Id = newId;
+    }
+
+    public ObstacleSaveData ToData()
+    {
+        ObstacleSaveData saveData = new ObstacleSaveData();
+        var pos = transform.position;
+        saveData.position = new float[3] { pos.x, pos.y, pos.z };
+        saveData.punchObstacleState = state;
+        return saveData;
+    }
+
+    public void LoadtoData(ObstacleSaveData data)
+    {
+        transform.position = new Vector3(data.position[0], data.position[1], data.position[2]);
+        state = data.punchObstacleState;
+        Init();
     }
 }

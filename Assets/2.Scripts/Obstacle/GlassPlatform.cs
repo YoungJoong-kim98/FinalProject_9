@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 public enum GlassPlatformState
@@ -6,7 +7,7 @@ public enum GlassPlatformState
     Break
 }
 
-public class GlassPlatform : MonoBehaviour
+public class GlassPlatform : MonoBehaviour, ISaveObstacle
 {
     //정상적인 유리 오브젝트
     [SerializeField] private GameObject _glassObject;
@@ -14,6 +15,22 @@ public class GlassPlatform : MonoBehaviour
     [SerializeField] private GameObject _shatteredObject;
 
     public GlassPlatformState state = GlassPlatformState.None;
+
+    [SerializeField] private string _id;
+    [SerializeField] private ObstacleDataType _type = ObstacleDataType.GlassPlatform;
+
+    public string Id
+    {
+        get => _id;
+        set => _id = value;
+    }
+
+    public ObstacleDataType Type => _type;
+
+    private void Start()
+    {
+        AddList();
+    }
 
     public void Init()
     {
@@ -52,4 +69,29 @@ public class GlassPlatform : MonoBehaviour
         //게임 오브젝트 비활성화
         gameObject.SetActive(false);
     }
+
+    public void AddList()
+    {
+        ObstacleManager.Instance.saveObstacles.Add(this);
+    }
+
+    public ObstacleSaveData ToData()
+    {
+        ObstacleSaveData saveData = new ObstacleSaveData();
+        saveData.glassPlatformState = state;
+        return saveData;
+    }
+
+    public void LoadtoData(ObstacleSaveData data)
+    {
+        state = data.glassPlatformState;
+        Init();
+    }
+
+#if UNITY_EDITOR
+    public void SetId(string newId)
+    {
+        Id = newId;
+    }
+#endif
 }

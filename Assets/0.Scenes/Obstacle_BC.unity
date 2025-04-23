@@ -136,7 +136,6 @@ GameObject:
   - component: {fileID: 93654952}
   - component: {fileID: 93654951}
   - component: {fileID: 93654950}
-  - component: {fileID: 93654955}
   m_Layer: 0
   m_Name: Obstacle_Platform
   m_TagString: Untagged
@@ -160,6 +159,8 @@ MonoBehaviour:
   _appearTime: -1
   remainTime: 0
   state: 0
+  _id: Platform_001
+  _type: 2
 --- !u!65 &93654951
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -246,20 +247,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 715402483}
   m_LocalEulerAnglesHint: {x: -0.736, y: 0.653, z: -0.186}
---- !u!114 &93654955
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 93654949}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9760cc89d6c0ee240935c3cb0be052ab, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _obstacleId: Platform_001
-  _obstacleType: 2
 --- !u!1 &184602633
 GameObject:
   m_ObjectHideFlags: 0
@@ -273,7 +260,6 @@ GameObject:
   - component: {fileID: 184602636}
   - component: {fileID: 184602635}
   - component: {fileID: 184602634}
-  - component: {fileID: 184602639}
   m_Layer: 0
   m_Name: 'Move_Platform '
   m_TagString: Untagged
@@ -302,6 +288,8 @@ MonoBehaviour:
   currentIndex: 0
   targetPosition: {x: 0, y: 0, z: 0}
   startPosition: {x: 0, y: 0, z: 0}
+  _id: MovePlatform_001
+  _type: 1
 --- !u!65 &184602635
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -388,20 +376,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1954476191}
   m_LocalEulerAnglesHint: {x: -0.736, y: 0.653, z: -0.186}
---- !u!114 &184602639
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 184602633}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9760cc89d6c0ee240935c3cb0be052ab, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _obstacleId: MovePlatform_002
-  _obstacleType: 1
 --- !u!1 &199850484
 GameObject:
   m_ObjectHideFlags: 0
@@ -1208,6 +1182,11 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1430204438496707303, guid: 3a8e8dcb41a141d47b326a91e96b2f4a,
+        type: 3}
+      propertyPath: _id
+      value: GlassPlatform_001
+      objectReference: {fileID: 0}
     - target: {fileID: 2844865309610701725, guid: 3a8e8dcb41a141d47b326a91e96b2f4a,
         type: 3}
       propertyPath: _obstacleId
@@ -1792,7 +1771,6 @@ GameObject:
   - component: {fileID: 1029587889}
   - component: {fileID: 1029587888}
   - component: {fileID: 1029587892}
-  - component: {fileID: 1029587893}
   m_Layer: 0
   m_Name: Obstacle_Punch
   m_TagString: Untagged
@@ -1906,20 +1884,8 @@ MonoBehaviour:
   _isReglar: 0
   _regularTime: 1
   state: 0
---- !u!114 &1029587893
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1029587886}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9760cc89d6c0ee240935c3cb0be052ab, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _obstacleId: PunchObstacle_001
-  _obstacleType: 3
+  _id: PunchObstacle_001
+  _type: 3
 --- !u!1 &1153821003
 GameObject:
   m_ObjectHideFlags: 0
@@ -2811,6 +2777,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _rotateDirection: {x: 0, y: 0, z: 1}
   _rotateSpeed: 15
+  _id: RotateObstacle_001
+  _type: 4
 --- !u!4 &1671361898
 Transform:
   m_ObjectHideFlags: 0
@@ -3005,7 +2973,6 @@ GameObject:
   - component: {fileID: 1849870907}
   - component: {fileID: 1849870906}
   - component: {fileID: 1849870905}
-  - component: {fileID: 1849870909}
   m_Layer: 0
   m_Name: Move_Platform  (1)
   m_TagString: Untagged
@@ -3047,6 +3014,8 @@ MonoBehaviour:
   currentIndex: 0
   targetPosition: {x: 0, y: 0, z: 0}
   startPosition: {x: 0, y: 0, z: 0}
+  _id: MovePlatform_002
+  _type: 1
 --- !u!65 &1849870906
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -3118,20 +3087,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1849870903}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!114 &1849870909
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1849870903}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9760cc89d6c0ee240935c3cb0be052ab, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _obstacleId: MovePlatform_001
-  _obstacleType: 1
 --- !u!1 &1872817018
 GameObject:
   m_ObjectHideFlags: 0

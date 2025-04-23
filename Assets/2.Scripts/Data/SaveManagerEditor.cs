@@ -17,34 +17,48 @@ public class SaveManagerEditor : Editor
 
         if (GUILayout.Button("게임 저장"))
         {
-            var player = GameObject.FindGameObjectWithTag("Player");
-            var achievement = GameManager.Instance.AchievementSystem;
-            if (player != null &&
-                player.TryGetComponent(out Rigidbody rb))
+            if (TryGetPlayerComponents(out Player player, out AchievementSystem achievement))
             {
-                float playTime = Time.time; // 필요에 따라 수정
-                manager.SaveGame(player.GetComponent<Player>(), achievement, playTime);
-            }
-            else
-            {
-                Debug.LogWarning("플레이어 또는 컴포넌트가 존재하지 않음");
+                float playTime = Time.time; // 또는 별도로 관리되는 PlayTime 변수
+                manager.SaveGame(player, achievement, playTime);
             }
         }
 
         if (GUILayout.Button("게임 불러오기"))
         {
-            var player = GameObject.FindGameObjectWithTag("Player");
-            var achievement = GameManager.Instance.AchievementSystem;
-            if (player != null &&
-                player.TryGetComponent(out Rigidbody rb))
+            if (TryGetPlayerComponents(out Player player, out AchievementSystem achievement))
             {
                 float playTime = 0f;
-                manager.LoadGame(player.GetComponent<Player>(), achievement, ref playTime);
-            }
-            else
-            {
-                Debug.LogWarning("플레이어 또는 컴포넌트가 존재하지 않음");
+                manager.LoadGame(player, achievement, ref playTime);
             }
         }
+    }
+
+    private bool TryGetPlayerComponents(out Player player, out AchievementSystem achievement)
+    {
+        player = null;
+        achievement = null;
+
+        var go = GameObject.FindGameObjectWithTag("Player");
+        if (go == null)
+        {
+            Debug.LogWarning("플레이어 오브젝트가 존재하지 않음");
+            return false;
+        }
+
+        if (!go.TryGetComponent(out player))
+        {
+            Debug.LogWarning("Player 컴포넌트를 찾을 수 없음");
+            return false;
+        }
+
+        achievement = GameManager.Instance?.AchievementSystem;
+        if (achievement == null)
+        {
+            Debug.LogWarning("AchievementSystem이 존재하지 않음");
+            return false;
+        }
+
+        return true;
     }
 }
