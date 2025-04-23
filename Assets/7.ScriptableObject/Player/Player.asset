@@ -13,13 +13,13 @@ MonoBehaviour:
   m_Name: Player
   m_EditorClassIdentifier: 
   <GroundData>k__BackingField:
-    <BaseSpeed>k__BackingField: 6
-    <BaseRotationDamping>k__BackingField: 30
+    <BaseSpeed>k__BackingField: 7
+    <BaseRotationDamping>k__BackingField: 45
     <WalkSpeedModifier>k__BackingField: 1
     <RunMaxSpeed>k__BackingField: 12
     <RunAcceleration>k__BackingField: 8
   <AirData>k__BackingField:
-    <JumpForce>k__BackingField: 10
-    <AirControlSpeed>k__BackingField: 5
-    <FallSpeed>k__BackingField: 5
+    <JumpForce>k__BackingField: 7
+    <AirControlSpeed>k__BackingField: 6
+    <FallSpeed>k__BackingField: 12
     <MaxFallSpeed>k__BackingField: 30

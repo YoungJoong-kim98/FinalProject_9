@@ -2,8 +2,10 @@
 <project version="4">
   <component name="Encoding">
     <file url="file://$PROJECT_DIR$/Assets/2.Scripts/GameManager.cs" charset="EUC-KR" />
+    <file url="file://$PROJECT_DIR$/Assets/2.Scripts/Obstacle/ReflectObstacle.cs" charset="EUC-KR" />
     <file url="file://$PROJECT_DIR$/Assets/2.Scripts/Player/ForceReceiver.cs" charset="EUC-KR" />
     <file url="file://$PROJECT_DIR$/Assets/2.Scripts/PortalCameraTrigger.cs" charset="EUC-KR" />
+    <file url="file://$PROJECT_DIR$/Assets/2.Scripts/SkillUnlockUI.cs" charset="EUC-KR" />
     <file url="file://$PROJECT_DIR$/Assets/2.Scripts/StateMachine/PlayerFallState.cs" charset="EUC-KR" />
     <file url="file://$PROJECT_DIR$/Assets/2.Scripts/StateMachine/PlayerGrabState.cs" charset="EUC-KR" />
     <file url="file://$PROJECT_DIR$/Assets/2.Scripts/StateMachine/PlayerJumpState.cs" charset="UTF-8" />

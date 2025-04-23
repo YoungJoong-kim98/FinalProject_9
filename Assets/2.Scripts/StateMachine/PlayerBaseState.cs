@@ -34,6 +34,7 @@ public class PlayerBaseState : IState
         input.playerActions.Run.started += OnRunStarted;                // 달리기 시작 시 호출
         input.playerActions.Run.canceled += OnRunCanceled;              // 달리기 종료 (Shift 뗄 때)
         input.playerActions.Jump.started += OnJumpStarted;              // 점프 시 호출
+        input.playerActions.Grab.started += OnGrabStarted;              // 잡기 시 호출
     }
 
     protected virtual void RemoveInputActionsCallbacks()
@@ -43,6 +44,7 @@ public class PlayerBaseState : IState
         input.playerActions.Run.started -= OnRunStarted;
         input.playerActions.Run.canceled -= OnRunCanceled;
         input.playerActions.Jump.started -= OnJumpStarted;
+        input.playerActions.Grab.started -= OnGrabStarted;
     }
 
     public virtual void HandleInput()
@@ -76,6 +78,10 @@ public class PlayerBaseState : IState
     }
     
     protected virtual void OnJumpStarted(InputAction.CallbackContext context)
+    {
+
+    }
+    protected virtual void OnGrabStarted(InputAction.CallbackContext context)
     {
 
     }
@@ -157,5 +163,43 @@ public class PlayerBaseState : IState
             stateMachine.Player.Rigidbody.MoveRotation(smoothedRotation);
         }
     }
+    
+    // 바닥 감지
+    protected bool IsGrounded(float rayLength = 1.0f, bool useOffset = true)
+    {
+        Transform t = stateMachine.Player.transform;
+        Vector3 origin = t.position + Vector3.up * 0.1f;
+        LayerMask groundMask = LayerMask.GetMask("Ground");
 
+        // 중앙 레이
+        Debug.DrawRay(origin, Vector3.down * rayLength, Color.yellow);
+        if (Physics.Raycast(origin, Vector3.down, rayLength, groundMask))
+        {
+            return true;
+        }
+
+        if (!useOffset) return false;
+
+        // 오프셋 레이
+        float offset = 0.3f;
+        Vector3[] offsets = new Vector3[]
+        {
+            t.right * offset,   // 오른쪽
+            -t.right * offset,  // 왼쪽
+            t.forward * offset, // 앞쪽
+            -t.forward * offset // 뒤쪽
+        };
+
+        foreach (var dir in offsets)
+        {
+            Vector3 offsetOrigin = origin + dir;
+            Debug.DrawRay(offsetOrigin, Vector3.down * rayLength, Color.red);
+            if (Physics.Raycast(offsetOrigin, Vector3.down, rayLength, groundMask))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }

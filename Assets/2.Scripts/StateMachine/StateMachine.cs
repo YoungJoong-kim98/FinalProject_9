@@ -1,3 +1,5 @@
+using UnityEngine;
+
 public interface IState
 {
     public void Enter();    // 상태에 들어갈 때
@@ -11,15 +13,18 @@ public interface IState
 public abstract class StateMachine
 {
     protected IState currentState;  // State 정보가 들어옴
-    public IState CurrentState => currentState; // 외부에서 읽기 전용 접근 가능하게!
-
-    public void ChangeState(IState state)
+    public IState CurrentState => currentState; // 외부에서 읽기 전용 접근 가능하게
+    
+    public void ChangeState(IState newState, bool force = false)
     {
+        if (!force && CurrentState == newState) return;
+        Debug.Log($"[ChangeState] {CurrentState} → {newState}");
+
         currentState?.Exit();
-        currentState = state;
+        currentState = newState;
         currentState?.Enter();
     }
-
+    
     public void HandleInput()
     {
         currentState?.HandleInput();

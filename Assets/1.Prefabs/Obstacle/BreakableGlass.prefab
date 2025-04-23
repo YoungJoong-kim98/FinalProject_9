@@ -10,7 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 5600041012031611371}
   - component: {fileID: 1430204438496707303}
-  m_Layer: 6
+  - component: {fileID: 2844865309610701725}
+  m_Layer: 0
   m_Name: BreakableGlass
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -48,6 +49,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _glassObject: {fileID: 7839632805074773343}
   _shatteredObject: {fileID: 588295335063220523}
+  state: 0
+--- !u!114 &2844865309610701725
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4352955937673110466}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9760cc89d6c0ee240935c3cb0be052ab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _obstacleId: g_1
+  _obstacleType: 0
 --- !u!1001 &354485488188083322
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -59,7 +75,7 @@ PrefabInstance:
     - target: {fileID: -9092237992908752040, guid: 48d7138f9dc7f1145abce55792c5d20d,
         type: 3}
       propertyPath: m_Layer
-      value: 6
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 48d7138f9dc7f1145abce55792c5d20d,
         type: 3}
@@ -114,27 +130,27 @@ PrefabInstance:
     - target: {fileID: -8018695773568045222, guid: 48d7138f9dc7f1145abce55792c5d20d,
         type: 3}
       propertyPath: m_Layer
-      value: 6
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -4802177655686205927, guid: 48d7138f9dc7f1145abce55792c5d20d,
         type: 3}
       propertyPath: m_Layer
-      value: 6
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -1011851978766341700, guid: 48d7138f9dc7f1145abce55792c5d20d,
         type: 3}
       propertyPath: m_Layer
-      value: 6
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -259199459689003643, guid: 48d7138f9dc7f1145abce55792c5d20d,
         type: 3}
       propertyPath: m_Layer
-      value: 6
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 137704935924252171, guid: 48d7138f9dc7f1145abce55792c5d20d,
         type: 3}
       propertyPath: m_Layer
-      value: 6
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 48d7138f9dc7f1145abce55792c5d20d,
         type: 3}
@@ -144,7 +160,7 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 48d7138f9dc7f1145abce55792c5d20d,
         type: 3}
       propertyPath: m_Layer
-      value: 6
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 48d7138f9dc7f1145abce55792c5d20d,
         type: 3}
@@ -154,7 +170,7 @@ PrefabInstance:
     - target: {fileID: 7234023659629549302, guid: 48d7138f9dc7f1145abce55792c5d20d,
         type: 3}
       propertyPath: m_Layer
-      value: 6
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -680,7 +696,7 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 864085767a5ac644db04855542da933c,
         type: 3}
       propertyPath: m_Layer
-      value: 6
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

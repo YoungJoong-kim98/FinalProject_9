@@ -22,6 +22,9 @@ public class Player : MonoBehaviour
 
     public Rigidbody Rigidbody { get; private set; }
 
+    private Coroutine _moveCoroutine;
+    public float movelockRemainTime;
+
     private void Awake()
     {
         AnimationData.Initialize();                         // 애니메이션 파라미터 해시값 초기화
@@ -35,6 +38,7 @@ public class Player : MonoBehaviour
 
     void Start()
     {
+        transform.position = new Vector3(177f, 1f, -95f); // 시작 위치
         Cursor.lockState = CursorLockMode.Locked;   // 마우스 잠금
         stateMachine.ChangeState(stateMachine.IdleState);   // 초기 상태를 Idle로 설정
     }
@@ -67,5 +71,32 @@ public class Player : MonoBehaviour
     {
         if (runDust != null && runDust.isPlaying)
             runDust.Stop();
+    }
+
+    public void StartLockMovement(float time)
+    {
+        //실행된 코루틴이 있으면 중지
+        if (_moveCoroutine != null)
+        {
+            StopCoroutine(_moveCoroutine);
+        }
+
+        //코루틴 실행
+        _moveCoroutine = StartCoroutine(SetIsMovementLocked(time));
+    }
+
+    //플레이어 움직임 제한
+    private IEnumerator SetIsMovementLocked(float time)
+    {
+        stateMachine.IsMovementLocked = true;
+        movelockRemainTime = time;
+
+        while (movelockRemainTime > 0f)
+        {
+            movelockRemainTime -= Time.deltaTime;
+            yield return null;
+        }
+        stateMachine.IsMovementLocked = false;
+        _moveCoroutine = null;
     }
 }

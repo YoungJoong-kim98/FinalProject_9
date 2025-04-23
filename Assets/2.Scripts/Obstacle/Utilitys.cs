@@ -1,8 +1,8 @@
 public static class Utilitys
 {
     /*
-    SetIfNegative´Â ref·Î µé¾î¿Â °ªÀÌ À½¼öÀÌ¸é value°ªÀ¸·Î ¹Ù²î´Â ¸Ş¼­µåÀÌ´Ù.
-    ÇöÀç Áö¿øµÇ´Â ÀÚ·áÇü
+    SetIfNegativeëŠ” refë¡œ ë“¤ì–´ì˜¨ ê°’ì´ ìŒìˆ˜ì´ë©´ valueê°’ìœ¼ë¡œ ë°”ë€ŒëŠ” ë©”ì„œë“œì´ë‹¤.
+    í˜„ì¬ ì§€ì›ë˜ëŠ” ìë£Œí˜•
     int, float, double, long
     */
     public static void SetIfNegative(ref int field, int value)

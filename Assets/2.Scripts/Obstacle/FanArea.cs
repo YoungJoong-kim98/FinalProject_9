@@ -1,34 +1,34 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 
 public class FanArea : MonoBehaviour
 {
-    //ÈûÀÇ ¹æÇâ
+    //í˜ì˜ ë°©í–¥
     public Vector3 forceDirection = Vector3.forward;
-    //ÈûÀÇ Å©±â
+    //í˜ì˜ í¬ê¸°
     [SerializeField] private float forceStrength = -1f;
 
     private void Start()
     {
-        //µ¥ÀÌÅÍ ÃÊ±âÈ­
+        //ë°ì´í„° ì´ˆê¸°í™”
         var data = ObstacleManager.Instance.obstacleData;
         Utilitys.SetIfNegative(ref forceStrength, data.forceStrength);
     }
 
     private void OnTriggerStay(Collider other)
     {
-        //¼±Ç³±â ¸Ş¼­µå ½ÇÇà
+        //ì„ í’ê¸° ë©”ì„œë“œ ì‹¤í–‰
         Fan(other.gameObject);
     }
 
-    //¼±Ç³±â ¸Ş¼­µå
+    //ì„ í’ê¸° ë©”ì„œë“œ
     private void Fan(GameObject gameObject)
     {
         if (gameObject.TryGetComponent(out Rigidbody rb))
         {
-            //¹°¸® Ã³¸®
+            //ë¬¼ë¦¬ ì²˜ë¦¬
             rb.AddForce(forceDirection.normalized * forceStrength, ForceMode.Force);
         }
-        //rigidbody°¡ ¾øÀ»¶§ ¿¡·¯ÄÚµå
+        //rigidbodyê°€ ì—†ì„ë•Œ ì—ëŸ¬ì½”ë“œ
         else
         {
             Debug.LogWarning($"{gameObject.name} does not have rigidbody");
@@ -40,7 +40,7 @@ public class FanArea : MonoBehaviour
         Renderer renderer = GetComponent<Renderer>();
         if (renderer != null)
         {
-            //Å¥ºêÀÇ Å©±â¸¸Å­ µå·Î¿ì
+            //íë¸Œì˜ í¬ê¸°ë§Œí¼ ë“œë¡œìš°
             Gizmos.color = Color.green;
             Gizmos.DrawWireCube(renderer.bounds.center, renderer.bounds.size);
         }

@@ -4,20 +4,20 @@ using UnityEngine;
 
 public class ObstacleManager : MonoBehaviour
 {
-    //½Ì±ÛÅæÀ¸·Î ±¸Çö
+    //ì‹±ê¸€í†¤ìœ¼ë¡œ êµ¬í˜„
     private static ObstacleManager instance;
     public static ObstacleManager Instance { get { return instance; } }
     
-    //Àå¾Ö¹° µ¥ÀÌÅÍ
+    //ì¥ì• ë¬¼ ë°ì´í„°
     public ObstacleData obstacleData;
 
-    //È¸ÀüÇÏ´Â Àå¾Ö¹° ¸®½ºÆ®
+    //íšŒì „í•˜ëŠ” ì¥ì• ë¬¼ ë¦¬ìŠ¤íŠ¸
     public List<RotateObstacle> rotateObstacles = new List<RotateObstacle>();
-    //¿òÁ÷ÀÌ´Â ¹ßÆÇ ¸®½ºÆ®
+    //ì›€ì§ì´ëŠ” ë°œíŒ ë¦¬ìŠ¤íŠ¸
     public List<MovePlatform> movePlatforms = new List<MovePlatform>();
 
-    //ÇÃ·¹ÀÌ¾îÀÇ ¿òÁ÷ÀÓ ÇÃ·¡±× ÄÚ·çÆ¾
-    private Coroutine _moveCoroutine;
+    //í”Œë ˆì´ì–´ì˜ ì›€ì§ì„ í”Œë˜ê·¸ ì½”ë£¨í‹´
+    //private Coroutine _moveCoroutine;
 
     private void Awake()
     {
@@ -31,12 +31,12 @@ public class ObstacleManager : MonoBehaviour
             return;
         }
 
-        _moveCoroutine = null;
+        //_moveCoroutine = null;
 
-        //obstacleData ÃÊ±âÈ­
+        //obstacleData ì´ˆê¸°í™”
         obstacleData = GetComponent<ObstacleData>();
 
-        if (obstacleData == null)//¹æ¾îÄÚµå
+        if (obstacleData == null)//ë°©ì–´ì½”ë“œ
         {
             obstacleData = gameObject.AddComponent<ObstacleData>();
         }
@@ -44,35 +44,36 @@ public class ObstacleManager : MonoBehaviour
 
     private void FixedUpdate()
     {
-        //È¸ÀüÇÏ´Â Àå¾Ö¹°
+        //íšŒì „í•˜ëŠ” ì¥ì• ë¬¼
         foreach (var Rotateobstacle in rotateObstacles)
         {
-            //È¸ÀüÇÏ´Â ¸Ş¼­µå ½ÇÇà
+            //íšŒì „í•˜ëŠ” ë©”ì„œë“œ ì‹¤í–‰
             Rotateobstacle.Rotate();
         }
 
-        //¿òÁ÷ÀÌ´Â ¹ßÆÇ
+        //ì›€ì§ì´ëŠ” ë°œíŒ
         foreach (var movePlatform in movePlatforms)
         {
-            //¿òÁ÷ÀÌ´Â ¸Ş¼­µå ½ÇÇà
+            //ì›€ì§ì´ëŠ” ë©”ì„œë“œ ì‹¤í–‰
             movePlatform.Move();
         }
     }
 
-    //ÇÃ·¹ÀÌ¾îÀÇ ¿òÁ÷ÀÓ Á¦ÇÑ
+    /*
+    //í”Œë ˆì´ì–´ì˜ ì›€ì§ì„ ì œí•œ
     public void StartLockMovement(Player player)
     {
-        //½ÇÇàµÈ ÄÚ·çÆ¾ÀÌ ÀÖÀ¸¸é ÁßÁö
+        //ì‹¤í–‰ëœ ì½”ë£¨í‹´ì´ ìˆìœ¼ë©´ ì¤‘ì§€
         if(_moveCoroutine != null)
         {
             StopCoroutine(_moveCoroutine);
         }
 
-        //ÄÚ·çÆ¾ ½ÇÇà
+        //ì½”ë£¨í‹´ ì‹¤í–‰
         _moveCoroutine = StartCoroutine(SetIsMovementLocked(player));
     }
 
-    //ÇÃ·¹ÀÌ¾î ¿òÁ÷ÀÓ Á¦ÇÑ
+    //í”Œë ˆì´ì–´ ì›€ì§ì„ ì œí•œ
     private IEnumerator SetIsMovementLocked(Player player)
     {
         player.stateMachine.IsMovementLocked = true;
@@ -80,4 +81,5 @@ public class ObstacleManager : MonoBehaviour
         player.stateMachine.IsMovementLocked = false;
         _moveCoroutine = null;
     }
+    */
 }
