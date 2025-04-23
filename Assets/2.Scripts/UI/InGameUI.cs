@@ -7,11 +7,14 @@ using UnityEngine.UI;
 public class InGameUI : BaseUI
 {
     public TextMeshProUGUI timetableText;
-    private float elapsedTime = 0f;//∞Ê∞˙ Ω√∞£
-    private float previousTime = 0f;//¿Ã¿¸Ω√∞£
+    private float elapsedTime = 0f;//Í≤ΩÍ≥º ÏãúÍ∞Ñ
+    private float previousTime = 0f;//Ïù¥Ï†ÑÏãúÍ∞Ñ
+    private float timeAccumulator = 0f;
     public Button bGM;
     public Button eFS;
     private SoundManager soundManager;
+    public GameObject operateImage;
+    public TextMeshProUGUI operateTxt;
     void Start()
     {
         soundManager = FindObjectOfType<SoundManager>();
@@ -23,19 +26,20 @@ public class InGameUI : BaseUI
     // Update is called once per frame
     void Update()
     {
-        elapsedTime += Time.deltaTime;
-        if (elapsedTime - previousTime >= 1f)
+        timeAccumulator += Time.deltaTime;
+        if (timeAccumulator >= 1f)
         {
-            previousTime = Mathf.Floor(elapsedTime);
+            elapsedTime += timeAccumulator;
+            timeAccumulator = 0f;
             UpdateTimetableText();
         }
     }
     private void UpdateTimetableText()
     {
-        int hours = Mathf.FloorToInt(elapsedTime / 3600); // Ω√
-        int minutes = Mathf.FloorToInt((elapsedTime % 3600) / 60); // ∫–
-        int seconds = Mathf.FloorToInt(elapsedTime % 60); //√ 
-        timetableText.text = string.Format("{0:D2}:{1:D2}:{2:D2}", hours, minutes, seconds);
+        int hours = Mathf.FloorToInt(elapsedTime / 3600); // Ïãú
+        int minutes = Mathf.FloorToInt((elapsedTime % 3600) / 60); // Î∂Ñ
+        int seconds = Mathf.FloorToInt(elapsedTime % 60); //Ï¥à
+        timetableText.text = string.Format("{0:D2}h:{1:D2}m:{2:D2}s", hours, minutes, seconds);
     }
     public void OnclickedbGM()
     {
