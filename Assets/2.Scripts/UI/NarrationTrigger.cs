@@ -2,8 +2,8 @@ using UnityEngine;
 
 public class NarrationTrigger : MonoBehaviour
 {
-    [TextArea]
-    [SerializeField] private string narrationText;
+    [Header("Localization Key")]
+    [SerializeField] private string localizationKey; // <- 키값만 받도록 변경!
 
     [SerializeField] private float duration = 5f;
     [SerializeField] private bool playOnce = true;
@@ -16,9 +16,9 @@ public class NarrationTrigger : MonoBehaviour
 
         if (other.CompareTag("Player"))
         {
-            UIManager.Instance.NarrationManager.ShowNarration(narrationText, duration); // �� ���⼭ �ٷ� ȣ��!
+            // 키값만 넘기면 알아서 언어에 맞게 번역해서 출력됨!
+            UIManager.Instance.NarrationManager.ShowNarration(localizationKey, duration);
             hasPlayed = true;
         }
     }
-
 }

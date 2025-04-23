@@ -1,28 +1,39 @@
 using System.Collections;
-using UnityEngine;
 using TMPro;
+using UnityEngine;
+using UnityEngine.Localization;
+using UnityEngine.Localization.Settings;
 
 public class NarrationManager : MonoBehaviour
 {
-    public GameObject narrationUI;         // UI Panel
-    public TextMeshProUGUI narrationText;  // ÅØ½ºÆ® ÄÄÆ÷³ÍÆ®
-
+    public GameObject narrationUI;
+    public TextMeshProUGUI narrationText;
     public float displayDuration = 5f;
-
-    [Header("Cartoon Voice")]
     public CartoonTTS cartoonTTS;
-    public void ShowNarration(string text, float duration = -1f)
+
+    private Coroutine currentRoutine;
+
+    public void ShowNarration(string key, float duration = -1f)
     {
-        StopAllCoroutines();  // ÀÌÀü UI ÄÚ·çÆ¾ Á¤¸®
-        StartCoroutine(DisplayNarrationWithVoice(text, duration));
+        if (currentRoutine != null)
+            StopCoroutine(currentRoutine);
+
+        currentRoutine = StartCoroutine(ShowLocalizedNarration(key, duration));
     }
 
-    private IEnumerator DisplayNarrationWithVoice(string text, float duration)
+    private IEnumerator ShowLocalizedNarration(string key, float duration)
     {
+        // ë²ˆì—­ëœ ë¬¸ìžì—´ ìš”ì²­
+        var table = LocalizationSettings.StringDatabase;
+        var localizedString = table.GetLocalizedStringAsync("NarrationTable", key);  // "NarrationTable"ì€ Table ì´ë¦„
+        yield return localizedString;
+
+        string result = localizedString.Result;
+
         narrationUI.SetActive(true);
         narrationText.text = "";
 
-        foreach (char c in text)
+        foreach (char c in result)
         {
             if (char.IsWhiteSpace(c))
             {
@@ -37,5 +48,6 @@ public class NarrationManager : MonoBehaviour
 
         yield return new WaitForSeconds(duration > 0 ? duration : displayDuration);
         narrationUI.SetActive(false);
+        currentRoutine = null;
     }
 }

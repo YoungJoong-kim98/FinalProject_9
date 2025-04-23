@@ -15,6 +15,8 @@ public class UIManager : MonoBehaviour
     [SerializeField] private NarrationManager narrationManager;
     public NarrationManager NarrationManager => narrationManager;
 
+    private CustomizingUI currentCustomizingUI;
+
     void Start()
     {
         InitializeUI();
@@ -22,6 +24,9 @@ public class UIManager : MonoBehaviour
     private void Awake()
     {
         Instance = this;
+    }
+    private void Update()
+    {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             ShowPopupUI<GoToStartUI>();
@@ -95,6 +100,11 @@ public class UIManager : MonoBehaviour
                 uiComponent.Initialize();
                 uiComponent.OnShow();
                 activePopupUIs.Add(uiName, uiComponent); // ÆË¾÷ UI·Î µñ¼Å³Ê¸®¿¡ Ãß°¡
+
+                if (uiComponent is CustomizingUI customizing)//CustomizingUIÀÎ °æ¿ì ÂüÁ¶ ÀúÀå
+                {
+                    currentCustomizingUI = customizing;
+                }
             }
         }
     }
@@ -108,6 +118,11 @@ public class UIManager : MonoBehaviour
             activePopupUIs[uiName].OnHide(); // ÆË¾÷ UI ¼û±â±â
             Destroy(activePopupUIs[uiName].gameObject); //ÆË¾÷ui°´Ã¼ ÆÄ±«
             activePopupUIs.Remove(uiName); // ÆË¾÷ UI µñ¼Å³Ê¸®¿¡¼­ Á¦°Å
+
+            if (typeof(UIType) == typeof(CustomizingUI))
+            {
+                currentCustomizingUI = null;
+            }
         }
         else
         {
@@ -135,5 +150,20 @@ public class UIManager : MonoBehaviour
         }
 
         return uiComponent;
+    }
+    public UIType GetPopupUI<UIType>() where UIType : BaseUI
+    {
+        string uiName = typeof(UIType).Name;
+
+        if (activePopupUIs.ContainsKey(uiName))
+        {
+            return activePopupUIs[uiName] as UIType;
+        }
+
+        return null;
+    }
+    public CustomizingUI GetCurrentCustomizingUI()
+    {
+        return currentCustomizingUI;
     }
 }
