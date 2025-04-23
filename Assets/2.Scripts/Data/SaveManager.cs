@@ -5,7 +5,7 @@ using UnityEngine;
 public class SaveManager : MonoBehaviour
 {
     public static SaveManager instance;
-    public static SaveManager Instance {get {return instance;}}
+    public static SaveManager Instance { get { return instance; } }
 
     private string _savePlayerPath => Path.Combine(Application.persistentDataPath, "PlayerSave.json");
     private string _saveObstaclePath => Path.Combine(Application.persistentDataPath, "ObstacleSave.json");
@@ -22,7 +22,7 @@ public class SaveManager : MonoBehaviour
         }
     }
 
-    public void SaveGame(Player player ,AchievementSystem achievementSystem, float playTime)
+    public void SaveGame(Player player, AchievementSystem achievementSystem, float playTime)
     {
         //Debug.Log(Application.persistentDataPath);
         SavePlayerData(player, achievementSystem, playTime);
@@ -62,9 +62,14 @@ public class SaveManager : MonoBehaviour
     {
         var dict = new Dictionary<string, ObstacleSaveData>();
 
-        foreach (var applier in FindObjectsOfType<ObstacleDataApplier>())
+        //foreach (var applier in FindObjectsOfType<ObstacleDataApplier>())
+        //{
+        //    dict[applier.obstacleId] = applier.CreateSaveData();
+        //}
+
+        foreach (var obstacle in ObstacleManager.Instance.saveObstacles)
         {
-            dict[applier.obstacleId] = applier.CreateSaveData();
+            dict[obstacle.Id] = obstacle.ToData();
         }
 
         var dataWrapper = new ObstacleSaveWrapper();
@@ -77,7 +82,7 @@ public class SaveManager : MonoBehaviour
 
     public void LoadGame(Player player, AchievementSystem achievementSystem, ref float playTime)
     {
-        LoadPlayerData(player, achievementSystem,ref playTime);
+        LoadPlayerData(player, achievementSystem, ref playTime);
         LoadAllObstacleState();
     }
 
@@ -108,7 +113,7 @@ public class SaveManager : MonoBehaviour
 
             player.transform.position = pos;
             player.Rigidbody.velocity = vel;
-            
+
             achievementSystem.LoadFromData(data.achievement);
             playTime = data.playTime;
 
@@ -142,59 +147,12 @@ public class SaveManager : MonoBehaviour
 
         var loadedData = wrapper.ToDictionary();
 
-        foreach (var obstacle in FindObjectsOfType<ObstacleDataApplier>())
+        foreach (var obstacle in ObstacleManager.Instance.saveObstacles)
         {
-            var id = obstacle.obstacleId;
-            
+            var id = obstacle.Id;
+
             if (!loadedData.TryGetValue(id, out var data)) continue;
-            switch (data.type)
-            {
-                case ObstacleDataType.GlassPlatform:
-                    if (obstacle.TryGetComponent(out GlassPlatform glassPlatform))
-                    {
-                        glassPlatform.state = data.glassPlatformState;
-                        glassPlatform.Init();
-                    }
-                    break;
-
-                case ObstacleDataType.MovePlatform:
-                    if (obstacle.TryGetComponent(out MovePlatform movePlatform))
-                    {
-                        movePlatform.transform.position = new Vector3(data.position[0], data.position[1], data.position[2]);
-                        movePlatform.currentIndex = data.moveIndex;
-                        movePlatform.targetPosition = new Vector3(data.nextPosition[0], data.nextPosition[1], data.nextPosition[2]);
-                        //Debug.Log($"moveIndex : {data.moveIndex}");
-                    }
-                    break;
-
-                case ObstacleDataType.Platform:
-                    if (obstacle.TryGetComponent(out Platform platform))
-                    {
-                        platform.state = data.platformState;
-                        platform.remainTime = data.remainTime;
-                        platform.Init();
-                    }
-                    break;
-
-                case ObstacleDataType.PunchObstacle:
-                    if (obstacle.TryGetComponent(out PunchObstacle punchObstacle))
-                    {
-                        punchObstacle.transform.position = new Vector3(data.position[0], data.position[1], data.position[2]);
-                        punchObstacle.state = data.punchObstacleState;
-                        punchObstacle.Init();
-                    }
-                    break;
-
-                case ObstacleDataType.RotateObstace:
-                    if (obstacle.TryGetComponent(out RotateObstacle rotateObstacle))
-                    {
-                        rotateObstacle.transform.eulerAngles = new Vector3(data.rotation[0], data.rotation[1], data.rotation[2]);
-                    }
-                    break;
-
-                default:
-                    break;
-            }
+            obstacle.LoadtoData(data);
         }
     }
 }
