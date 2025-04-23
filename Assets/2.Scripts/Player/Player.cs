@@ -15,7 +15,7 @@ public class Player : MonoBehaviour
 
     public Animator Animator { get; private set; }              // 애니메이션 제어
     public PlayerController Input { get; private set; }         // 입력 처리
-    public ForceReceiver ForceReceiver { get; private set; }    // 중력, 점프
+    //public ForceReceiver ForceReceiver { get; private set; }    // 중력, 점프
     public PlayerStateMachine stateMachine;                     // FSM의 핵심 컨트롤러
 
     [SerializeField] private ParticleSystem runDust;
@@ -31,7 +31,7 @@ public class Player : MonoBehaviour
         Animator = GetComponentInChildren<Animator>();      // 애니메이터 연결
         Input = GetComponent<PlayerController>();           // 입력 시스템 연결
         Rigidbody = GetComponent<Rigidbody>();              // 물리 가져오기
-        ForceReceiver = GetComponent<ForceReceiver>();      // 중력, 점프 연결
+        //ForceReceiver = GetComponent<ForceReceiver>();      // 중력, 점프 연결
 
         stateMachine = new PlayerStateMachine(this);        // 상태 머신 생성
     }
