@@ -21,7 +21,7 @@ public class AchievementSystem : MonoBehaviour
         completionTime = false;
 
     }
-    //private void Update() - inspector창내에서 직접 수정하여 확인하는 용도
+    //private void Update() //- inspector창내에서 직접 수정하여 확인하는 용도
     //{
     //    var customizingUI = UIManager.Instance.GetCurrentCustomizingUI();
     //    if (customizingUI != null)

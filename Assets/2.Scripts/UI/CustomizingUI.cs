@@ -29,6 +29,7 @@ public class CustomizingUI : PopUpUI
     public RuntimeAnimatorController fallingPlayerAnimatorController;// FallingPlayer 애니메이션 컨트롤러
     public AchievementSystem achievementSystem;//업적
 
+
     void Start()
     {
         achievementSystem = FindObjectOfType<AchievementSystem>();
@@ -121,54 +122,26 @@ public class CustomizingUI : PopUpUI
     }
     void OnClickApply()
     {
-        selectedCharacterPrefab = GetCharacterFromIndex(currentCharacterBaseIndex + currentColorOffset);
-
+        //selectedCharacterPrefab = GetCharacterFromIndex(currentCharacterBaseIndex + currentColorOffset);
+      
         Debug.Log($"[Apply] 선택된 캐릭터 프리팹: {selectedCharacterPrefab?.name}");
 
         var startUI = UIManager.Instance.GetPopupUI<StartUI>();
-        if (startUI != null && selectedCharacterPrefab != null && startUI.startCharacter != null)
+        if (startUI != null && mainCharacter != null)
         {
-            Transform startCharacterTransform = startUI.startCharacter.transform;
-
-            // 기존 자식(캐릭터 프리팹) 가져오기
-            Transform oldChild = startCharacterTransform.childCount > 0 ? startCharacterTransform.GetChild(0) : null;
-
-            // 기본값: startCharacter 위치 기준
-            Vector3 localPos = Vector3.zero;
-            Quaternion localRot = Quaternion.identity;
-            Vector3 localScale = Vector3.one;
-
-            if (oldChild != null)
-            {
-                localPos = oldChild.localPosition;
-                localRot = oldChild.localRotation;
-                localScale = oldChild.localScale;
-
-                Destroy(oldChild.gameObject); // 기존 캐릭터 제거
-            }
-
-            // 새 캐릭터 생성
-            GameObject newCharacter = Instantiate(selectedCharacterPrefab, startCharacterTransform);
-
-            // 저장된 localTransform 값 적용
-            newCharacter.transform.localPosition = localPos;
-            newCharacter.transform.localRotation = localRot;
-            newCharacter.transform.localScale = localScale;
-
+            startUI.SetCharacterPrefab(mainCharacter);
             startUI.gameObject.SetActive(true);
+            
+            
         }
         else
         {
-            Debug.LogWarning("StartUI or selectedCharacterPrefab or startCharacter is null");
+            Debug.LogWarning("StartUI 또는 선택된 프리팹이 null");
         }
 
         this.gameObject.SetActive(false);
     }
-    //void ShowUnlockInfo(CharacterSlot slot)
-    //{
-    //    Debug.Log($"[잠금] 슬롯 {slot.characterBaseIndex}는 아직 해금되지 않았음");
-
-    //}
+  
     public void RefreshCharacterSlots()
     {
         for (int i = 0; i < characterSlots.Count; i++)
