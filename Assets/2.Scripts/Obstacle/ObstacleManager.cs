@@ -52,7 +52,6 @@ public class ObstacleManager : MonoBehaviour
 
         //obstacleData 초기화
         obstacleData = GetComponent<ObstacleData>();
-        player = GetComponent<Player>();
 
         if (obstacleData == null)//방어코드
         {
@@ -76,28 +75,4 @@ public class ObstacleManager : MonoBehaviour
             movePlatform.Move();
         }
     }
-
-    /*
-    //플레이어의 움직임 제한
-    public void StartLockMovement(Player player)
-    {
-        //실행된 코루틴이 있으면 중지
-        if(_moveCoroutine != null)
-        {
-            StopCoroutine(_moveCoroutine);
-        }
-
-        //코루틴 실행
-        _moveCoroutine = StartCoroutine(SetIsMovementLocked(player));
-    }
-
-    //플레이어 움직임 제한
-    private IEnumerator SetIsMovementLocked(Player player)
-    {
-        player.stateMachine.IsMovementLocked = true;
-        yield return new WaitForSeconds(obstacleData.moveLockTime);
-        player.stateMachine.IsMovementLocked = false;
-        _moveCoroutine = null;
-    }
-    */
 }
