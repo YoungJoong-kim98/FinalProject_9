@@ -13,6 +13,10 @@ public class NarrationManager : MonoBehaviour
 
     private Coroutine currentRoutine;
 
+    private void Start()
+    {
+        narrationUI.SetActive(false);
+    }
     public void ShowNarration(string key, float duration = -1f)
     {
         if (currentRoutine != null)

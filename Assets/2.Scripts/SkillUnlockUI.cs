@@ -5,28 +5,35 @@ using UnityEngine.UI;
 
 public class SkillUnlockUI : MonoBehaviour
 {
+    public GameObject skillObj;
     public CanvasGroup canvasGroup;
     public Image skillImage;
     public TextMeshProUGUI skillText;
     public float fadeDuration = 1.5f;
     public float displayTime = 3.5f;
 
-    private Sequence currentSequence; // ÇöÀç ½ÃÄö½º¸¦ ÀúÀå
+    private Sequence currentSequence; // í˜„ì¬ ì‹œí€€ìŠ¤ë¥¼ ì €ì¥
+
+    private void Start()
+    {
+        skillObj.SetActive(false);
+    }
     public void Show(string skillName, Sprite image)
     {
-        // ±âÁ¸ ½ÃÄö½º°¡ ÀÖ´Ù¸é Á¦°Å
+        skillObj.SetActive(true);
+        // ê¸°ì¡´ ì‹œí€€ìŠ¤ê°€ ìˆë‹¤ë©´ ì œê±°
         currentSequence?.Kill();
 
-        // ÀÌ¹ÌÁö ¹× ÅØ½ºÆ® ¼³Á¤
+        // ì´ë¯¸ì§€ ë° í…ìŠ¤íŠ¸ ì„¤ì •
         
         skillText.text = skillName.Equals("all") ? $"{skillName} lock": $"{skillName} Unlock";
         skillImage.sprite = image;
 
-        // Åõ¸íµµ ÃÊ±âÈ­
+        // íˆ¬ëª…ë„ ì´ˆê¸°í™”
         canvasGroup.alpha = 0f;
         canvasGroup.gameObject.SetActive(true);
 
-        // DOTween ¾Ö´Ï¸ŞÀÌ¼Ç ½ÃÄö½º »ı¼º ¹× ÀúÀå
+        // DOTween ì• ë‹ˆë©”ì´ì…˜ ì‹œí€€ìŠ¤ ìƒì„± ë° ì €ì¥
         currentSequence = DOTween.Sequence();
         currentSequence.Append(canvasGroup.DOFade(1, fadeDuration))
                        .AppendInterval(displayTime)
