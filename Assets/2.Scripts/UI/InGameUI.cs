@@ -6,43 +6,54 @@ using UnityEngine.UI;
 
 public class InGameUI : BaseUI
 {
+    [Header("UI Elements")]
     public TextMeshProUGUI timetableText;
-    private float elapsedTime = 0f;//��� �ð�
-    private float previousTime = 0f;//�����ð�
-    public Button bGM;
-    public Button eFS;
-    private SoundManager soundManager;
+    public TextMeshProUGUI leveltxt;
+
+    private float elapsedTime = 0f;//경과 시간
+    private float timeAccumulator = 0f;//누적 시간
+
+    private SoundManager soundManager;//사운드 매니저 참조
+
     void Start()
     {
         soundManager = FindObjectOfType<SoundManager>();
-        UpdateTimetableText();
-        bGM.onClick.AddListener(OnclickedbGM);
-        eFS.onClick.AddListener(OnclickedeFS);
+        if (soundManager != null)
+        {
+            soundManager.PlayBGM(0); // 게임 시작 시 BGM을 재생
+        }
+        else
+        {
+            Debug.LogWarning("SoundManager를 찾을 수 없음");
+        }
+
+        UpdateTimetableText(); // UI 초기화
     }
 
-    // Update is called once per frame
     void Update()
     {
+        // 시간 누적 처리
+        timeAccumulator += Time.deltaTime;
         elapsedTime += Time.deltaTime;
-        if (elapsedTime - previousTime >= 1f)
+
+        // 타임테이블 업데이트
+        if (timeAccumulator >= 1f)
         {
-            previousTime = Mathf.Floor(elapsedTime);
             UpdateTimetableText();
+            timeAccumulator = 0f;
         }
     }
-    private void UpdateTimetableText()
+    private void UpdateTimetableText()   // 타임테이블을 갱신 메서드
     {
-        int hours = Mathf.FloorToInt(elapsedTime / 3600); // ��
-        int minutes = Mathf.FloorToInt((elapsedTime % 3600) / 60); // ��
-        int seconds = Mathf.FloorToInt(elapsedTime % 60); //��
-        timetableText.text = string.Format("{0:D2}:{1:D2}:{2:D2}", hours, minutes, seconds);
+        timetableText.text = GetFormattedTime(elapsedTime);
     }
-    public void OnclickedbGM()
+    private string GetFormattedTime(float timeInSeconds) // 시간 포맷팅 유틸리티 함수
     {
-        soundManager?.PlayBGM(0);
+        int hours = Mathf.FloorToInt(timeInSeconds / 3600);
+        int minutes = Mathf.FloorToInt((timeInSeconds % 3600) / 60);
+        int seconds = Mathf.FloorToInt(timeInSeconds % 60);
+
+        return string.Format("{0:D2}h:{1:D2}m:{2:D2}s", hours, minutes, seconds);
     }
-    public void OnclickedeFS()
-    {
-        soundManager?.PlaySFX("Glass");
-    }
+  
 }
