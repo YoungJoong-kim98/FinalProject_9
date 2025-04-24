@@ -10,7 +10,7 @@ public class SkillDoubleJump : MonoBehaviour
         if(other.CompareTag("Player"))
         {
             GameManager.Instance.SkillManager.UnlockDoubleJump();
-            GameManager.Instance.SkillUnlockUI.Show("doubleJump", doubleJumpSkillIcon);
+            UIManager.Instance.SkillUnlockUI.Show("doubleJump", doubleJumpSkillIcon);
         }
     }
 }

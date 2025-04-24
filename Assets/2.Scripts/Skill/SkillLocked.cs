@@ -10,7 +10,7 @@ public class SkillLocked : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             GameManager.Instance.SkillManager.SkillLocked();
-            GameManager.Instance.SkillUnlockUI.Show("all", allLockSkillIcon);
+            UIManager.Instance.SkillUnlockUI.Show("all", allLockSkillIcon);
         }
     }
 }

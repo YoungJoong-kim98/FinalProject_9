@@ -10,7 +10,7 @@ public class SkillGrab : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             GameManager.Instance.SkillManager.UnlockGrab();
-            GameManager.Instance.SkillUnlockUI.Show("grab", grabSkillIcon);
+            UIManager.Instance.SkillUnlockUI.Show("grab", grabSkillIcon);
         }
     }
 }

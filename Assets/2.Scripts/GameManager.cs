@@ -13,7 +13,7 @@ public class GameManager : MonoBehaviour
     public AchievementSystem AchievementSystem => achievementSystem; //업적 시스템
     public SkillManager SkillManager => skillManager; //스킬 매니저
     public NarrationManager NarrationManager => narrationManager; //나레이션
-    public SkillUnlockUI SkillUnlockUI => skillUnlockUI; //스킬 UI 추후 UI매니저로 이동
+
     private void Awake()
     {
         if (Instance == null)
