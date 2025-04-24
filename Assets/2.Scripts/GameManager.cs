@@ -10,10 +10,12 @@ public class GameManager : MonoBehaviour
     [SerializeField] private SkillManager skillManager;
     //[SerializeField] private NarrationManager narrationManager;
     [SerializeField] private SkillUnlockUI skillUnlockUI;
+    [SerializeField] private SoundManager soundManager;
     public AchievementSystem AchievementSystem => achievementSystem;
     public SkillManager SkillManager => skillManager;
     //public NarrationManager NarrationManager => narrationManager;
     public SkillUnlockUI SkillUnlockUI => skillUnlockUI;
+    public SoundManager SoundManager => soundManager;
     private void Awake()
     {
         if (Instance == null)
@@ -21,9 +23,9 @@ public class GameManager : MonoBehaviour
             Instance = this;
             if (achievementSystem == null)
             {
-                GameObject go = new GameObject("AchievementSystem"); //AchievementSystem¿ë GameObject »ı¼º
-                achievementSystem = go.AddComponent<AchievementSystem>(); // AchievementSystem ½ºÅ©¸³Æ® ³Ö¾îÁÖ±â
-                go.transform.SetParent(this.transform); // GameManager¸¦ ºÎ¸ğ·Î ¼³Á¤
+                GameObject go = new GameObject("AchievementSystem"); //AchievementSystemìš© GameObject ìƒì„±
+                achievementSystem = go.AddComponent<AchievementSystem>(); // AchievementSystem ìŠ¤í¬ë¦½íŠ¸ ë„£ì–´ì£¼ê¸°
+                go.transform.SetParent(this.transform); // GameManagerë¥¼ ë¶€ëª¨ë¡œ ì„¤ì •
             }
             if(skillManager == null)
             {
@@ -31,7 +33,12 @@ public class GameManager : MonoBehaviour
                 skillManager = go.AddComponent<SkillManager>();
                 go.transform.SetParent(this.transform);
             }
-            
+            if (soundManager == null)
+            {
+                GameObject go = new GameObject("SoundManager");
+                soundManager = go.AddComponent<SoundManager>();
+                go.transform.SetParent(transform);
+            }
         }
         else
         {
