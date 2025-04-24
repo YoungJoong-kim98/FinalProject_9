@@ -10,8 +10,9 @@ public class SkillRun : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
+            Debug.Log("달리기스킬획득");
             GameManager.Instance.SkillManager.UnlockRun();
-            GameManager.Instance.SkillUnlockUI.Show("run", runSkillIcon);
+            UIManager.Instance.SkillUnlockUI.Show("run", runSkillIcon);
         }
     }
 }
