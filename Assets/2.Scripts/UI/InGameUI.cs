@@ -48,6 +48,11 @@ public class InGameUI : BaseUI
     {
         skillUnlockUI.Show(skillName, icon);
     }
+    void OnDestroy()
+    {
+        EventManager.OnSkillUnlocked -= HandleSkillUnlock;
+    }
+
 
     void Update()
     {
