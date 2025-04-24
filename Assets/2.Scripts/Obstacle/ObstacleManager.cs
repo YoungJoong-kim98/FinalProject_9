@@ -52,6 +52,7 @@ public class ObstacleManager : MonoBehaviour
 
         //obstacleData 초기화
         obstacleData = GetComponent<ObstacleData>();
+        player = GetComponent<Player>();
 
         if (obstacleData == null)//방어코드
         {
