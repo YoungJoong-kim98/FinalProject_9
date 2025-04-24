@@ -147,20 +147,16 @@ public class MovePlatform : MonoBehaviour, ISaveObstacle
     public ObstacleSaveData ToData()
     {
         ObstacleSaveData saveData = new ObstacleSaveData();
-        var pos = transform.position;
-        saveData.position = new float[] { pos.x, pos.y, pos.z };
+        saveData.position = Utilitys.Vector3ToFloat(transform.position);
         saveData.moveIndex = currentIndex;
-        saveData.nextPosition = new float[] {
-                        targetPosition.x,
-                        targetPosition.y,
-                        targetPosition.z };
+        saveData.nextPosition = Utilitys.Vector3ToFloat(targetPosition);
         return saveData;
     }
 
     public void LoadtoData(ObstacleSaveData data)
     {
-        transform.position = new Vector3(data.position[0], data.position[1], data.position[2]);
+        transform.position = Utilitys.FloatToVecter3(data.position);    
         currentIndex = data.moveIndex;
-        targetPosition = new Vector3(data.nextPosition[0], data.nextPosition[1], data.nextPosition[2]);
+        targetPosition = Utilitys.FloatToVecter3(data.nextPosition);
     }
 }

@@ -5,12 +5,15 @@ using UnityEngine;
 public class SkillGrab : MonoBehaviour
 {
     [SerializeField] private Sprite grabSkillIcon;
+
+    private bool hasPlayed = false;
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player"))
+        if (other.CompareTag("Player") && !hasPlayed)
         {
             GameManager.Instance.SkillManager.UnlockGrab();
-            GameManager.Instance.SkillUnlockUI.Show("grab", grabSkillIcon);
+            EventManager.OnSkillUnlocked?.Invoke("grab", grabSkillIcon);
+            hasPlayed = true;
         }
     }
 }

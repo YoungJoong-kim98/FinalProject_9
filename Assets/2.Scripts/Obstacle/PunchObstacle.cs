@@ -191,15 +191,14 @@ public class PunchObstacle : MonoBehaviour, ISaveObstacle
     public ObstacleSaveData ToData()
     {
         ObstacleSaveData saveData = new ObstacleSaveData();
-        var pos = transform.position;
-        saveData.position = new float[3] { pos.x, pos.y, pos.z };
+        saveData.position = Utilitys.Vector3ToFloat(transform.position);
         saveData.punchObstacleState = state;
         return saveData;
     }
 
     public void LoadtoData(ObstacleSaveData data)
     {
-        transform.position = new Vector3(data.position[0], data.position[1], data.position[2]);
+        transform.position = Utilitys.FloatToVecter3(data.position);
         state = data.punchObstacleState;
         Init();
     }

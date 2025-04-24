@@ -5,12 +5,14 @@ using UnityEngine;
 public class SkillLocked : MonoBehaviour
 {
     [SerializeField] private Sprite allLockSkillIcon;
+    private bool hasPlayed = false;
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player"))
+        if (other.CompareTag("Player") && !hasPlayed)
         {
             GameManager.Instance.SkillManager.SkillLocked();
-            GameManager.Instance.SkillUnlockUI.Show("all", allLockSkillIcon);
+            EventManager.OnSkillUnlocked?.Invoke("all", allLockSkillIcon);
+            hasPlayed = true;
         }
     }
 }

@@ -1,3 +1,5 @@
+using UnityEngine;
+
 public static class Utilitys
 {
     /*
@@ -35,5 +37,20 @@ public static class Utilitys
         {
             field = value;
         }
+    }
+
+    public static Vector3 FloatToVecter3(float[] floats)
+    {
+        if (floats == null || floats.Length != 3)
+        {
+            return Vector3.zero;
+        }
+        Vector3 result = new Vector3(floats[0], floats[1], floats[2]);
+        return result;
+    }
+
+    public static float[] Vector3ToFloat(Vector3 vector)
+    {
+        return new float[3] { vector.x, vector.y, vector.z };
     }
 }
