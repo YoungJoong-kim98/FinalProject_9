@@ -16,8 +16,7 @@ public class UIManager : MonoBehaviour
     private CustomizingUI currentCustomizingUI;
 
 
-    private SkillUnlockUI skillUnlockUI;
-    public SkillUnlockUI SkillUnlockUI => skillUnlockUI; //스킬 UI
+
 
     void Start()
     {
@@ -26,18 +25,7 @@ public class UIManager : MonoBehaviour
     private void Awake()
     {
         Instance = this;
-        if (skillUnlockUI == null)
-        {
-            var prefab = Resources.Load<SkillUnlockUI>("UI/SkillUnlockUI");
-            if (prefab != null)
-            {
-                skillUnlockUI = Instantiate(prefab, transform);
-            }
-            else
-            {
-                Debug.LogError("SkillUnlockUI 프리팹을 Resources에서 찾을 수 없습니다.");
-            }
-        }
+
     }
     private void Update()
     {

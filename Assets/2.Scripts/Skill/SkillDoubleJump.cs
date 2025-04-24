@@ -5,12 +5,14 @@ using UnityEngine;
 public class SkillDoubleJump : MonoBehaviour
 {
     [SerializeField] private Sprite doubleJumpSkillIcon;
+    private bool hasPlayed = false;
     private void OnTriggerEnter(Collider other)
     {
-        if(other.CompareTag("Player"))
+        if(other.CompareTag("Player") && !hasPlayed)
         {
             GameManager.Instance.SkillManager.UnlockDoubleJump();
-            UIManager.Instance.SkillUnlockUI.Show("doubleJump", doubleJumpSkillIcon);
+            EventManager.OnSkillUnlocked?.Invoke("doubleJump", doubleJumpSkillIcon);
+            hasPlayed = true;
         }
     }
 }
