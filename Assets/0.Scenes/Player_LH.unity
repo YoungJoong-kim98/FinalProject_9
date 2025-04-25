@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028326, g: 0.22571333, b: 0.30692202, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -5907,7 +5907,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e1ad8c5b615175a4cb1aa4ff2be0d107, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  narrationManager: {fileID: 0}
 --- !u!114 &1357035703
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6499,7 +6498,7 @@ Transform:
   m_GameObject: {fileID: 1662447522}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 3, z: -14.88}
+  m_LocalPosition: {x: 0, y: 25.4, z: -3.26}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -6884,6 +6883,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de089df9f428bb94a879288c4607849e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  skillObj: {fileID: 0}
   canvasGroup: {fileID: 1736041583}
   skillImage: {fileID: 61736394}
   skillText: {fileID: 992076735}
@@ -7132,7 +7132,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   achievementSystem: {fileID: 0}
   skillManager: {fileID: 0}
+  narrationManager: {fileID: 0}
   skillUnlockUI: {fileID: 1772201168}
+  soundManager: {fileID: 0}
 --- !u!4 &1969688388
 Transform:
   m_ObjectHideFlags: 0
@@ -7483,7 +7485,7 @@ Transform:
   m_GameObject: {fileID: 1177325950782003273}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -7.88}
+  m_LocalPosition: {x: 0, y: 22.4, z: 3.74}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -7797,7 +7799,7 @@ Transform:
   m_GameObject: {fileID: 1780939174375154864}
   serializedVersion: 2
   m_LocalRotation: {x: -0.5, y: 0, z: 0, w: 0.8660254}
-  m_LocalPosition: {x: 0, y: 2, z: -17.880001}
+  m_LocalPosition: {x: 0, y: 24.4, z: -6.26}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -7813,7 +7815,7 @@ Transform:
   m_GameObject: {fileID: 173771833434926256}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 3, z: -14.88}
+  m_LocalPosition: {x: 0, y: 25.4, z: -3.26}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -7869,6 +7871,7 @@ MonoBehaviour:
     grabParameterName: Grab
   runDust: {fileID: 0}
   movelockRemainTime: 0
+  collider: {fileID: 0}
 --- !u!136 &7762607284603972587
 CapsuleCollider:
   m_ObjectHideFlags: 0
