@@ -16,7 +16,7 @@ public class PlayerRunState : PlayerGroundState
     public override void Enter()
     {
         base.Enter();
-        stateMachine.Player.PlayRunDust();
+
         _currentRunSpeed = stateMachine.CurrentMoveSpeed;   // 이전 속도 가져오기
         if (_currentRunSpeed < stateMachine.MovementSpeed)  // 최소 속도 (MovementSpeed) 보장
         {
@@ -54,7 +54,9 @@ public class PlayerRunState : PlayerGroundState
             stateMachine.ChangeState(stateMachine.WalkState);   // 반대 방향 입력 시 Walk로 전환
             return;
         }
-        
+
+        stateMachine.Player.PlayRunDust(); //파티클 확인
+
         // 가속도 적용
         if (_currentRunSpeed < groundData.RunMaxSpeed)
         {
