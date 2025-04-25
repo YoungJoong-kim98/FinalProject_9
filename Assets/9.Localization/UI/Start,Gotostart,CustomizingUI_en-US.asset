@@ -1,0 +1,71 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9620f8c34305754d8cc9a7e49e852d9, type: 3}
+  m_Name: Start,Gotostart,CustomizingUI_en-US
+  m_EditorClassIdentifier: 
+  m_LocaleId:
+    m_Code: en-US
+  m_SharedData: {fileID: 11400000, guid: ffbbeab07ae492c42a1c798bffa5826f, type: 2}
+  m_Metadata:
+    m_Items: []
+  m_TableData:
+  - m_Id: 342858366976
+    m_Localized: Customizing
+    m_Metadata:
+      m_Items: []
+  - m_Id: 316555886592
+    m_Localized: Game Over
+    m_Metadata:
+      m_Items: []
+  - m_Id: 197496373248
+    m_Localized: Development team
+    m_Metadata:
+      m_Items: []
+  - m_Id: 180748517376
+    m_Localized: Setting
+    m_Metadata:
+      m_Items: []
+  - m_Id: 152357273600
+    m_Localized: Game Load
+    m_Metadata:
+      m_Items: []
+  - m_Id: 128890142720
+    m_Localized: Game Play
+    m_Metadata:
+      m_Items: []
+  - m_Id: 61588340736
+    m_Localized: Going to be a Director
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1650239700992
+    m_Localized: Back
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1874068733952
+    m_Localized: Apply
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2091304321024
+    m_Localized: Are you sure return to the main screen?
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2305989771264
+    m_Localized: No
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2282174513152
+    m_Localized: Yes
+    m_Metadata:
+      m_Items: []
+  references:
+    version: 2
+    RefIds: []
