@@ -80,18 +80,23 @@ public class PlayerJumpState : PlayerAirState
             return;
         }
         
+        // 계단 감지용 레이
         Transform t = stateMachine.Player.transform;
         Vector3 rayOrigin = t.position + Vector3.up * 0.1f + t.forward * 0.5f;
+        float rayLength = 2.5f;
+        
+        // 레이 시각화
+        Debug.DrawRay(rayOrigin, Vector3.down * rayLength, Color.magenta);
         
         // 앞 계단 감지해 조기 착지
         if (Physics.Raycast(rayOrigin, Vector3.down, out RaycastHit hit, 2.5f, LayerMask.GetMask("Ground")))
         {
-            Debug.DrawRay(rayOrigin, Vector3.down * 2.5f, Color.magenta);
+            // Debug.DrawRay(rayOrigin, Vector3.down * 2.5f, Color.magenta);
     
             float heightDiff = rayOrigin.y - hit.point.y;
             float velY = rb.velocity.y;
     
-            if (heightDiff < 1.0f && velY <= 3.0f)
+            if (heightDiff < 1.0f && velY <= 5.0f)
             {
                 Debug.LogWarning($"계단 감지 - 높이차: {heightDiff:F2}, 수직속도: {velY:F2}");
                 HandleGroundedState();
