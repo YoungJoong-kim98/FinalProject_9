@@ -10,9 +10,14 @@ public class GameManager : MonoBehaviour
     [SerializeField] private SkillManager skillManager;
     [SerializeField] private NarrationManager narrationManager;
     [SerializeField] private SkillUnlockUI skillUnlockUI;
-    public AchievementSystem AchievementSystem => achievementSystem; //업적 시스템
-    public SkillManager SkillManager => skillManager; //스킬 매니저
+    [SerializeField] private SoundManager soundManager;
+
+    public AchievementSystem AchievementSystem => achievementSystem;
+    public SkillManager SkillManager => skillManager;
     public NarrationManager NarrationManager => narrationManager; //나레이션
+    public SkillUnlockUI SkillUnlockUI => skillUnlockUI;
+    public SoundManager SoundManager => soundManager;
+
 
     private void Awake()
     {
@@ -31,6 +36,12 @@ public class GameManager : MonoBehaviour
                 GameObject go = new GameObject("SkillManager");
                 skillManager = go.AddComponent<SkillManager>();
                 go.transform.SetParent(this.transform);
+            }
+            if (soundManager == null)
+            {
+                GameObject go = new GameObject("SoundManager");
+                soundManager = go.AddComponent<SoundManager>();
+                go.transform.SetParent(transform);
             }
             if (narrationManager == null)
             {

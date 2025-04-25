@@ -30,6 +30,7 @@ public class PlayerStateMachine : StateMachine
     public bool IsMovementLocked { get; set; } = false; // 이동 잠금
     public bool CanDoubleJump { get; set; } = true; // 더블 점프 가능 여부
     public string LastGrabTag { get; set; } // 마지막 잡은 종류
+    
     public PlayerStateMachine(Player player)
     {
         this.Player = player;
