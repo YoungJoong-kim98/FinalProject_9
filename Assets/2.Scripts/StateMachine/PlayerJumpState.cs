@@ -44,7 +44,7 @@ public class PlayerJumpState : PlayerAirState
         base.Exit();
         StopAnimation(stateMachine.Player.AnimationData.JumpParameterHash);
     }
-    
+
     // public override void PhysicsUpdate()
     // {
     //     base.PhysicsUpdate();   // AirState.PhysicsUpdate 호출
@@ -70,41 +70,47 @@ public class PlayerJumpState : PlayerAirState
     public override void PhysicsUpdate()
     {
         base.PhysicsUpdate(); // AirState.PhysicsUpdate 호출
-    
+
         Rigidbody rb = stateMachine.Player.Rigidbody;
-    
+
         // 낙하 상태로 전환
         if (rb.velocity.y < 0)
         {
             stateMachine.ChangeState(stateMachine.FallState);
             return;
         }
-        
-        // 계단 감지용 레이
+
         Transform t = stateMachine.Player.transform;
-        Vector3 rayOrigin = t.position + Vector3.up * 0.1f + t.forward * 0.5f;
-        float rayLength = 2.5f;
-        
-        // 레이 시각화
-        Debug.DrawRay(rayOrigin, Vector3.down * rayLength, Color.magenta);
-        
-        // 앞 계단 감지해 조기 착지
-        if (Physics.Raycast(rayOrigin, Vector3.down, out RaycastHit hit, 2.5f, LayerMask.GetMask("Ground")))
+        float radius = 0.5f;
+        float castDistance = 2.5f;
+
+        // 정면 감지 (계단을 오를 때 유용)
+        Vector3 forwardOrigin = t.position + Vector3.up * 0.1f + t.forward * 0.5f;
+        bool forwardHitDetected = Physics.SphereCast(forwardOrigin, radius, Vector3.down, out RaycastHit forwardHit, castDistance, LayerMask.GetMask("Ground"));
+
+        // 중심 감지 (일반적인 착지용)
+        Vector3 centerOrigin = t.position + Vector3.up * 0.1f;
+        bool centerHitDetected = Physics.SphereCast(centerOrigin, radius, Vector3.down, out RaycastHit centerHit, castDistance, LayerMask.GetMask("Ground"));
+
+        Debug.DrawRay(forwardOrigin, Vector3.down * castDistance, Color.blue);
+        Debug.DrawRay(centerOrigin, Vector3.down * castDistance, Color.blue);
+
+        float heightDiff = forwardOrigin.y - forwardHit.point.y;
+        float centerDiff = centerOrigin.y - centerHit.point.y;
+        float velY = rb.velocity.y;
+
+        if (heightDiff <1.0f|| centerDiff<1.0f)
         {
-            // Debug.DrawRay(rayOrigin, Vector3.down * 2.5f, Color.magenta);
-    
-            float heightDiff = rayOrigin.y - hit.point.y;
-            float velY = rb.velocity.y;
-    
-            if (heightDiff < 1.0f && velY <= 5.0f)
+            if (velY <= 5.0f)
             {
-                Debug.LogWarning($"계단 감지 - 높이차: {heightDiff:F2}, 수직속도: {velY:F2}");
+                Debug.Log("JumpState: 계단 또는 중심 착지 감지");
                 HandleGroundedState();
                 return;
             }
         }
     }
-    
+
+
     //protected override void OnGrabStarted(InputAction.CallbackContext context)
     //{
     //    base.OnGrabStarted(context);

@@ -9,6 +9,7 @@ public class PopEffect : MonoBehaviour
     private Vector3 originalPosition;
     private Vector3 originalScale;
     private Coroutine currentRoutine;
+    private Transform playerTransform;
 
     private void Awake()
     {
@@ -16,6 +17,7 @@ public class PopEffect : MonoBehaviour
         originalScale = transform.localScale;
         transform.localScale = Vector3.zero;
         transform.position = originalPosition + startOffset;
+        playerTransform = GameObject.FindWithTag("Player").transform;
     }
 
     public void Show()
@@ -46,6 +48,14 @@ public class PopEffect : MonoBehaviour
             transform.position = Vector3.Lerp(startPos, endPos, easedT);
             transform.localScale = Vector3.Lerp(startScale, endScale, easedT);
             time += Time.deltaTime;
+
+            if (showing && playerTransform != null)
+            {
+                Vector3 directionToPlayer = playerTransform.position - transform.position;
+                directionToPlayer.y = 0;  // 수직으로 회전하지 않도록 y값을 0으로 설정
+                Quaternion lookRotation = Quaternion.LookRotation(directionToPlayer);
+                transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 5f);
+            }
             yield return null;
         }
 

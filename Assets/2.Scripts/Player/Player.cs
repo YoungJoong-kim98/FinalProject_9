@@ -24,6 +24,7 @@ public class Player : MonoBehaviour
     private Coroutine _moveCoroutine;
     public float movelockRemainTime;
 
+    public CapsuleCollider collider;
     private void Awake()
     {
         AnimationData.Initialize();                         // 애니메이션 파라미터 해시값 초기화
@@ -33,6 +34,7 @@ public class Player : MonoBehaviour
         //ForceReceiver = GetComponent<ForceReceiver>();    // 중력, 점프 연결
 
         stateMachine = new PlayerStateMachine(this);        // 상태 머신 생성
+        collider = GetComponent<CapsuleCollider>();
     }
 
     void Start()
@@ -87,6 +89,7 @@ public class Player : MonoBehaviour
     //플레이어 움직임 제한
     private IEnumerator SetIsMovementLocked(float time)
     {
+        collider.material.dynamicFriction = 0f;
         stateMachine.IsMovementLocked = true;
         movelockRemainTime = time;
 
