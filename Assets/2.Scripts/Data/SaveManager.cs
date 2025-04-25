@@ -33,18 +33,8 @@ public class SaveManager : MonoBehaviour
     {
         PlayerSaveData PlayerData = new PlayerSaveData()
         {
-            playerPosition = new float[3]
-            {
-                player.transform.position.x,
-                player.transform.position.y,
-                player.transform.position.z,
-            },
-            playerVelocity = new float[3]
-            {
-                player.Rigidbody.velocity.x,
-                player.Rigidbody.velocity.y,
-                player.Rigidbody.velocity.z,
-            },
+            playerPosition = Utilitys.Vector3ToFloat(player.transform.position),
+            playerVelocity = Utilitys.Vector3ToFloat(player.Rigidbody.velocity),
             playTime = playTime,
             movelockRemainTime = player.movelockRemainTime,
             run = GameManager.Instance.SkillManager.run,
@@ -61,11 +51,6 @@ public class SaveManager : MonoBehaviour
     public void SaveObstacleStates()
     {
         var dict = new Dictionary<string, ObstacleSaveData>();
-
-        //foreach (var applier in FindObjectsOfType<ObstacleDataApplier>())
-        //{
-        //    dict[applier.obstacleId] = applier.CreateSaveData();
-        //}
 
         foreach (var obstacle in ObstacleManager.Instance.saveObstacles)
         {
@@ -99,17 +84,8 @@ public class SaveManager : MonoBehaviour
                 return;
             }
 
-            Vector3 pos = new Vector3(
-                data.playerPosition[0],
-                data.playerPosition[1],
-                data.playerPosition[2]
-            );
-
-            Vector3 vel = new Vector3(
-                data.playerVelocity[0],
-                data.playerVelocity[1],
-                data.playerVelocity[2]
-            );
+            Vector3 pos = Utilitys.FloatToVecter3(data.playerPosition);
+            Vector3 vel = Utilitys.FloatToVecter3(data.playerVelocity);
 
             player.transform.position = pos;
             player.Rigidbody.velocity = vel;

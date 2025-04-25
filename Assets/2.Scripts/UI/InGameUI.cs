@@ -15,6 +15,9 @@ public class InGameUI : BaseUI
 
     private SoundManager soundManager;//사운드 매니저 참조
 
+    private SkillUnlockUI skillUnlockUI;
+    public SkillUnlockUI SkillUnlockUI => skillUnlockUI; //스킬 UI
+
     void Start()
     {
         soundManager = FindObjectOfType<SoundManager>();
@@ -26,9 +29,30 @@ public class InGameUI : BaseUI
         {
             Debug.LogWarning("SoundManager를 찾을 수 없음");
         }
-
+        if (skillUnlockUI == null)
+        {
+            var prefab = Resources.Load<SkillUnlockUI>("UI/SkillUnlockUI");
+            if (prefab != null)
+            {
+                skillUnlockUI = Instantiate(prefab, transform);
+            }
+            else
+            {
+                Debug.LogError("SkillUnlockUI 프리팹을 Resources에서 찾을 수 없습니다.");
+            }
+        }
+        EventManager.OnSkillUnlocked += HandleSkillUnlock;
         UpdateTimetableText(); // UI 초기화
     }
+    private void HandleSkillUnlock(string skillName, Sprite icon)
+    {
+        skillUnlockUI.Show(skillName, icon);
+    }
+    void OnDestroy()
+    {
+        EventManager.OnSkillUnlocked -= HandleSkillUnlock;
+    }
+
 
     void Update()
     {

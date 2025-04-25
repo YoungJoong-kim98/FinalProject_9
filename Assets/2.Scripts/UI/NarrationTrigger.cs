@@ -17,7 +17,7 @@ public class NarrationTrigger : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             // 키값만 넘기면 알아서 언어에 맞게 번역해서 출력됨!
-            UIManager.Instance.NarrationManager.ShowNarration(localizationKey, duration);
+            GameManager.Instance.NarrationManager.ShowNarration(localizationKey, duration);
             hasPlayed = true;
         }
     }

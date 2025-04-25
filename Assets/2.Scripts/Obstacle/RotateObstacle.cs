@@ -49,13 +49,12 @@ public class RotateObstacle : MonoBehaviour, ISaveObstacle
     public ObstacleSaveData ToData()
     {
         ObstacleSaveData saveData = new ObstacleSaveData();
-        var angle = transform.eulerAngles;
-        saveData.rotation = new float[3] { angle.x, angle.y, angle.z };
+        saveData.rotation = Utilitys.Vector3ToFloat(transform.eulerAngles);
         return saveData;
     }
 
     public void LoadtoData(ObstacleSaveData data)
     {
-        transform.eulerAngles = new Vector3(data.rotation[0], data.rotation[1], data.rotation[2]);
+        transform.eulerAngles = Utilitys.FloatToVecter3(data.rotation);
     }
 }

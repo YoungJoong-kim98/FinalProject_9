@@ -8,19 +8,23 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] private AchievementSystem achievementSystem;
     [SerializeField] private SkillManager skillManager;
-    //[SerializeField] private NarrationManager narrationManager;
+    [SerializeField] private NarrationManager narrationManager;
     [SerializeField] private SkillUnlockUI skillUnlockUI;
     [SerializeField] private SoundManager soundManager;
+
     public AchievementSystem AchievementSystem => achievementSystem;
     public SkillManager SkillManager => skillManager;
-    //public NarrationManager NarrationManager => narrationManager;
+    public NarrationManager NarrationManager => narrationManager; //나레이션
     public SkillUnlockUI SkillUnlockUI => skillUnlockUI;
     public SoundManager SoundManager => soundManager;
+
+
     private void Awake()
     {
         if (Instance == null)
         {
             Instance = this;
+            DontDestroyOnLoad(gameObject);
             if (achievementSystem == null)
             {
                 GameObject go = new GameObject("AchievementSystem"); //AchievementSystem용 GameObject 생성
@@ -39,6 +43,19 @@ public class GameManager : MonoBehaviour
                 soundManager = go.AddComponent<SoundManager>();
                 go.transform.SetParent(transform);
             }
+            if (narrationManager == null)
+            {
+                var prefab = Resources.Load<NarrationManager>("Narration/NarrationManager");
+                if (prefab != null)
+                {
+                    narrationManager = Instantiate(prefab, transform);
+                }
+                else
+                {
+                    Debug.LogError("NarrationManager 프리팹을 Resources에서 찾을 수 없습니다.");
+                }
+            }
+
         }
         else
         {

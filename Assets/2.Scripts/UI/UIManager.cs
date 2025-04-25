@@ -7,15 +7,16 @@ using UnityEngine.InputSystem;
 public class UIManager : MonoBehaviour
 {
     public static UIManager Instance;
-    private const string UIResourceFolderPath = "UI/"; //UI¸®¼Ò½º À§Ä¡ Æú´õ °æ·Î - ÀÌÈÄ ui ÇÁ¸®ÆÕÀ¸·Î ¸¸µé¾î °ü¸®
+    private const string UIResourceFolderPath = "UI/"; //UIë¦¬ì†ŒìŠ¤ ìœ„ì¹˜ í´ë” ê²½ë¡œ - ì´í›„ ui í”„ë¦¬íŒ¹ìœ¼ë¡œ ë§Œë“¤ì–´ ê´€ë¦¬
 
-    private Dictionary<string, BaseUI> permanentUIs = new Dictionary<string, BaseUI>(); // »ó½Ã UIµé
-    private Dictionary<string, BaseUI> activePopupUIs = new Dictionary<string, BaseUI>(); // ÆË¾÷ UIµé
+    private Dictionary<string, BaseUI> permanentUIs = new Dictionary<string, BaseUI>(); // ìƒì‹œ UIë“¤
+    private Dictionary<string, BaseUI> activePopupUIs = new Dictionary<string, BaseUI>(); // íŒì—… UIë“¤
 
-    [SerializeField] private NarrationManager narrationManager;
-    public NarrationManager NarrationManager => narrationManager;
 
     private CustomizingUI currentCustomizingUI;
+
+
+
 
     void Start()
     {
@@ -24,6 +25,7 @@ public class UIManager : MonoBehaviour
     private void Awake()
     {
         Instance = this;
+
     }
     private void Update()
     {
@@ -35,7 +37,7 @@ public class UIManager : MonoBehaviour
 
     private void InitializeUI()
     {
-        // ¸ğµç UI ºñÈ°¼ºÈ­
+        // ëª¨ë“  UI ë¹„í™œì„±í™”
         foreach (var ui in permanentUIs.Values)
         {
             ui.gameObject.SetActive(false);
@@ -45,63 +47,63 @@ public class UIManager : MonoBehaviour
             ui.gameObject.SetActive(false);
         }
 
-        // °ÔÀÓ ½ÃÀÛ ½Ã StartUI¸¸ È°¼ºÈ­
+        // ê²Œì„ ì‹œì‘ ì‹œ StartUIë§Œ í™œì„±í™”
         ShowPopupUI<StartUI>();
     }
-    public void ShowPermanentUI<UIType>() where UIType : BaseUI//»ó½Ã UIÇ¥½Ã
+    public void ShowPermanentUI<UIType>() where UIType : BaseUI//ìƒì‹œ UIí‘œì‹œ
     {
         string uiName = typeof(UIType).Name;
 
-        if (permanentUIs.ContainsKey(uiName))//È°¼ºÈ­µÇ¾îÀÖ´Ù¸é ´Ù½ÃÇ¥½Ã
+        if (permanentUIs.ContainsKey(uiName))//í™œì„±í™”ë˜ì–´ìˆë‹¤ë©´ ë‹¤ì‹œí‘œì‹œ
         {
             permanentUIs[uiName].OnShow();
         }
         else
         {            
-            UIType uiComponent = LoadUI<UIType>(uiName); // »ó½Ã UI »õ·Î ·ÎµåÇÏ°í È­¸é¿¡ Ç¥½Ã
+            UIType uiComponent = LoadUI<UIType>(uiName); // ìƒì‹œ UI ìƒˆë¡œ ë¡œë“œí•˜ê³  í™”ë©´ì— í‘œì‹œ
             if (uiComponent != null)
             {
                 uiComponent.Initialize();
                 uiComponent.OnShow();
-                permanentUIs.Add(uiName, uiComponent); // »ó½Ã UI·Î µñ¼Å³Ê¸®¿¡ Ãß°¡
+                permanentUIs.Add(uiName, uiComponent); // ìƒì‹œ UIë¡œ ë”•ì…”ë„ˆë¦¬ì— ì¶”ê°€
             }
         }
     }
 
    
-    public void HidePermanentUI<UIType>() where UIType : BaseUI  // »ó½Ã UI¸¦ ¼û±â±â
+    public void HidePermanentUI<UIType>() where UIType : BaseUI  // ìƒì‹œ UIë¥¼ ìˆ¨ê¸°ê¸°
     {
         string uiName = typeof(UIType).Name;
 
         if (permanentUIs.ContainsKey(uiName))
         {
-            permanentUIs[uiName].OnHide(); // »ó½Ã UI ¼û±â±â
+            permanentUIs[uiName].OnHide(); // ìƒì‹œ UI ìˆ¨ê¸°ê¸°
         }
         else
         {
-            Debug.LogWarning($"{uiName} UI´Â È°¼ºÈ­µÇ¾î ÀÖÁö ¾ÊÀ½");
+            Debug.LogWarning($"{uiName} UIëŠ” í™œì„±í™”ë˜ì–´ ìˆì§€ ì•ŠìŒ");
         }
     }
 
 
-    public void ShowPopupUI<UIType>() where UIType : BaseUI // ÆË¾÷ UI¸¦ Ç¥½Ã
+    public void ShowPopupUI<UIType>() where UIType : BaseUI // íŒì—… UIë¥¼ í‘œì‹œ
     {
         string uiName = typeof(UIType).Name;
       
-        if (activePopupUIs.ContainsKey(uiName)) //È°¼ºÈ­ µÇ¾îÀÖ´Ù¸é ´Ù½ÃÇ¥½Ã
+        if (activePopupUIs.ContainsKey(uiName)) //í™œì„±í™” ë˜ì–´ìˆë‹¤ë©´ ë‹¤ì‹œí‘œì‹œ
         {
             activePopupUIs[uiName].OnShow();
         }
         else
         {
-            UIType uiComponent = LoadUI<UIType>(uiName); // ÆË¾÷ UI »õ·Î ·ÎµåÇÏ°í È­¸é¿¡ Ç¥½Ã
+            UIType uiComponent = LoadUI<UIType>(uiName); // íŒì—… UI ìƒˆë¡œ ë¡œë“œí•˜ê³  í™”ë©´ì— í‘œì‹œ
             if (uiComponent != null)
             {
                 uiComponent.Initialize();
                 uiComponent.OnShow();
-                activePopupUIs.Add(uiName, uiComponent); // ÆË¾÷ UI·Î µñ¼Å³Ê¸®¿¡ Ãß°¡
+                activePopupUIs.Add(uiName, uiComponent); // íŒì—… UIë¡œ ë”•ì…”ë„ˆë¦¬ì— ì¶”ê°€
 
-                if (uiComponent is CustomizingUI customizing)//CustomizingUIÀÎ °æ¿ì ÂüÁ¶ ÀúÀå
+                if (uiComponent is CustomizingUI customizing)//CustomizingUIì¸ ê²½ìš° ì°¸ì¡° ì €ì¥
                 {
                     currentCustomizingUI = customizing;
                 }
@@ -109,15 +111,15 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    public void HidePopupUI<UIType>() where UIType : BaseUI //ÆË¾÷UI ¼û±â±â
+    public void HidePopupUI<UIType>() where UIType : BaseUI //íŒì—…UI ìˆ¨ê¸°ê¸°
     {
         string uiName = typeof(UIType).Name;
 
         if (activePopupUIs.ContainsKey(uiName))
         {
-            activePopupUIs[uiName].OnHide(); // ÆË¾÷ UI ¼û±â±â
-            Destroy(activePopupUIs[uiName].gameObject); //ÆË¾÷ui°´Ã¼ ÆÄ±«
-            activePopupUIs.Remove(uiName); // ÆË¾÷ UI µñ¼Å³Ê¸®¿¡¼­ Á¦°Å
+            activePopupUIs[uiName].OnHide(); // íŒì—… UI ìˆ¨ê¸°ê¸°
+            Destroy(activePopupUIs[uiName].gameObject); //íŒì—…uiê°ì²´ íŒŒê´´
+            activePopupUIs.Remove(uiName); // íŒì—… UI ë”•ì…”ë„ˆë¦¬ì—ì„œ ì œê±°
 
             if (typeof(UIType) == typeof(CustomizingUI))
             {
@@ -126,17 +128,17 @@ public class UIManager : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning($"{uiName} ÆË¾÷ UI´Â È°¼ºÈ­µÇ¾î ÀÖÁö ¾ÊÀ½");
+            Debug.LogWarning($"{uiName} íŒì—… UIëŠ” í™œì„±í™”ë˜ì–´ ìˆì§€ ì•ŠìŒ");
         }
     }
 
-    private UIType LoadUI<UIType>(string uiName) where UIType : BaseUI // UI¸¦ ·ÎµåÇÏ°í ÀÎ½ºÅÏ½º¸¦ »ı¼º
+    private UIType LoadUI<UIType>(string uiName) where UIType : BaseUI // UIë¥¼ ë¡œë“œí•˜ê³  ì¸ìŠ¤í„´ìŠ¤ë¥¼ ìƒì„±
     {
         GameObject uiPrefab = Resources.Load<GameObject>($"{UIResourceFolderPath}{uiName}");
 
         if (uiPrefab == null)
         {
-            Debug.LogWarning($"{uiName} UI PrefabÀ» Ã£À» ¼ö ¾øÀ½");
+            Debug.LogWarning($"{uiName} UI Prefabì„ ì°¾ì„ ìˆ˜ ì—†ìŒ");
             return null;
         }
 
