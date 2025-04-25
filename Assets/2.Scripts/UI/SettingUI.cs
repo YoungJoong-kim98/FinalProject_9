@@ -364,6 +364,6 @@ public class SettingUI : PopUpUI
     private void UpdateLanguageText(int index)
     {
         var locale = LocalizationSettings.AvailableLocales.Locales[index];
-        languageName.text = locale.LocaleName;
+       // languageName.text = locale.LocaleName;
     }
 }
