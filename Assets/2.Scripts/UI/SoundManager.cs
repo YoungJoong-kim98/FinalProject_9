@@ -5,31 +5,36 @@ using UnityEngine;
 
 public class SoundManager : MonoBehaviour
 {
-    // ÇÊµå: ¹è°æÀ½¾Ç(BGM)°ú È¿°úÀ½(SFX)ÀÇ ¸®½ºÆ®
+    // í•„ë“œ: ë°°ê²½ìŒì•…(BGM)ê³¼ íš¨ê³¼ìŒ(SFX)ì˜ ë¦¬ìŠ¤íŠ¸
     [SerializeField] List<AudioClip> bgms = new List<AudioClip>();
     [SerializeField] List<AudioClip> sfxs = new List<AudioClip>();
 
-    // È¿°úÀ½À» ÀÌ¸§À¸·Î Ã£À» ¼ö ÀÖµµ·Ï µñ¼Å³Ê¸® »ç¿ë
+    // íš¨ê³¼ìŒì„ ì´ë¦„ìœ¼ë¡œ ì°¾ì„ ìˆ˜ ìˆë„ë¡ ë”•ì…”ë„ˆë¦¬ ì‚¬ìš©
     private Dictionary<string, AudioClip> sfxDictionary = new Dictionary<string, AudioClip>();
 
-    // ¹è°æÀ½¾Ç Àç»ı¿ë ¿Àµğ¿À ¼Ò½º
+    // ë°°ê²½ìŒì•… ì¬ìƒìš© ì˜¤ë””ì˜¤ ì†ŒìŠ¤
     [SerializeField] AudioSource audioBGM;
 
-    // È¿°úÀ½ Àç»ı¿ë ¿Àµğ¿À ¼Ò½º¸¦ ¿©·¯ °³ ¸¸µé¾î¼­ µ¿½Ã¿¡ Àç»ı °¡´ÉÇÏ°Ô ÇÔ
-    [Header("È¿°úÀ½ ¿Àµğ¿À ¼Ò½º °³¼ö")]
-    [SerializeField] int sfxSourceCount = 5; // ÀÓ½Ã·Î 5°³
+    // íš¨ê³¼ìŒ ì¬ìƒìš© ì˜¤ë””ì˜¤ ì†ŒìŠ¤ë¥¼ ì—¬ëŸ¬ ê°œ ë§Œë“¤ì–´ì„œ ë™ì‹œì— ì¬ìƒ ê°€ëŠ¥í•˜ê²Œ í•¨
+    [Header("íš¨ê³¼ìŒ ì˜¤ë””ì˜¤ ì†ŒìŠ¤ ê°œìˆ˜")]
+    [SerializeField] int sfxSourceCount = 5; // ì„ì‹œë¡œ 5ê°œ
     private List<AudioSource> sfxSources = new List<AudioSource>();
 
-    private float masterVolume = 1f; // ¸¶½ºÅÍ º¼·ı (0.0f ~ 1.0f)
-    private float backgroundMusicVolume = 1f; // ¹è°æ À½¾Ç º¼·ı
-    private float effectSoundVolume = 1f; // È¿°úÀ½ º¼·ı
+    private float masterVolume = 1f; // ë§ˆìŠ¤í„° ë³¼ë¥¨ (0.0f ~ 1.0f)
+    private float backgroundMusicVolume = 1f; // ë°°ê²½ ìŒì•… ë³¼ë¥¨
+    private float effectSoundVolume = 1f; // íš¨ê³¼ìŒ ë³¼ë¥¨
 
-    private void Awake()//ÃÊ±âÈ­
+    //ì½ê¸° ì „ìš© í”„ë¡œí¼í‹°
+    public float MasterVolume => masterVolume;
+    public float BackgroundMusicVolume => backgroundMusicVolume;
+    public float EffectSoundVolume => effectSoundVolume;
+
+    private void Awake()//ì´ˆê¸°í™”
     {
-        InitializeSFXDictionary(); // È¿°úÀ½À» ÀÌ¸§À¸·Î °ü¸®ÇÏ±â À§ÇØ ÃÊ±âÈ­
-        InitializeSFXSources();    // È¿°úÀ½ Àç»ı¿ë ¿Àµğ¿À ¼Ò½º ¿©·¯ °³ »ı¼º
+        InitializeSFXDictionary(); // íš¨ê³¼ìŒì„ ì´ë¦„ìœ¼ë¡œ ê´€ë¦¬í•˜ê¸° ìœ„í•´ ì´ˆê¸°í™”
+        InitializeSFXSources();    // íš¨ê³¼ìŒ ì¬ìƒìš© ì˜¤ë””ì˜¤ ì†ŒìŠ¤ ì—¬ëŸ¬ ê°œ ìƒì„±
     }
-    private void Start()//º¼·ı ¹İ¿µ
+    private void Start()//ë³¼ë¥¨ ë°˜ì˜
     {
         SetMasterVolume(masterVolume);
         SetBackgroundMusicVolume(backgroundMusicVolume);
@@ -37,7 +42,7 @@ public class SoundManager : MonoBehaviour
     }
     private void InitializeSFXDictionary()
     {
-        // È¿°úÀ½À» ÀÌ¸§À¸·Î °ü¸®ÇÒ ¼ö ÀÖ°Ô ¼³Á¤
+        // íš¨ê³¼ìŒì„ ì´ë¦„ìœ¼ë¡œ ê´€ë¦¬í•  ìˆ˜ ìˆê²Œ ì„¤ì •
         foreach (var sfx in sfxs)
         {
             if (sfx != null && !sfxDictionary.ContainsKey(sfx.name))
@@ -46,7 +51,7 @@ public class SoundManager : MonoBehaviour
             }
         }
     }
-    private void InitializeSFXSources() // È¿°úÀ½ Àç»ı¿ë ¿Àµğ¿À ¼Ò½º
+    private void InitializeSFXSources() // íš¨ê³¼ìŒ ì¬ìƒìš© ì˜¤ë””ì˜¤ ì†ŒìŠ¤
     {
         for (int i = 0; i < sfxSourceCount; i++)
         {
@@ -55,23 +60,29 @@ public class SoundManager : MonoBehaviour
         }
     }
 
-    public void SetMasterVolume(float volume)//¸¶½ºÅÍ º¼·ı ¼³Á¤
+    public void SetMasterVolume(float volume)//ë§ˆìŠ¤í„° ë³¼ë¥¨ ì„¤ì •
     {
-        masterVolume = Mathf.Clamp01(volume); // 0~1·Î Á¦ÇÑ
-        audioBGM.volume = backgroundMusicVolume * masterVolume;
+        masterVolume = Mathf.Clamp01(volume); // 0~1ë¡œ ì œí•œ
+        if (audioBGM != null)
+            audioBGM.volume = backgroundMusicVolume * masterVolume;
+        else
+            Debug.LogWarning("audioBGMì´ í• ë‹¹ë˜ì§€ ì•Šì•˜ìŠµë‹ˆë‹¤.");
 
         foreach (var src in sfxSources)
         {
             src.volume = effectSoundVolume * masterVolume;
         }
     }
-    public void SetBackgroundMusicVolume(float volume)//¹è°æÀ½¾Ç º¼·ı ¼³Á¤
+    public void SetBackgroundMusicVolume(float volume)//ë°°ê²½ìŒì•… ë³¼ë¥¨ ì„¤ì •
     {
         backgroundMusicVolume = Mathf.Clamp01(volume);
-        audioBGM.volume = backgroundMusicVolume * masterVolume;
+        if (audioBGM != null)
+            audioBGM.volume = backgroundMusicVolume * masterVolume;
+        else
+            Debug.LogWarning("audioBGMì´ í• ë‹¹ë˜ì§€ ì•Šì•˜ìŠµë‹ˆë‹¤.");
     }
 
-    public void SetEffectSoundVolume(float volume)//È¿°úÀ½ ¼³Á¤
+    public void SetEffectSoundVolume(float volume)//íš¨ê³¼ìŒ ì„¤ì •
     {
         effectSoundVolume = Mathf.Clamp01(volume);
 
@@ -81,8 +92,13 @@ public class SoundManager : MonoBehaviour
         }
     }
 
-    public void PlayBGM(int index) //¹è°æÀ½¾Ç Àç»ı
+    public void PlayBGM(int index) //ë°°ê²½ìŒì•… ì¬ìƒ
     {
+        if (bgms == null || bgms.Count == 0)
+        {
+            Debug.LogWarning("ë°°ê²½ìŒì•… ë¦¬ìŠ¤íŠ¸ê°€ ë¹„ì–´ ìˆìŠµë‹ˆë‹¤. BGMì„ ë“±ë¡í•´ì£¼ì„¸ìš”.");
+            return;
+        }
         if (index >= 0 && index < bgms.Count)
         {
             audioBGM.clip = bgms[index];
@@ -91,7 +107,7 @@ public class SoundManager : MonoBehaviour
         }
     }
 
-    public void PauseBGM() //¹è°æÀ½¾Ç ÀÏ½ÃÁ¤Áö
+    public void PauseBGM() //ë°°ê²½ìŒì•… ì¼ì‹œì •ì§€
     {
         if (audioBGM.isPlaying)
         {
@@ -99,22 +115,22 @@ public class SoundManager : MonoBehaviour
         }
     }
 
-    public void ResumeBGM() //¹è°æÀ½¾Ç Àç°³
+    public void ResumeBGM() //ë°°ê²½ìŒì•… ì¬ê°œ
     {
         if (!audioBGM.isPlaying && audioBGM.clip != null)
         {
             audioBGM.UnPause();
         }
     }
-    public void StopBGM() //¹è°æÀ½¾Ç ¸ØÃã
+    public void StopBGM() //ë°°ê²½ìŒì•… ë©ˆì¶¤
     {
         audioBGM.Stop();
     }
-    public void PlaySFX(string sfxName) //È¿°úÀ½ Àç»ı
+    public void PlaySFX(string sfxName) //íš¨ê³¼ìŒ ì¬ìƒ
     {
         if (sfxDictionary.TryGetValue(sfxName, out AudioClip clip))
         {
-            // »ç¿ë °¡´ÉÇÑ ¿Àµğ¿À ¼Ò½º¸¦ Ã£¾Æ È¿°úÀ½ Àç»ı
+            // ì‚¬ìš© ê°€ëŠ¥í•œ ì˜¤ë””ì˜¤ ì†ŒìŠ¤ë¥¼ ì°¾ì•„ íš¨ê³¼ìŒ ì¬ìƒ
             AudioSource available = sfxSources.Find(src => !src.isPlaying);
             if (available != null)
             {
@@ -122,12 +138,12 @@ public class SoundManager : MonoBehaviour
             }
             else
             {
-                Debug.LogWarning("»ç¿ë °¡´ÉÇÑ È¿°úÀ½ ¿Àµğ¿À ¼Ò½º°¡ ¾ø½À´Ï´Ù.");
+                Debug.LogWarning("ì‚¬ìš© ê°€ëŠ¥í•œ íš¨ê³¼ìŒ ì˜¤ë””ì˜¤ ì†ŒìŠ¤ê°€ ì—†ìŠµë‹ˆë‹¤.");
             }
         }
         else
         {
-            Debug.LogWarning($"È¿°úÀ½ '{sfxName}' ¸¦ Ã£À» ¼ö ¾ø½À´Ï´Ù.");
+            Debug.LogWarning($"íš¨ê³¼ìŒ '{sfxName}' ë¥¼ ì°¾ì„ ìˆ˜ ì—†ìŠµë‹ˆë‹¤.");
         }
     }
 }

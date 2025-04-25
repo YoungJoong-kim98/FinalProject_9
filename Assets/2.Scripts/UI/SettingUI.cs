@@ -7,37 +7,37 @@ using UnityEngine.UI;
 public class SettingUI : PopUpUI
 {
     [Header("Buttons")]
-    public Button displayButton;//µğ½ºÇÃ·¹ÀÌ ¹öÆ°
-    public Button audioButton;//¿Àµğ¿À¹öÆ°
-    public Button languageButton;//¾ğ¾î¹öÆ°
+    public Button displayButton;//ë””ìŠ¤í”Œë ˆì´ ë²„íŠ¼
+    public Button audioButton;//ì˜¤ë””ì˜¤ë²„íŠ¼
+    public Button languageButton;//ì–¸ì–´ë²„íŠ¼
 
     [Header("Display")]
-    public GameObject displayobject;//µğ½ºÇÃ·¹ÀÌÃ¢
-    public TextMeshProUGUI screenCondition;//ÀüÃ¼È­¸é ÅØ½ºÆ®
-    public Button screenConditionBeforeButton;//ÀüÃ¼È­¸é ÃÊ±âÈ­
-    public Button screenConditionAfterButton;//ÀüÃ¼È­¸é ÃÊ±âÈ­
-    public TextMeshProUGUI mainResolution; //ÇØ»óµµ ÅØ½ºÆ®
-    public Button mainResolutionBeforeButton;//ÇØ»óµµº¯°æ
-    public Button mainResolutionAfterButton;//ÇØ»óµµ º¯°æ
+    public GameObject displayobject;//ë””ìŠ¤í”Œë ˆì´ì°½
+    public TextMeshProUGUI screenCondition;//ì „ì²´í™”ë©´ í…ìŠ¤íŠ¸
+    public Button screenConditionBeforeButton;//ì „ì²´í™”ë©´ ì´ˆê¸°í™”
+    public Button screenConditionAfterButton;//ì „ì²´í™”ë©´ ì´ˆê¸°í™”
+    public TextMeshProUGUI mainResolution; //í•´ìƒë„ í…ìŠ¤íŠ¸
+    public Button mainResolutionBeforeButton;//í•´ìƒë„ë³€ê²½
+    public Button mainResolutionAfterButton;//í•´ìƒë„ ë³€ê²½
 
     [Header("Audio")]
-    public GameObject audioobject;//¿Àµğ¿ÀÃ¢
-    public Slider masterSoundController;//¸¶½ºÅÍº¼·ıÁ¶Àı
-    public Slider backGroungMusicController;//¹è°æÀ½Á¶Àı
-    public Slider effectSoundController;//È¿°úÀ½Á¶Àı
-    public TextMeshProUGUI masterSoundNumber;//¸¶½ºÅÍº¼·ı¼ıÀÚ
-    public TextMeshProUGUI backGroundSoundNumber;//¹è°æÀ½¼ıÀÚ
-    public TextMeshProUGUI effectSoundNumber;//È¿°úÀ½¼ıÀÚ
+    public GameObject audioobject;//ì˜¤ë””ì˜¤ì°½
+    public Slider masterSoundController;//ë§ˆìŠ¤í„°ë³¼ë¥¨ì¡°ì ˆ
+    public Slider backGroungMusicController;//ë°°ê²½ìŒì¡°ì ˆ
+    public Slider effectSoundController;//íš¨ê³¼ìŒì¡°ì ˆ
+    public TextMeshProUGUI masterSoundNumber;//ë§ˆìŠ¤í„°ë³¼ë¥¨ìˆ«ì
+    public TextMeshProUGUI backGroundSoundNumber;//ë°°ê²½ìŒìˆ«ì
+    public TextMeshProUGUI effectSoundNumber;//íš¨ê³¼ìŒìˆ«ì
 
     [Header("Language")]
-    public GameObject languageobject;//¾ğ¾îÃ¢
+    public GameObject languageobject;//ì–¸ì–´ì°½
     public TextMeshProUGUI changeLanguageName;
     public TextMeshProUGUI languageName;
     public Button beforeLanguageButton;
     public Button afterLanguageButton;
 
     [Header("Other")]
-    public Button settingUIBackButton; //µÚ·Î°¡±â
+    public Button settingUIBackButton; //ë’¤ë¡œê°€ê¸°
     public Button settingUIDefalutValueButton;
     public Button settingUIApplyButton;
 
@@ -47,6 +47,10 @@ public class SettingUI : PopUpUI
     private int[] resolutionsHeight = { 768, 720, 900, 1080 };
 
     private Color originalButtonColor;
+
+    private float savedMasterVolume; //ì €ì¥ëœ ì‚¬ìš´ë“œ ì„¤ì •ê°’
+    private float savedBGMVolume;
+    private float savedEffectVolume;
 
     void Start()
     {
@@ -65,13 +69,38 @@ public class SettingUI : PopUpUI
         effectSoundController.onValueChanged.AddListener(EfSoundControl);
 
         settingUIBackButton.onClick.AddListener(OnClickedBackButton);
+        settingUIApplyButton.onClick.AddListener(OnClickedApplyButton);
+
+        // ì´ˆê¸° ë³¼ë¥¨ ë™ê¸°í™”
+        var sound = GameManager.Instance.SoundManager;
+        savedMasterVolume = sound.MasterVolume;
+        savedBGMVolume = sound.BackgroundMusicVolume;
+        savedEffectVolume = sound.EffectSoundVolume;
+
+        masterSoundController.value = savedMasterVolume;
+        backGroungMusicController.value = savedBGMVolume;
+        effectSoundController.value = savedEffectVolume;
+
+        sound.SetMasterVolume(savedMasterVolume);
+        sound.SetBackgroundMusicVolume(savedBGMVolume);
+        sound.SetEffectSoundVolume(savedEffectVolume);
+
+        MasterSoundControl(savedMasterVolume);
+        BGMSoundControl(savedBGMVolume);
+        EfSoundControl(savedEffectVolume);
 
         UpdateScreenConditionText();
         UpdateResolutionText();
-        originalButtonColor = Color.green;
+        originalButtonColor = Color.black;
+
+        // ë””ìŠ¤í”Œë ˆì´ê°€ ì²˜ìŒ ì—´ë¦¼
         displayobject.SetActive(true);
         audioobject.SetActive(false);
         languageobject.SetActive(false);
+
+        SetButtonColor(displayButton, Color.yellow);
+        SetButtonColor(audioButton, originalButtonColor);
+        SetButtonColor(languageButton, originalButtonColor);
     }
 
     private void ToggleFullScreen()
@@ -81,33 +110,33 @@ public class SettingUI : PopUpUI
         UpdateScreenConditionText();
     }
     
-    private void UpdateScreenConditionText() //È­¸é ÅØ½ºÆ® ¾÷µ¥ÀÌÆ®
+    private void UpdateScreenConditionText() //í™”ë©´ í…ìŠ¤íŠ¸ ì—…ë°ì´íŠ¸
     {
-        screenCondition.text = isFullScreen ? "ÀüÃ¼ È­¸é" : "Ã¢ È­¸é";
+        screenCondition.text = isFullScreen ? "ì „ì²´ í™”ë©´" : "ì°½ í™”ë©´";
     }
-    private void DecreaseResolution() //ÇØ»óµµ ÀÌÀü¹öÆ°
+    private void DecreaseResolution() //í•´ìƒë„ ì´ì „ë²„íŠ¼
     {
         currentResolutionIndex--;
         if (currentResolutionIndex < 0)
         {
-            currentResolutionIndex = resolutionsWidth.Length - 1; // ¸¶Áö¸· ÇØ»óµµ·Î ¼øÈ¯
+            currentResolutionIndex = resolutionsWidth.Length - 1; // ë§ˆì§€ë§‰ í•´ìƒë„ë¡œ ìˆœí™˜
         }
 
         ApplyResolution();
     }
 
-    private void IncreaseResolution()//ÇØ»óµµ ´ÙÀ½¹öÆ°
+    private void IncreaseResolution()//í•´ìƒë„ ë‹¤ìŒë²„íŠ¼
     {
         currentResolutionIndex++;
         if (currentResolutionIndex >= resolutionsWidth.Length)
         {
-            currentResolutionIndex = 0; // Ã¹ ¹øÂ° ÇØ»óµµ·Î ¼øÈ¯
+            currentResolutionIndex = 0; // ì²« ë²ˆì§¸ í•´ìƒë„ë¡œ ìˆœí™˜
         }
 
         ApplyResolution();
     }
 
-    private void ApplyResolution()// ÇØ»óµµ Àû¿ë
+    private void ApplyResolution()// í•´ìƒë„ ì ìš©
     {
         int width = resolutionsWidth[currentResolutionIndex];
         int height = resolutionsHeight[currentResolutionIndex];
@@ -115,32 +144,32 @@ public class SettingUI : PopUpUI
         Screen.SetResolution(width, height, isFullScreen);
         UpdateResolutionText();
     }
-    private void UpdateResolutionText()//ÇØ»óµµ ÅØ½ºÆ® ¾÷µ¥ÀÌÆ®
+    private void UpdateResolutionText()//í•´ìƒë„ í…ìŠ¤íŠ¸ ì—…ë°ì´íŠ¸
     {
         int width = resolutionsWidth[currentResolutionIndex];
         int height = resolutionsHeight[currentResolutionIndex];
         mainResolution.text = $"{width} x {height}";
     }
 
-    private void MasterSoundControl(float value)//¸¶½ºÅÍ º¼·ı
+    private void MasterSoundControl(float value)//ë§ˆìŠ¤í„° ë³¼ë¥¨
     {
-        // GameManager.Instance.soundManager.MasterVolumeControl(value);
+        GameManager.Instance.SoundManager.SetMasterVolume(value);
         masterSoundNumber.text = Mathf.RoundToInt(value * 100).ToString();
     }
 
-    private void BGMSoundControl(float value)//¹è°æÀ½¾Ç 
+    private void BGMSoundControl(float value)//ë°°ê²½ìŒì•… 
     {
-        // GameManager.Instance.soundManager.BGMVolumeControl(value);
+        GameManager.Instance.SoundManager.SetBackgroundMusicVolume(value);
         backGroundSoundNumber.text = Mathf.RoundToInt(value * 100).ToString();
     }
 
-    private void EfSoundControl(float value)//È¿°úÀ½
+    private void EfSoundControl(float value)//íš¨ê³¼ìŒ
     {
-        // GameManager.Instance.soundManager.EfSoundControl(value);
+        GameManager.Instance.SoundManager.SetEffectSoundVolume(value);
         effectSoundNumber.text = Mathf.RoundToInt(value * 100).ToString();
     }
 
-    private void ActivateDisplayObject()//µğ½ºÇÃ·¹ÀÌÃ¢ È°¼ºÈ­
+    private void ActivateDisplayObject()//ë””ìŠ¤í”Œë ˆì´ì°½ í™œì„±í™”
     {
         displayobject.SetActive(true);
         audioobject.SetActive(false);
@@ -151,7 +180,7 @@ public class SettingUI : PopUpUI
 
     }
 
-    private void ActivateAudioObject()//¼Ò¸®Ã¢ È°¼ºÈ­
+    private void ActivateAudioObject()//ì†Œë¦¬ì°½ í™œì„±í™”
     {
         audioobject.SetActive(true);
         displayobject.SetActive(false);
@@ -161,7 +190,7 @@ public class SettingUI : PopUpUI
         SetButtonColor(languageButton, originalButtonColor);
     }
 
-    private void ActivateLanguageObject() //¾ğ¾îÃ¢È°¼ºÈ­
+    private void ActivateLanguageObject() //ì–¸ì–´ì°½í™œì„±í™”
     {
         languageobject.SetActive(true);
         displayobject.SetActive(false);
@@ -170,18 +199,36 @@ public class SettingUI : PopUpUI
         SetButtonColor(displayButton, originalButtonColor);
         SetButtonColor(audioButton, originalButtonColor);
     }
-    private void SetButtonColor(Button button, Color color)//¹öÆ°»ö»óº¯°æÇÔ¼ö
+    private void SetButtonColor(Button button, Color color)//ë²„íŠ¼ìƒ‰ìƒë³€ê²½í•¨ìˆ˜
     {
         ColorBlock colors = button.colors;
         colors.normalColor = color;
-        //colors.selectedColor = color;
-        //colors.highlightedColor = color;
-        //colors.pressedColor = color;
+        colors.selectedColor = color;
+        colors.highlightedColor = color;
+        colors.pressedColor = color;
         button.colors = colors;
     }
 
     private void OnClickedBackButton()
     {
+        masterSoundController.value = savedMasterVolume;
+        backGroungMusicController.value = savedBGMVolume;
+        effectSoundController.value = savedEffectVolume;
+
+        MasterSoundControl(savedMasterVolume);
+        BGMSoundControl(savedBGMVolume);
+        EfSoundControl(savedEffectVolume);
+
+        UIManager.Instance.HidePopupUI<SettingUI>();
+    }
+
+    private void OnClickedApplyButton()
+    {
+        // í˜„ì¬ ìŠ¬ë¼ì´ë” ê°’ ì €ì¥
+        savedMasterVolume = masterSoundController.value;
+        savedBGMVolume = backGroungMusicController.value;
+        savedEffectVolume = effectSoundController.value;
+
         UIManager.Instance.HidePopupUI<SettingUI>();
     }
 }
