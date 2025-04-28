@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Localization.Settings;
+using UnityEngine.Localization;
 
 public class SettingUI : PopUpUI
 {
@@ -13,7 +15,9 @@ public class SettingUI : PopUpUI
 
     [Header("Display")]
     public GameObject displayobject;//디스플레이창
-    public TextMeshProUGUI screenCondition;//전체화면 텍스트
+    public TextMeshProUGUI fullScreen;//전체화면 텍스트
+    public TextMeshProUGUI fullWindowMode;//전체창 텍스트
+    public TextMeshProUGUI findowMode;//창화면 텍스트
     public Button screenConditionBeforeButton;//전체화면 초기화
     public Button screenConditionAfterButton;//전체화면 초기화
     public TextMeshProUGUI mainResolution; //해상도 텍스트
@@ -41,7 +45,15 @@ public class SettingUI : PopUpUI
     public Button settingUIDefalutValueButton;
     public Button settingUIApplyButton;
 
-    private bool isFullScreen = false;
+    private FullScreenMode[] screenModes = {
+        FullScreenMode.ExclusiveFullScreen,
+        FullScreenMode.FullScreenWindow,
+        FullScreenMode.Windowed
+    };
+    private int currentScreenModeIndex = 0;
+    private int previewScreenModeIndex = 0;
+
+    private int previewResolutionIndex = 3;
     private int currentResolutionIndex = 3; // 0: 1024x768, 1: 1280x720, 2: 1600x900, 3: 1920x1080
     private int[] resolutionsWidth = { 1024, 1280, 1600, 1920 };
     private int[] resolutionsHeight = { 768, 720, 900, 1080 };
@@ -52,14 +64,23 @@ public class SettingUI : PopUpUI
     private float savedBGMVolume;
     private float savedEffectVolume;
 
+    private const float DEFAULT_VOLUME = 1.0f;
+    private const int DEFAULT_RESOLUTION_INDEX = 3;
+    private const int DEFAULT_SCREEN_MODE_INDEX = 0;
+
+    private int currentLanguageIndex = 0;
+    private int previewLanguageIndex = 0;
+
+    private const int DEFAULT_LANGUAGE_INDEX = 0; // 0: Korean
+
     void Start()
     {
         displayButton.onClick.AddListener(ActivateDisplayObject);
         audioButton.onClick.AddListener(ActivateAudioObject);
         languageButton.onClick.AddListener(ActivateLanguageObject);
 
-        screenConditionBeforeButton.onClick.AddListener(ToggleFullScreen);
-        screenConditionAfterButton.onClick.AddListener(ToggleFullScreen);
+        screenConditionBeforeButton.onClick.AddListener(() => ChangeScreenMode(false));
+        screenConditionAfterButton.onClick.AddListener(() => ChangeScreenMode(true));
 
         mainResolutionBeforeButton.onClick.AddListener(DecreaseResolution);
         mainResolutionAfterButton.onClick.AddListener(IncreaseResolution);
@@ -70,6 +91,10 @@ public class SettingUI : PopUpUI
 
         settingUIBackButton.onClick.AddListener(OnClickedBackButton);
         settingUIApplyButton.onClick.AddListener(OnClickedApplyButton);
+        settingUIDefalutValueButton.onClick.AddListener(OnClickedDefaultButton);
+
+        beforeLanguageButton.onClick.AddListener(() => ChangeLanguage(false));
+        afterLanguageButton.onClick.AddListener(() => ChangeLanguage(true));
 
         // 초기 볼륨 동기화
         var sound = GameManager.Instance.SoundManager;
@@ -89,8 +114,12 @@ public class SettingUI : PopUpUI
         BGMSoundControl(savedBGMVolume);
         EfSoundControl(savedEffectVolume);
 
-        UpdateScreenConditionText();
-        UpdateResolutionText();
+        previewResolutionIndex = currentResolutionIndex;
+        previewScreenModeIndex = currentScreenModeIndex;
+
+        PreviewResolution();
+        PreviewScreenMode();
+
         originalButtonColor = Color.black;
 
         // 디스플레이가 처음 열림
@@ -101,19 +130,52 @@ public class SettingUI : PopUpUI
         SetButtonColor(displayButton, Color.yellow);
         SetButtonColor(audioButton, originalButtonColor);
         SetButtonColor(languageButton, originalButtonColor);
+
+        // 현재 언어 인덱스를 Localization에서 가져옴
+        Locale currentLocale = LocalizationSettings.SelectedLocale;
+        currentLanguageIndex = LocalizationSettings.AvailableLocales.Locales.IndexOf(currentLocale);
+        previewLanguageIndex = currentLanguageIndex;
+
+        UpdateLanguageText(previewLanguageIndex);
     }
 
-    private void ToggleFullScreen()
+    private void ChangeScreenMode(bool isNext)
     {
-        isFullScreen = !isFullScreen;
-        Screen.fullScreen = isFullScreen;
-        UpdateScreenConditionText();
+        if (isNext)
+            previewScreenModeIndex = (previewScreenModeIndex + 1) % screenModes.Length;
+        else
+            previewScreenModeIndex = (previewScreenModeIndex - 1 + screenModes.Length) % screenModes.Length;
+
+        PreviewScreenMode();
     }
-    
-    private void UpdateScreenConditionText() //화면 텍스트 업데이트
+
+    private void PreviewScreenMode()
     {
-        screenCondition.text = isFullScreen ? "전체 화면" : "창 화면";
+        var mode = screenModes[previewScreenModeIndex];
+        Screen.fullScreenMode = mode;
+        UpdateScreenConditionText(previewScreenModeIndex);
     }
+
+    private void UpdateScreenConditionText(int index)
+    {
+        fullScreen.gameObject.SetActive(false);
+        fullWindowMode.gameObject.SetActive(false);
+        findowMode.gameObject.SetActive(false);
+
+        switch (screenModes[index])
+        {
+            case FullScreenMode.ExclusiveFullScreen:
+                fullScreen.gameObject.SetActive(true);
+                break;
+            case FullScreenMode.FullScreenWindow:
+                fullWindowMode.gameObject.SetActive(true);
+                break;
+            case FullScreenMode.Windowed:
+                findowMode.gameObject.SetActive(true);
+                break;
+        }
+    }
+
     private void DecreaseResolution() //해상도 이전버튼
     {
         currentResolutionIndex--;
@@ -122,7 +184,7 @@ public class SettingUI : PopUpUI
             currentResolutionIndex = resolutionsWidth.Length - 1; // 마지막 해상도로 순환
         }
 
-        ApplyResolution();
+        PreviewResolution();
     }
 
     private void IncreaseResolution()//해상도 다음버튼
@@ -133,18 +195,18 @@ public class SettingUI : PopUpUI
             currentResolutionIndex = 0; // 첫 번째 해상도로 순환
         }
 
-        ApplyResolution();
+        PreviewResolution();
     }
 
-    private void ApplyResolution()// 해상도 적용
+    private void PreviewResolution()
     {
-        int width = resolutionsWidth[currentResolutionIndex];
-        int height = resolutionsHeight[currentResolutionIndex];
+        int width = resolutionsWidth[previewResolutionIndex];
+        int height = resolutionsHeight[previewResolutionIndex];
 
-        Screen.SetResolution(width, height, isFullScreen);
-        UpdateResolutionText();
+        Screen.SetResolution(width, height, screenModes[previewScreenModeIndex] != FullScreenMode.Windowed);
+        UpdateResolutionText(previewResolutionIndex);
     }
-    private void UpdateResolutionText()//해상도 텍스트 업데이트
+    private void UpdateResolutionText(int index)//해상도 텍스트 업데이트
     {
         int width = resolutionsWidth[currentResolutionIndex];
         int height = resolutionsHeight[currentResolutionIndex];
@@ -211,6 +273,7 @@ public class SettingUI : PopUpUI
 
     private void OnClickedBackButton()
     {
+        //사운드 설정 복원
         masterSoundController.value = savedMasterVolume;
         backGroungMusicController.value = savedBGMVolume;
         effectSoundController.value = savedEffectVolume;
@@ -218,6 +281,16 @@ public class SettingUI : PopUpUI
         MasterSoundControl(savedMasterVolume);
         BGMSoundControl(savedBGMVolume);
         EfSoundControl(savedEffectVolume);
+
+        // 화면 설정 복원
+        previewResolutionIndex = currentResolutionIndex;
+        previewScreenModeIndex = currentScreenModeIndex;
+        PreviewResolution();
+        PreviewScreenMode();
+
+        //언어 설정 복원
+        previewLanguageIndex = currentLanguageIndex;
+        UpdateLanguageText(previewLanguageIndex);
 
         UIManager.Instance.HidePopupUI<SettingUI>();
     }
@@ -229,6 +302,68 @@ public class SettingUI : PopUpUI
         savedBGMVolume = backGroungMusicController.value;
         savedEffectVolume = effectSoundController.value;
 
+        currentResolutionIndex = previewResolutionIndex;
+        currentScreenModeIndex = previewScreenModeIndex;
+        currentLanguageIndex = previewLanguageIndex;
+
+        ApplyResolution();
+        ApplyScreenMode();
+        ApplyLanguage();
+
         UIManager.Instance.HidePopupUI<SettingUI>();
+    }
+    private void ApplyResolution()
+    {
+        int width = resolutionsWidth[currentResolutionIndex];
+        int height = resolutionsHeight[currentResolutionIndex];
+        Screen.SetResolution(width, height, screenModes[currentScreenModeIndex] != FullScreenMode.Windowed);
+    }
+
+    private void ApplyScreenMode()
+    {
+        Screen.fullScreenMode = screenModes[currentScreenModeIndex];
+    }
+    private void ApplyLanguage()
+    {
+        var selectedLocale = LocalizationSettings.AvailableLocales.Locales[currentLanguageIndex];
+        LocalizationSettings.SelectedLocale = selectedLocale;
+    }
+
+    private void OnClickedDefaultButton()
+    {
+        masterSoundController.value = DEFAULT_VOLUME;
+        backGroungMusicController.value = DEFAULT_VOLUME;
+        effectSoundController.value = DEFAULT_VOLUME;
+
+        MasterSoundControl(DEFAULT_VOLUME);
+        BGMSoundControl(DEFAULT_VOLUME);
+        EfSoundControl(DEFAULT_VOLUME);
+
+        previewResolutionIndex = DEFAULT_RESOLUTION_INDEX;
+        PreviewResolution();
+
+        previewScreenModeIndex = DEFAULT_SCREEN_MODE_INDEX;
+        PreviewScreenMode();
+
+        previewLanguageIndex = DEFAULT_LANGUAGE_INDEX;
+        UpdateLanguageText(previewLanguageIndex);
+    }
+    private void ChangeLanguage(bool isNext)
+    {
+        int count = LocalizationSettings.AvailableLocales.Locales.Count;
+
+        if (isNext)
+            previewLanguageIndex = (previewLanguageIndex + 1) % count;
+        else
+            previewLanguageIndex = (previewLanguageIndex - 1 + count) % count;
+
+        UpdateLanguageText(previewLanguageIndex);
+        LocalizationSettings.SelectedLocale = LocalizationSettings.AvailableLocales.Locales[previewLanguageIndex];
+    }
+
+    private void UpdateLanguageText(int index)
+    {
+        var locale = LocalizationSettings.AvailableLocales.Locales[index];
+        languageName.text = locale.LocaleName;
     }
 }

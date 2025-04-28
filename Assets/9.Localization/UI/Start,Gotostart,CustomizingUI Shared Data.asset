@@ -1,0 +1,77 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b11a58205ec3474ca216360e9fa74a8, type: 3}
+  m_Name: Start,Gotostart,CustomizingUI Shared Data
+  m_EditorClassIdentifier: 
+  m_TableCollectionName: Start,Gotostart,CustomizingUI
+  m_TableCollectionNameGuidString: ffbbeab07ae492c42a1c798bffa5826f
+  m_Entries:
+  - m_Id: 61588340736
+    m_Key: Going to be a Director
+    m_Metadata:
+      m_Items: []
+  - m_Id: 128890142720
+    m_Key: Game Play
+    m_Metadata:
+      m_Items: []
+  - m_Id: 152357273600
+    m_Key: Game Load
+    m_Metadata:
+      m_Items: []
+  - m_Id: 180748517376
+    m_Key: Setting
+    m_Metadata:
+      m_Items: []
+  - m_Id: 197496373248
+    m_Key: Development team
+    m_Metadata:
+      m_Items: []
+  - m_Id: 316555886592
+    m_Key: Game Over
+    m_Metadata:
+      m_Items: []
+  - m_Id: 342858366976
+    m_Key: Customizing
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1650239700992
+    m_Key: Back
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1874068733952
+    m_Key: Apply
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2091304321024
+    m_Key: GomainDescripton
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2282174513152
+    m_Key: Yes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2305989771264
+    m_Key: No
+    m_Metadata:
+      m_Items: []
+  m_Metadata:
+    m_Items: []
+  m_KeyGenerator:
+    rid: 7183180406963568655
+  references:
+    version: 2
+    RefIds:
+    - rid: 7183180406963568655
+      type: {class: DistributedUIDGenerator, ns: UnityEngine.Localization.Tables,
+        asm: Unity.Localization}
+      data:
+        m_CustomEpoch: 1745576795461

@@ -41,8 +41,8 @@ public class PlayerGroundState : PlayerBaseState
         base.PhysicsUpdate();
         Rigidbody rb = stateMachine.Player.Rigidbody;
         
-        // 아래로 떨어지고 있는 경우에만 낙하 상태로 전환
-        if (!IsGrounded(0.2f, useOffset: false) && stateMachine.Player.Rigidbody.velocity.y < -3f)
+        // 이동 중 아래로 떨어지고 있는 경우에만 Fall로 전환
+        if (!IsGrounded(1.0f, useOffset: true) && stateMachine.Player.Rigidbody.velocity.y < -3f)
         {
             // Debug.Log("GroundState에서 Fall로 전환");
             stateMachine.ChangeState(stateMachine.FallState);

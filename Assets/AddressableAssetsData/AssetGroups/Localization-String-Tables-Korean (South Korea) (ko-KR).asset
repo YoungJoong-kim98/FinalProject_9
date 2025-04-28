@@ -23,6 +23,18 @@ MonoBehaviour:
     m_SerializedLabels:
     - Locale-ko-KR
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: fb99bb28142a5514ba85b9303d416158
+    m_Address: setting_ko-KR
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-ko-KR
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 968b5c39857de5941ba848f1a5ebabea
+    m_Address: Start,Gotostart,CustomizingUI_ko-KR
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-ko-KR
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 1
   m_Settings: {fileID: 11400000, guid: b7539579966b5944d8d35c5e8b66ab52, type: 2}
   m_SchemaSet:

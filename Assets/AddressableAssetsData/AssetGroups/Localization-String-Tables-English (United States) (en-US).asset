@@ -23,6 +23,18 @@ MonoBehaviour:
     m_SerializedLabels:
     - Locale-en-US
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 7c8c9db43204223409b544fc5786a4f5
+    m_Address: setting_en-US
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-en-US
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 66f2faddb8c202a4895585f34b64be0d
+    m_Address: Start,Gotostart,CustomizingUI_en-US
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-en-US
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 1
   m_Settings: {fileID: 11400000, guid: b7539579966b5944d8d35c5e8b66ab52, type: 2}
   m_SchemaSet:
