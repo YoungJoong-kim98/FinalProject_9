@@ -69,16 +69,6 @@ public class PlayerGroundState : PlayerBaseState
                 // Debug.Log("정지 중 계단 감속");
             }
         }
-        
-        // // 계단 위에서 미끄러짐 방지
-        // if (stateMachine.MovementInput == Vector2.zero && IsGrounded())
-        // {
-        //     Vector3 velocity = rb.velocity;
-        //     velocity.x = 0f;
-        //     velocity.z = 0f;
-        //     rb.velocity = velocity;
-        //     Debug.Log("정지 중 - 수평 속도 강제 제거");
-        // }
     }
 
     protected override void OnMovementCanceled(InputAction.CallbackContext context)

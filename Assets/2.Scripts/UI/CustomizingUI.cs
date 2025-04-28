@@ -29,6 +29,7 @@ public class CustomizingUI : PopUpUI
     public RuntimeAnimatorController fallingPlayerAnimatorController;// FallingPlayer 애니메이션 컨트롤러
     public AchievementSystem achievementSystem;//업적
 
+    [SerializeField] private RuntimeAnimatorController playerAnimatorController; // 플레이어 애니메이터 컨트롤러
 
     void Start()
     {
@@ -121,8 +122,12 @@ public class CustomizingUI : PopUpUI
         }
     }
     void OnClickApply()
-    {            
+    {
+        //selectedCharacterPrefab = GetCharacterFromIndex(currentCharacterBaseIndex + currentColorOffset);
+      
         Debug.Log($"[Apply] 선택된 캐릭터 프리팹: {selectedCharacterPrefab?.name}");
+
+        ApplyCharacter(mainCharacter);
 
         var startUI = UIManager.Instance.GetPopupUI<StartUI>();
         if (startUI != null && mainCharacter != null)
@@ -139,7 +144,58 @@ public class CustomizingUI : PopUpUI
 
         this.gameObject.SetActive(false);
     }
-  
+
+    private GameObject currentModel; // 현재 적용된 모델 기억
+    public void ApplyCharacter(GameObject selectedPrefab)
+    {
+        Player player = FindObjectOfType<Player>();
+        if (player == null)
+        {
+            Debug.LogError("Player를 찾을 수 없습니다.");
+            return;
+        }
+
+        Transform modelParent = player.transform;
+
+        // 현재 적용된 모델이 있으면 삭제
+        if (currentModel != null)
+        {
+            Destroy(currentModel);
+        }
+        else
+        {
+            // 처음 한 번은 기존 "Office_worker_Boss_B_D" 삭제
+            Transform oldModel = modelParent.Find("Office_worker_Boss_B_D");
+            if (oldModel != null)
+            {
+                Destroy(oldModel.gameObject);
+            }
+        }
+
+        // 새 모델 생성
+        currentModel = Instantiate(selectedPrefab, modelParent);
+        currentModel.name = selectedPrefab.name;
+
+        // 위치, 스케일 조정
+        currentModel.transform.localPosition = Vector3.zero;
+        currentModel.transform.localScale = Vector3.one * 3f;
+
+        // 새 모델의 Animator를 Player에 다시 연결
+        Animator newAnimator = currentModel.GetComponent<Animator>();
+        if (newAnimator != null)
+        {
+            player.Animator = newAnimator; // 여기가 핵심!
+            player.Animator.runtimeAnimatorController = playerAnimatorController; // 애니메이터 컨트롤러도 다시 세팅
+        }
+        else
+        {
+            Debug.LogWarning("새 모델에 Animator가 없습니다!");
+        }
+    }
+
+
+
+
     public void RefreshCharacterSlots()
     {
         for (int i = 0; i < characterSlots.Count; i++)
@@ -169,7 +225,7 @@ public class CustomizingUI : PopUpUI
                     isUnlocked = achievementSystem.grabCount >= 100;
                     break;
                 case 7:
-                    isUnlocked = achievementSystem.playTime1HourUnlocked;
+                    isUnlocked = achievementSystem.completionTime;
                     break;
             }
 

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class RotateObstacle : MonoBehaviour, ISaveObstacle
+public class RotateObstacle : MonoBehaviour, ISaveObstacle, IObstacle
 {
     //회전하는 방향
     [SerializeField] private Vector3 _rotateDirection;

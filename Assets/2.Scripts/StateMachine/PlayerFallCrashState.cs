@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Cinemachine;
 
 public class PlayerFallCrashState : PlayerBaseState
 {
@@ -16,6 +17,14 @@ public class PlayerFallCrashState : PlayerBaseState
         base.Enter();
         _crashTimer = 0f;   // 타이머 초기화
         stateMachine.IsMovementLocked = true; // 이동 차단
+        
+        // 카메라 진동
+        CinemachineImpulseSource impulse = stateMachine.Player.GetComponent<CinemachineImpulseSource>();
+        if (impulse != null)
+        {
+            impulse.GenerateImpulse();
+            Debug.Log("FallCrash - 카메라 진동");
+        }
         
         // 3프레임 기다리고 땅에 붙이기
         stateMachine.Player.StartCoroutine(AlignToGroundAfterFrames(3));

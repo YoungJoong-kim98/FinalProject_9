@@ -31,30 +31,67 @@ public class PlayerFallState : PlayerAirState
         StopAnimation(stateMachine.Player.AnimationData.FallParameterHash);
     }
 
-    // 낙하 로직 처리
+    // // 낙하 로직 처리(수정 전)
+    // public override void Update()
+    // {
+    //     base.Update();
+    //     
+    //     Rigidbody rb = stateMachine.Player.Rigidbody;   // 플레이어 물리 가져옴
+    //     Vector3 velocity = rb.velocity; // 현재 속도 가져오기
+    //     
+    //     // 낙하 속도 계산
+    //     velocity.y -= _fallSpeed * Time.deltaTime;  // y 속도 더하기
+    //     velocity.y = Mathf.Max(velocity.y, -_maxFallSpeed); // 최대 속도 제한
+    //     rb.velocity = velocity; // 속도 적용
+    //     
+    //     float savedVelocity = velocity.y; // 착지 전 속도 저장
+    //     Debug.Log($"Fall - y 속도: {velocity.y}");
+    //
+    //     // 착지 확인
+    //     bool isGrounded = IsGrounded(1.0f, useOffset: true); // 바닥 감지
+    //     if (isGrounded && !_wasGrounded) // 첫 착지 프레임만 처리
+    //     {
+    //         Debug.Log($"착지 - 저장 속도: {savedVelocity}");
+    //         _wasGrounded = true; // 다음 프레임 대비
+    //         
+    //         if (savedVelocity <= -_maxFallSpeed) // 최고 속도에 도달하면 FallCrash   
+    //         {
+    //             Debug.Log("철푸덕");
+    //             stateMachine.ChangeState(stateMachine.FallCrashState);
+    //             return;
+    //         }
+    //         else
+    //         {
+    //             Debug.Log("정상 착지");
+    //             HandleGroundedState();
+    //             return;
+    //         }
+    //     }
+    // }
+    
     public override void Update()
     {
         base.Update();
+    }
+    
+    // 낙하 로직 처리
+    public override void PhysicsUpdate()
+    {
+        base.PhysicsUpdate();   // AirState.PhysicsUpdate 호출
         
-        Rigidbody rb = stateMachine.Player.Rigidbody;   // 플레이어 물리 가져옴
+        Rigidbody rb = stateMachine.Player.Rigidbody;
         Vector3 velocity = rb.velocity; // 현재 속도 가져오기
         
-        // 낙하 속도 계산
-        velocity.y -= _fallSpeed * Time.deltaTime;  // y 속도 더하기
-        velocity.y = Mathf.Max(velocity.y, -_maxFallSpeed); // 최대 속도 제한
-        rb.velocity = velocity; // 속도 적용
-        
-        float savedVelocity = velocity.y; // 착지 전 속도 저장
-        // Debug.Log($"Fall - y 속도: {velocity.y}");
+        float clampVelY = Mathf.Clamp(velocity.y, -_maxFallSpeed, float.PositiveInfinity);
 
-        // 착지 확인
-        bool isGrounded = IsGrounded(1.0f, useOffset: true); // 바닥 감지
-        if (isGrounded && !_wasGrounded) // 첫 착지 프레임만 처리
+        // 착지 감지
+        bool isGrounded = IsGrounded(1.0f, useOffset: true);    // 바닥 감지
+        if (isGrounded && !_wasGrounded)    // 첫 착지 프레임만 처리
         {
-            // Debug.Log($"착지 - 저장 속도: {savedVelocity}");
-            _wasGrounded = true; // 다음 프레임 대비
-            
-            if (savedVelocity <= -_maxFallSpeed) // 최고 속도에 도달하면 FallCrash   
+            Debug.Log($"착지 - 저장 속도: {clampVelY}");
+            _wasGrounded = true;
+
+            if (clampVelY <= -_maxFallSpeed)   // 최고 속도에 도달하면 FallCrash
             {
                 Debug.Log("철푸덕");
                 stateMachine.ChangeState(stateMachine.FallCrashState);
@@ -67,50 +104,15 @@ public class PlayerFallState : PlayerAirState
                 return;
             }
         }
+
+        // 착지 아니면 낙하 속도 계산
+        velocity.y -= _fallSpeed * Time.fixedDeltaTime; // y 속도 더하기
+        velocity.y = Mathf.Clamp(velocity.y, -_maxFallSpeed, float.PositiveInfinity);   // 최대 속도 제한
+
+        rb.velocity = velocity; // 속도 적용
+
+        // Debug.Log($"Fall - y 속도: {velocity.y}");
     }
-    
-    public override void PhysicsUpdate()
-    {
-        base.PhysicsUpdate();   // AirState.PhysicsUpdate 호출
-    }
-    
-    // // 바닥 감지
-    // private bool IsGrounded()
-    // {
-    //     Transform t = stateMachine.Player.transform;
-    //     Vector3 origin = t.position + Vector3.up * 0.1f; // 플레이어 중심보다 살짝 위에서 쏨
-    //     float rayLength = 1.0f;
-    //     LayerMask groundMask = LayerMask.GetMask("Ground"); // Ground만 감지
-    //     
-    //     // 중앙 아래로 레이 쏘기
-    //     if (Physics.Raycast(origin, Vector3.down, rayLength, groundMask))
-    //     {
-    //         Debug.Log($"중앙 접지 감지, 속도: {stateMachine.Player.Rigidbody.velocity.y}");
-    //         return true;
-    //     }
-    //
-    //     // 좌우 앞뒤 방향을 약간 퍼뜨린 위치
-    //     float offset = 0.3f;
-    //     Vector3[] offsets = new Vector3[]
-    //     {
-    //         t.right * offset,     // 오른쪽
-    //         -t.right * offset,    // 왼쪽
-    //         t.forward * offset,   // 앞쪽
-    //         -t.forward * offset   // 뒤쪽
-    //     };
-    //
-    //     // 네 방향 아래로 레이 쏘기
-    //     foreach (var dir in offsets)
-    //     {
-    //         Vector3 offsetOrigin = origin + dir;    // 시작 위치 오프셋 적용
-    //         if (Physics.Raycast(offsetOrigin, Vector3.down, rayLength, groundMask))
-    //         {
-    //             Debug.Log($"오프셋 접지 감지: {dir}, 속도: {stateMachine.Player.Rigidbody.velocity.y}");
-    //             return true;
-    //         }
-    //     }
-    //     return false;
-    // }
     
     /// <summary>
     /// 떨어지는 상태시 정면 , 위 , 땅과 로프 확인 로직 값 수정시 GrabState스크립트 IsStillGrabbing 함수도 같이 수정 바람!
@@ -123,17 +125,6 @@ public class PlayerFallState : PlayerAirState
     private void DebugDrawGrabRay()
     {
         Transform t = stateMachine.Player.transform;
-        // Vector3 origin = t.position + Vector3.up * 0.1f;
-        // float rayLength = 1.5f;
-        // float offset = 0.3f;
-
-        // // 바닥 체크 (중앙 + 주변 4방향)
-        // Debug.DrawRay(origin, Vector3.down * rayLength, Color.yellow); // 중앙
-        //
-        // Debug.DrawRay(origin + t.right * offset, Vector3.down * rayLength, Color.red);   // 오른쪽
-        // Debug.DrawRay(origin - t.right * offset, Vector3.down * rayLength, Color.red);   // 왼쪽
-        // Debug.DrawRay(origin + t.forward * offset, Vector3.down * rayLength, Color.red); // 앞쪽
-        // Debug.DrawRay(origin - t.forward * offset, Vector3.down * rayLength, Color.red); // 뒤쪽
 
         // 로프 및 벽 감지용 Ray 시각화
         Vector3 origin2 = t.position + Vector3.up * 2.0f;

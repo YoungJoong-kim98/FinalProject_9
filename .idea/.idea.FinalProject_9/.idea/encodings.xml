@@ -9,5 +9,7 @@
     <file url="file://$PROJECT_DIR$/Assets/2.Scripts/StateMachine/PlayerFallState.cs" charset="EUC-KR" />
     <file url="file://$PROJECT_DIR$/Assets/2.Scripts/StateMachine/PlayerGrabState.cs" charset="EUC-KR" />
     <file url="file://$PROJECT_DIR$/Assets/2.Scripts/StateMachine/PlayerJumpState.cs" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Assets/2.Scripts/UI/AssignRenderCamera.cs" charset="EUC-KR" />
+    <file url="file://$PROJECT_DIR$/Assets/2.Scripts/UI/StartUI.cs" charset="EUC-KR" />
   </component>
 </project>

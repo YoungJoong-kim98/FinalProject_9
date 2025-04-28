@@ -99,9 +99,9 @@ public class PlayerJumpState : PlayerAirState
         float centerDiff = centerOrigin.y - centerHit.point.y;
         float velY = rb.velocity.y;
 
-        if (heightDiff <1.0f|| centerDiff<1.0f)
+        if (heightDiff <0.5f|| centerDiff<0.5f)
         {
-            if (velY <= 5.0f)
+            if (velY <=7.0f)
             {
                 Debug.Log("JumpState: 계단 또는 중심 착지 감지");
                 HandleGroundedState();
