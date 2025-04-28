@@ -4719,6 +4719,8 @@ MonoBehaviour:
   fallingPlayerAnimatorController: {fileID: 9100000, guid: 0183158aaa2f7d44db63c65e524b2c79,
     type: 2}
   achievementSystem: {fileID: 0}
+  playerAnimatorController: {fileID: 9100000, guid: cdd223b167b278446a1adbede4c4fbc8,
+    type: 2}
 --- !u!114 &4364053358810232651
 MonoBehaviour:
   m_ObjectHideFlags: 0
