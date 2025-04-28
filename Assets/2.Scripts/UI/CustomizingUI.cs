@@ -19,15 +19,15 @@ public class CustomizingUI : PopUpUI
     public Button cButton;
     public Button dButton;
 
-    [Header("All character prefabs(¼ø¼­¹Ù²Ù¸é¾ÈµÊ)")]
+    [Header("All character prefabs(ìˆœì„œë°”ê¾¸ë©´ì•ˆë¨)")]
     public List<GameObject> allCharacterPrefabs;
     public GameObject mainCharacter;
 
-    private int currentCharacterBaseIndex = 0;  // »ö»ó º¯°æ ½Ã ±âÁØÀÌ µÇ´Â Ä³¸¯ÅÍ ÀÎµ¦½º
-    private int currentColorOffset = 0;         // ÇöÀç ¼±ÅÃµÈ »ö»ó A(0), B(1), C(2), D(3)
-    private GameObject selectedCharacterPrefab; // Apply¿¡¼­ ÃÖÁ¾ ÀúÀåÇÒ ÇÁ¸®ÆÕ
-    public RuntimeAnimatorController fallingPlayerAnimatorController;// FallingPlayer ¾Ö´Ï¸ŞÀÌ¼Ç ÄÁÆ®·Ñ·¯
-    public AchievementSystem achievementSystem;//¾÷Àû
+    private int currentCharacterBaseIndex = 0;  // ìƒ‰ìƒ ë³€ê²½ ì‹œ ê¸°ì¤€ì´ ë˜ëŠ” ìºë¦­í„° ì¸ë±ìŠ¤
+    private int currentColorOffset = 0;         // í˜„ì¬ ì„ íƒëœ ìƒ‰ìƒ A(0), B(1), C(2), D(3)
+    private GameObject selectedCharacterPrefab; // Applyì—ì„œ ìµœì¢… ì €ì¥í•  í”„ë¦¬íŒ¹
+    public RuntimeAnimatorController fallingPlayerAnimatorController;// FallingPlayer ì• ë‹ˆë©”ì´ì…˜ ì»¨íŠ¸ë¡¤ëŸ¬
+    public AchievementSystem achievementSystem;//ì—…ì 
 
 
     void Start()
@@ -51,10 +51,10 @@ public class CustomizingUI : PopUpUI
         {
             var capturedSlot = characterSlots[i];
 
-            Debug.Log($"[Setup] ½½·Ô {i} ¡æ BaseIndex: {capturedSlot.characterBaseIndex}");
+            Debug.Log($"[Setup] ìŠ¬ë¡¯ {i} â†’ BaseIndex: {capturedSlot.characterBaseIndex}");
 
             capturedSlot.slotButton.onClick.RemoveAllListeners();
-            // ¹öÆ° Å¬¸¯ ½Ã Ä³¸¯ÅÍ ¼±ÅÃ
+            // ë²„íŠ¼ í´ë¦­ ì‹œ ìºë¦­í„° ì„ íƒ
             capturedSlot.slotButton.onClick.AddListener(() =>
             SelectCharacter(capturedSlot.characterBaseIndex));
         }
@@ -72,7 +72,7 @@ public class CustomizingUI : PopUpUI
     void SelectCharacter(int baseIndex)
     {
         currentCharacterBaseIndex = baseIndex;
-        currentColorOffset = 0; // ±âº» A »ö»ó
+        currentColorOffset = 0; // ê¸°ë³¸ A ìƒ‰ìƒ
         ReplaceMainCharacter(GetCharacterFromIndex(currentCharacterBaseIndex));
     }
 
@@ -90,7 +90,7 @@ public class CustomizingUI : PopUpUI
             return allCharacterPrefabs[index];
         }
 
-        Debug.LogError($"ÇÁ¸®ÆÕ ÀÎµ¦½º {index} °¡ ¸®½ºÆ® ¹üÀ§¸¦ ¹ş¾î³µÀ½");
+        Debug.LogError($"í”„ë¦¬íŒ¹ ì¸ë±ìŠ¤ {index} ê°€ ë¦¬ìŠ¤íŠ¸ ë²”ìœ„ë¥¼ ë²—ì–´ë‚¬ìŒ");
         return null;
     }
 
@@ -98,33 +98,31 @@ public class CustomizingUI : PopUpUI
     {
         if (newPrefab == null || mainCharacter == null) return;
 
-        // ±âÁ¸ À§Ä¡, È¸Àü ÀúÀå
+        // ê¸°ì¡´ ìœ„ì¹˜, íšŒì „ ì €ì¥
         Vector3 currentPosition = mainCharacter.transform.position;
         Quaternion currentRotation = mainCharacter.transform.rotation;
-        Vector3 currentScale = mainCharacter.transform.localScale; // ½ºÄÉÀÏ Á¤º¸ ÀúÀå
-        Transform currentParent = mainCharacter.transform.parent; // ºÎ¸ğ Á¤º¸ ÀúÀå
+        Vector3 currentScale = mainCharacter.transform.localScale; // ìŠ¤ì¼€ì¼ ì •ë³´ ì €ì¥
+        Transform currentParent = mainCharacter.transform.parent; // ë¶€ëª¨ ì •ë³´ ì €ì¥
 
-        // ±âÁ¸ Ä³¸¯ÅÍ ÆÄ±«
+        // ê¸°ì¡´ ìºë¦­í„° íŒŒê´´
         Destroy(mainCharacter);
 
-        // »õ Ä³¸¯ÅÍ ÀÎ½ºÅÏ½ºÈ­
+        // ìƒˆ ìºë¦­í„° ì¸ìŠ¤í„´ìŠ¤í™”
         mainCharacter = Instantiate(newPrefab, currentPosition, currentRotation, currentParent);
 
-        // »õ Ä³¸¯ÅÍÀÇ ½ºÄÉÀÏÀ» ±âº»°ªÀ¸·Î ¼³Á¤
+        // ìƒˆ ìºë¦­í„°ì˜ ìŠ¤ì¼€ì¼ì„ ê¸°ë³¸ê°’ìœ¼ë¡œ ì„¤ì •
         mainCharacter.transform.localScale = currentScale;
 
-        // »õ Ä³¸¯ÅÍ¿¡ Animator°¡ ÀÖÀ» °æ¿ì ¾Ö´Ï¸ŞÀÌÅÍ ÄÁÆ®·Ñ·¯ º¯°æ
+        // ìƒˆ ìºë¦­í„°ì— Animatorê°€ ìˆì„ ê²½ìš° ì• ë‹ˆë©”ì´í„° ì»¨íŠ¸ë¡¤ëŸ¬ ë³€ê²½
         Animator animator = mainCharacter.GetComponent<Animator>();
         if (animator != null && fallingPlayerAnimatorController != null)
         { 
-            animator.runtimeAnimatorController = fallingPlayerAnimatorController; // ¾Ö´Ï¸ŞÀÌÅÍ ÄÁÆ®·Ñ·¯ º¯°æ
+            animator.runtimeAnimatorController = fallingPlayerAnimatorController; // ì• ë‹ˆë©”ì´í„° ì»¨íŠ¸ë¡¤ëŸ¬ ë³€ê²½
         }
     }
     void OnClickApply()
-    {
-        //selectedCharacterPrefab = GetCharacterFromIndex(currentCharacterBaseIndex + currentColorOffset);
-      
-        Debug.Log($"[Apply] ¼±ÅÃµÈ Ä³¸¯ÅÍ ÇÁ¸®ÆÕ: {selectedCharacterPrefab?.name}");
+    {            
+        Debug.Log($"[Apply] ì„ íƒëœ ìºë¦­í„° í”„ë¦¬íŒ¹: {selectedCharacterPrefab?.name}");
 
         var startUI = UIManager.Instance.GetPopupUI<StartUI>();
         if (startUI != null && mainCharacter != null)
@@ -136,7 +134,7 @@ public class CustomizingUI : PopUpUI
         }
         else
         {
-            Debug.LogWarning("StartUI ¶Ç´Â ¼±ÅÃµÈ ÇÁ¸®ÆÕÀÌ null");
+            Debug.LogWarning("StartUI ë˜ëŠ” ì„ íƒëœ í”„ë¦¬íŒ¹ì´ null");
         }
 
         this.gameObject.SetActive(false);
@@ -171,7 +169,7 @@ public class CustomizingUI : PopUpUI
                     isUnlocked = achievementSystem.grabCount >= 100;
                     break;
                 case 7:
-                    isUnlocked = achievementSystem.completionTime;
+                    isUnlocked = achievementSystem.playTime1HourUnlocked;
                     break;
             }
 
@@ -179,11 +177,11 @@ public class CustomizingUI : PopUpUI
 
             if (isUnlocked && slot.hiddenImage != null)
             {
-                Destroy(slot.hiddenImage); // Àá±İ ÀÌ¹ÌÁö Á¦°Å
-                slot.hiddenImage = null;   // ÂüÁ¶ Á¦°Å
+                Destroy(slot.hiddenImage); // ì ê¸ˆ ì´ë¯¸ì§€ ì œê±°
+                slot.hiddenImage = null;   // ì°¸ì¡° ì œê±°
             }
 
-            slot.UpdateLockVisual(); // ºñÁÖ¾ó »óÅÂ ¾÷µ¥ÀÌÆ®
+            slot.UpdateLockVisual(); // ë¹„ì£¼ì–¼ ìƒíƒœ ì—…ë°ì´íŠ¸
         }
     }
 }

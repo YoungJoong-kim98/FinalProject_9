@@ -66,6 +66,10 @@ MonoBehaviour:
     m_Localized: Yes
     m_Metadata:
       m_Items: []
+  - m_Id: 1013834751115264
+    m_Localized: Achievement
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

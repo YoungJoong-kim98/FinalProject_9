@@ -26,7 +26,13 @@ public class AchievementData
     public bool researcherStage;
     public bool fallingCrash;
     public int grabCount;
-    public bool completionTime;
+
+    public bool playTime1HourUnlocked;
+    public bool playTime3HourUnlocked;
+    public bool idle30MinutesUnlocked;
+    public bool customizationChangedUnlocked;
+
+    public float playTime;
 }
 
 [System.Serializable]

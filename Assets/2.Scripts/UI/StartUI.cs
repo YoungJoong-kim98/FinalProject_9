@@ -9,6 +9,7 @@ public class StartUI : PopUpUI
     public Button loadGameButton;
     public Button settingButton;
     public Button creditButton;
+    public Button achievementButton;
     public Button gameOverButton;
     public Button customButton;
     public GameObject startCharacter;
@@ -20,6 +21,7 @@ public class StartUI : PopUpUI
         loadGameButton.onClick.AddListener(OnLoadGameButtonClicked);
         settingButton.onClick.AddListener(OnSettingButtonClicked);
         creditButton.onClick.AddListener(OnCreditButtonClicked);
+        achievementButton.onClick.AddListener(OnAchievementButtonClicked);
         gameOverButton.onClick.AddListener(OnGameOverButtonClicked);
         customButton.onClick.AddListener(OnCustomButtonClicked);
         InitializeStartCharacterAnimator();
@@ -36,7 +38,7 @@ public class StartUI : PopUpUI
     }
     private void OnGameplayButtonClicked()
     {
-        Debug.Log("°ÔÀÓ ½ÃÀÛ");
+        Debug.Log("ê²Œì„ ì‹œì‘");
         UIManager.Instance.HidePopupUI<StartUI>();
         UIManager.Instance.ShowPermanentUI<InGameUI>();
     }
@@ -47,22 +49,25 @@ public class StartUI : PopUpUI
 
     private void OnLoadGameButtonClicked()
     {
-        //·Îµå ui Á¦ÀÛ? °ÔÀÓ¸Å´ÏÀú¸¦ ÅëÇØ ·Îµå°ÔÀÓÁ¦ÀÛÇÊ¿ä
+        //ë¡œë“œ ui ì œì‘? ê²Œì„ë§¤ë‹ˆì €ë¥¼ í†µí•´ ë¡œë“œê²Œì„ì œì‘í•„ìš”
     }
 
     private void OnCreditButtonClicked()
     {
         UIManager.Instance.ShowPopupUI<CreditUI>();
     }
-
+    private void OnAchievementButtonClicked()
+    {
+        UIManager.Instance.ShowPopupUI<AchievementUI>();
+    }
     private void OnGameOverButtonClicked()
     {
-        // °ÔÀÓÀÌ ½ÇÁ¦ ºôµå¿¡¼­ ½ÇÇà ÁßÀÌ¶ó¸é Á¾·á
+        // ê²Œì„ì´ ì‹¤ì œ ë¹Œë“œì—ì„œ ì‹¤í–‰ ì¤‘ì´ë¼ë©´ ì¢…ë£Œ
 #if UNITY_EDITOR
-        // ¿¡µğÅÍ¿¡¼­ ½ÇÇà ÁßÀÏ ¶§´Â °ÔÀÓÀ» Á¾·áÇÏÁö ¾Ê°í, ¿¡µğÅÍ¿¡¼­ ¸ØÃßµµ·Ï Ã³¸®
+        // ì—ë””í„°ì—ì„œ ì‹¤í–‰ ì¤‘ì¼ ë•ŒëŠ” ê²Œì„ì„ ì¢…ë£Œí•˜ì§€ ì•Šê³ , ì—ë””í„°ì—ì„œ ë©ˆì¶”ë„ë¡ ì²˜ë¦¬
         UnityEditor.EditorApplication.isPlaying = false;
 #else
-            // ½ÇÁ¦ ºôµå¿¡¼­´Â °ÔÀÓ Á¾·á
+            // ì‹¤ì œ ë¹Œë“œì—ì„œëŠ” ê²Œì„ ì¢…ë£Œ
             Application.Quit();
 #endif
     }
@@ -70,7 +75,7 @@ public class StartUI : PopUpUI
     {
         if (startCharacter == null || prefabToSet == null)
         {
-            Debug.LogWarning("StartCharacter ¶Ç´Â Àü´ŞµÈ ÇÁ¸®ÆÕÀÌ nullÀÔ´Ï´Ù.");
+            Debug.LogWarning("StartCharacter ë˜ëŠ” ì „ë‹¬ëœ í”„ë¦¬íŒ¹ì´ nullì…ë‹ˆë‹¤.");
             return;
         }
 
@@ -89,20 +94,20 @@ public class StartUI : PopUpUI
             Destroy(oldChild.gameObject);
         }
 
-        // »õ Ä³¸¯ÅÍ »ı¼º
+        // ìƒˆ ìºë¦­í„° ìƒì„±
         GameObject newCharacter = Instantiate(prefabToSet, startCharacterTransform);
         newCharacter.transform.localPosition = localPos;
         newCharacter.transform.localRotation = localRot;
         newCharacter.transform.localScale = localScale;
 
-        // ¾Ö´Ï¸ŞÀÌÅÍ ¼³Á¤
+        // ì• ë‹ˆë©”ì´í„° ì„¤ì •
         Animator animator = newCharacter.GetComponent<Animator>();
         if (animator != null && defaultAnimatorController != null)
         {
             animator.runtimeAnimatorController = defaultAnimatorController;
         }
 
-        Debug.Log("[StartUI] Ä³¸¯ÅÍ ÇÁ¸®ÆÕ Àû¿ë ¹× ¾Ö´Ï¸ŞÀÌ¼Ç ¼³Á¤ ¿Ï·á");
+        Debug.Log("[StartUI] ìºë¦­í„° í”„ë¦¬íŒ¹ ì ìš© ë° ì• ë‹ˆë©”ì´ì…˜ ì„¤ì • ì™„ë£Œ");
     }
     private void InitializeStartCharacterAnimator()
     {
@@ -120,11 +125,11 @@ public class StartUI : PopUpUI
         }
     }private IEnumerator AssignAnimatorNextFrame(Animator animator)
 {
-    yield return null; // ÇÁ·¹ÀÓ ÇÑ ¹ø ´ë±â
+    yield return null; // í”„ë ˆì„ í•œ ë²ˆ ëŒ€ê¸°
     animator.runtimeAnimatorController = defaultAnimatorController;
-    animator.Rebind(); // Ãß°¡·Î »óÅÂ¸¦ Àç¼³Á¤
-    animator.Update(0f); // Áï½Ã ¹İ¿µ
+    animator.Rebind(); // ì¶”ê°€ë¡œ ìƒíƒœë¥¼ ì¬ì„¤ì •
+    animator.Update(0f); // ì¦‰ì‹œ ë°˜ì˜
 
-    Debug.Log("[StartUI] Animator Áö¿¬ ÇÒ´ç ¹× Rebind ¿Ï·á");
+    Debug.Log("[StartUI] Animator ì§€ì—° í• ë‹¹ ë° Rebind ì™„ë£Œ");
 }
 }

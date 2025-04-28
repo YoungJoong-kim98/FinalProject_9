@@ -11,6 +11,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private NarrationManager narrationManager;
     [SerializeField] private SkillUnlockUI skillUnlockUI;
     [SerializeField] private SoundManager soundManager;
+    [SerializeField] private Player player;
 
     public AchievementSystem AchievementSystem => achievementSystem;
     public SkillManager SkillManager => skillManager;
@@ -18,6 +19,7 @@ public class GameManager : MonoBehaviour
     public SkillUnlockUI SkillUnlockUI => skillUnlockUI;
     public SoundManager SoundManager => soundManager;
 
+    public Player Player => player;
 
     private void Awake()
     {
