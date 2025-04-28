@@ -8,7 +8,7 @@ public enum PunchObstacleState
     Back
 }
 
-public class PunchObstacle : MonoBehaviour, ISaveObstacle
+public class PunchObstacle : MonoBehaviour, ISaveObstacle, IObstacle
 {
     //미는 힘
     [SerializeField] private float _pushPower = -1f;

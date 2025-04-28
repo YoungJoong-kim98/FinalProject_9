@@ -10,6 +10,8 @@ public enum ObstacleDataType
     RotateObstacle,
 }
 
+public interface IObstacle { }
+
 public interface ISaveObstacle
 {
     public string Id {  get; set; }

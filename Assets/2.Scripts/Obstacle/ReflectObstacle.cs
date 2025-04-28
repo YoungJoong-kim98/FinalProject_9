@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-public class ReflectObstacle : MonoBehaviour
+public class ReflectObstacle : MonoBehaviour, IObstacle
 {
     [SerializeField] private float _reflectPower = -1f;
     [SerializeField] private float _reflectMinPower = -1f;

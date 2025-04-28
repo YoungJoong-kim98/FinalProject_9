@@ -783,6 +783,7 @@ MonoBehaviour:
     grabParameterName: Grab
   runDust: {fileID: 0}
   movelockRemainTime: 0
+  collider: {fileID: 0}
 --- !u!1 &349782445
 GameObject:
   m_ObjectHideFlags: 0
@@ -2270,7 +2271,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   achievementSystem: {fileID: 0}
   skillManager: {fileID: 0}
+  narrationManager: {fileID: 0}
   skillUnlockUI: {fileID: 0}
+  soundManager: {fileID: 0}
 --- !u!4 &1266612770
 Transform:
   m_ObjectHideFlags: 0
@@ -2527,6 +2530,7 @@ MonoBehaviour:
     grabParameterName: Grab
   runDust: {fileID: 0}
   movelockRemainTime: 0
+  collider: {fileID: 0}
 --- !u!4 &1508827691
 Transform:
   m_ObjectHideFlags: 0
@@ -2990,7 +2994,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0.006429892, y: 0.005683589, z: -0.0015897596, w: 0.9999619}
   m_LocalPosition: {x: 10, y: 0.28, z: 10}
-  m_LocalScale: {x: 1, y: 0.13894, z: 1}
+  m_LocalScale: {x: 7, y: 0.13894, z: 7}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1954476191}
