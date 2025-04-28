@@ -74,6 +74,7 @@ public class PlayerFallState : PlayerAirState
         base.Update();
     }
     
+    // 낙하 로직 처리
     public override void PhysicsUpdate()
     {
         base.PhysicsUpdate();   // AirState.PhysicsUpdate 호출
@@ -110,7 +111,7 @@ public class PlayerFallState : PlayerAirState
 
         rb.velocity = velocity; // 속도 적용
 
-        Debug.Log($"Fall - y 속도: {velocity.y}");
+        // Debug.Log($"Fall - y 속도: {velocity.y}");
     }
     
     /// <summary>
