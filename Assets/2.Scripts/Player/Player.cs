@@ -13,7 +13,7 @@ public class Player : MonoBehaviour
     [field:Header("Animations")]
     [field:SerializeField] public PlayerAnimationData AnimationData { get; private set; }   // 애니메이션 데이터
 
-    public Animator Animator { get; private set; }              // 애니메이션 제어
+    public Animator Animator { get; set; }              // 애니메이션 제어
     public PlayerController Input { get; private set; }         // 입력 처리
     public PlayerStateMachine stateMachine;                     // FSM 컨트롤러
 
