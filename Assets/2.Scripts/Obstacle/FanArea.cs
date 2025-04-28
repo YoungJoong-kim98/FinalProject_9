@@ -1,6 +1,6 @@
-﻿using UnityEngine;
+using UnityEngine;
 
-public class FanArea : MonoBehaviour
+public class FanArea : MonoBehaviour, IObstacle
 {
     //힘의 방향
     public Vector3 forceDirection = Vector3.forward;

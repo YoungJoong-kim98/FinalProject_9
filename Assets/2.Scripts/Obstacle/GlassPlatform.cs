@@ -7,7 +7,7 @@ public enum GlassPlatformState
     Break
 }
 
-public class GlassPlatform : MonoBehaviour, ISaveObstacle
+public class GlassPlatform : MonoBehaviour, ISaveObstacle, IObstacle
 {
     //정상적인 유리 오브젝트
     [SerializeField] private GameObject _glassObject;
