@@ -8,7 +8,7 @@ public enum PlatformState
     Restore
 }
 
-public class Platform : MonoBehaviour, ISaveObstacle
+public class Platform : MonoBehaviour, ISaveObstacle, IObstacle
 {
     [SerializeField] private float _disappearTime = -1f;
     [SerializeField] private float _appearTime = -1f;

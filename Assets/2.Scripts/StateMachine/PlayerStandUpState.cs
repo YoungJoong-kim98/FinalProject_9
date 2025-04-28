@@ -15,6 +15,7 @@ public class PlayerStandUpState : PlayerBaseState
     {
         base.Enter();
         _standUpTimer = 0f;
+        stateMachine.Player.Rigidbody.isKinematic = true;
         stateMachine.IsMovementLocked = true;   // 이동 입력 잠금
         stateMachine.MovementInput = Vector2.zero; // 입력 초기화
         StartAnimation(stateMachine.Player.AnimationData.StandUpParameterHash);
@@ -30,18 +31,23 @@ public class PlayerStandUpState : PlayerBaseState
             stateMachine.ChangeState(stateMachine.IdleState);
         }
     }
-    
+
     public override void PhysicsUpdate()
     {
         base.PhysicsUpdate();
-        // 이동 차단
-        stateMachine.Player.Rigidbody.velocity = new Vector3(0, stateMachine.Player.Rigidbody.velocity.y, 0);
-        // Debug.Log("StandUp - 이동 차단");
+
+        if (!stateMachine.Player.Rigidbody.isKinematic)
+        {
+            // 이동 차단
+            stateMachine.Player.Rigidbody.velocity = new Vector3(0, stateMachine.Player.Rigidbody.velocity.y, 0);
+            // Debug.Log("StandUp - 이동 차단");
+        }
     }
 
     public override void Exit()
     {
         base.Exit();
+        stateMachine.Player.Rigidbody.isKinematic = false;
         stateMachine.IsMovementLocked = false;  // 이동 잠금 해제
         stateMachine.MovementInput = Vector2.zero; // 입력 초기화
         StopAnimation(stateMachine.Player.AnimationData.StandUpParameterHash);

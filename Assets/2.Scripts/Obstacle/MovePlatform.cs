@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MovePlatform : MonoBehaviour, ISaveObstacle
+public class MovePlatform : MonoBehaviour, ISaveObstacle, IObstacle
 {
     //움직이는 속도
     [SerializeField] private float _moveSpeed = -1;

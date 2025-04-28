@@ -1,9 +1,11 @@
 using UnityEngine;
+using static UnityEditor.Experimental.GraphView.GraphView;
 
-public class JumpPlatform : MonoBehaviour
+public class JumpPlatform : MonoBehaviour, IObstacle
 {
     //점프 힘
     [SerializeField] private float _jumpPower = -1f;
+    private bool _isJumping = false;
 
     private void Start()
     {
@@ -16,8 +18,11 @@ public class JumpPlatform : MonoBehaviour
     {
         if (collision.collider.CompareTag("Player"))
         {
-            //점프 메서드 실행
-            AddJumpPower(collision.gameObject);
+            var player = collision.collider.GetComponent<Player>();
+            if (player.stateMachine.CurrentState != player.stateMachine.FallCrashState)
+            {
+                AddJumpPower(collision.gameObject);
+            }
         }
     }
 
@@ -27,7 +32,9 @@ public class JumpPlatform : MonoBehaviour
         if (gameObject.TryGetComponent(out Rigidbody rb))
         {
             //물리 처리
-            rb.AddForce(Vector3.up * _jumpPower, ForceMode.Impulse);
+            //rb.AddForce(Vector3.up * _jumpPower, ForceMode.Impulse);
+            rb.velocity = Vector3.up * _jumpPower;
+            GameManager.Instance.AchievementSystem.jumpPlatform++;
         }
         //rigidbody가 없을때 에러코드
         else
