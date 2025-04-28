@@ -167,4 +167,12 @@ public class AchievementSystem : MonoBehaviour
         this.idle30MinutesUnlocked = data.idle30MinutesUnlocked;
         this.playTime = data.playTime;
     }
+    public void NotifyCustomizationChanged()
+    {
+        if (!customizationChangedUnlocked)
+        {
+            customizationChangedUnlocked = true;          
+            UpdateAchievements();
+        }
+    }
 }

@@ -99,6 +99,8 @@ public class CustomizingUI : PopUpUI
     {
         if (newPrefab == null || mainCharacter == null) return;
 
+        if (mainCharacter.name == newPrefab.name) return;
+
         // 기존 위치, 회전 저장
         Vector3 currentPosition = mainCharacter.transform.position;
         Quaternion currentRotation = mainCharacter.transform.rotation;
@@ -119,6 +121,10 @@ public class CustomizingUI : PopUpUI
         if (animator != null && fallingPlayerAnimatorController != null)
         { 
             animator.runtimeAnimatorController = fallingPlayerAnimatorController; // 애니메이터 컨트롤러 변경
+        }
+        if (!achievementSystem.customizationChangedUnlocked)
+        {
+            achievementSystem.NotifyCustomizationChanged();
         }
     }
     void OnClickApply()
@@ -225,7 +231,7 @@ public class CustomizingUI : PopUpUI
                     isUnlocked = achievementSystem.grabCount >= 100;
                     break;
                 case 7:
-                    isUnlocked = achievementSystem.completionTime;
+                    isUnlocked = achievementSystem.playTime1HourUnlocked;
                     break;
             }
 
