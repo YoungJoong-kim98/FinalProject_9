@@ -32,6 +32,16 @@ MonoBehaviour:
       employee, you'll need to keep proving yourself.
     m_Metadata:
       m_Items: []
+  - m_Id: 1739553283121152
+    m_Localized: "Your brain just froze at the unexpected question. The interviewer's
+      face doesn\u2019t look too pleased."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1740022701236224
+    m_Localized: The interviewer scans your resume and mutters, 'No experience?'
+      You black out on the spot.
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

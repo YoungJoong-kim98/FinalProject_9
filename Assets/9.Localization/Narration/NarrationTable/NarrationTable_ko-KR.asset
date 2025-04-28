@@ -35,6 +35,19 @@ MonoBehaviour:
       \uC704\uD574\uC11C\uB294 \uB04A\uC784\uC5C6\uC774 \uB178\uB825\uD574\uC57C\uD569\uB2C8\uB2E4."
     m_Metadata:
       m_Items: []
+  - m_Id: 1739553283121152
+    m_Localized: "\uC608\uC0C1\uCE58 \uBABB\uD55C \uC9C8\uBB38\uC5D0 \uB1CC\uAC00
+      \uBA48\uCDB0\uBC84\uB838\uAD70\uC694. \uBA74\uC811\uAD00\uC758 \uD45C\uC815\uC774
+      \uC88B\uC9C0 \uBABB\uD574\uBCF4\uC785\uB2C8\uB2E4."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1740022701236224
+    m_Localized: "\uBA74\uC811\uAD00\uC774 \uC774\uB825\uC11C\uB97C \uBCF4\uB354\uB2C8
+      \uB9D0\uC744 \uAC74\uB124\uB294\uAD70\uC694. \u2018\uD760.. \uACBD\uB825\uC774
+      \uC5C6\uC73C\uC2DC\uB124\uC694?\u2019 \uB2F9\uC2E0\uC740 \uADF8\uB9CC \uC815\uC2E0\uC744
+      \uC783\uC5C8\uC2B5\uB2C8\uB2E4."
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

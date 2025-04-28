@@ -16,15 +16,27 @@ MonoBehaviour:
   m_TableCollectionNameGuidString: 9cfd63be8bfb8bc429ed569c8fc9ec64
   m_Entries:
   - m_Id: 42702348288
-    m_Key: IntroText
+    m_Key: Tutorial
     m_Metadata:
       m_Items: []
   - m_Id: 7317370314752
-    m_Key: interviewText
+    m_Key: Startinterview
     m_Metadata:
       m_Items: []
   - m_Id: 10582778585088
-    m_Key: interviewEndText
+    m_Key: Endinterview
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1739553283121152
+    m_Key: BreakableGlass_1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1740022701236224
+    m_Key: BreakableGlass_2
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1744168355504128
+    m_Key: StartStaffStage
     m_Metadata:
       m_Items: []
   m_Metadata:
