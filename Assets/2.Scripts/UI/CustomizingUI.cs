@@ -225,7 +225,7 @@ public class CustomizingUI : PopUpUI
                     isUnlocked = achievementSystem.grabCount >= 100;
                     break;
                 case 7:
-                    isUnlocked = achievementSystem.completionTime;
+                    //isUnlocked = achievementSystem.completionTime;
                     break;
             }
 
