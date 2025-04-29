@@ -26,8 +26,8 @@ public class PlayerFallCrashState : PlayerBaseState
             Debug.Log("FallCrash - 카메라 진동");
         }
         
-        // 3프레임 기다리고 땅에 붙이기
-        stateMachine.Player.StartCoroutine(AlignToGroundAfterFrames(3));
+        // 5프레임 기다리고 땅에 붙이기
+        stateMachine.Player.StartCoroutine(AlignToGroundAfterFrames(5));
         
         // 속도 및 중력 제어
         Rigidbody rb = stateMachine.Player.Rigidbody;
